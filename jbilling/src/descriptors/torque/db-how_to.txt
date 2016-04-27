@@ -115,7 +115,7 @@ The following shouldn't be necessary since the creation of the tables first drop
   - run betty's 'ant db'
   
 - To enable/disable logging
-  There are a wide viarety of options for logging, it can be setup at runtime and in the
+  There are a wide variety of options for logging, it can be setup at runtime and in the
   postgresql.conf file. Probably the most useful are LOG_STATEMENT and LOG_DURATION
   update pg_settings set setting = 'all' where name = 'log_statement';
 
@@ -125,7 +125,7 @@ The following shouldn't be necessary since the creation of the tables first drop
 
 Oracle:
 -------
-datasource for oracel express in the same box is:
+datasource for oracle express in the same box is:
 <datasources>
   <local-tx-datasource>
     <jndi-name>ApplicationDS</jndi-name>
