@@ -18,7 +18,7 @@
     along with jbilling.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 
-<%@ page language="java" import="com.sapienter.jbilling.client.util.Constants;"%>
+<%@ page language="java" import="com.sapienter.jbilling.client.util.Constants"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
