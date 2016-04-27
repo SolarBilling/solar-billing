@@ -127,9 +127,6 @@
   <taskdef name="tc-resources" classname="org.apache.catalina.ant.ResourcesTask">
     <classpath refid="tomcat.classpath"/>
   </taskdef>
-  <taskdef name="tc-roles"     classname="org.apache.catalina.ant.RolesTask">
-    <classpath refid="tomcat.classpath"/>
-  </taskdef>
   <taskdef name="tc-start"     classname="org.apache.catalina.ant.StartTask">
     <classpath refid="tomcat.classpath"/>
   </taskdef>
@@ -140,10 +137,10 @@
     <classpath refid="tomcat.classpath"/>
   </taskdef>
 
-  <target name="tc-deploy" description="Install web application"
+  <target name="deploy" description="Install web application"
           depends="compile">
-    <deploy url="${url}" username="${username}" password="${password}"
-            path="${path}" war="file:${build}${path}.war"/>
+    <tc-deploy url="${url}" username="${username}" password="${password}"
+            path="${path}" war="file:${build.deploy.dir}/${path}.war"/>
   </target>
 
   <target name="tc-reload" description="Reload web application">
