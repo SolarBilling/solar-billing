@@ -27,7 +27,7 @@
     <jee:jndi-lookup id="dataSource" jndi-name="java:/ApplicationDS"/>
     -->
  
-     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 			<property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
@@ -36,7 +36,7 @@
         <property name="driverClass" value="org.postgresql.Driver"/>
         <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/jbilling_test" />
         <property name="user" value="jbilling" />
-        <property name="password" value="" />
+        <property name="password" value="jbilling" />
         <property name="acquireIncrement" value="2"/>
         <property name="initialPoolSize" value="5"/>
         <property name="maxPoolSize" value="20" />
@@ -60,7 +60,7 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean id="sessionFactory"
-        class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <!-- Scan for annotated classes -->
         <property name="packagesToScan" value="com.sapienter.jbilling.server.**.*"/>
@@ -78,7 +78,7 @@
                 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
                 <prop key="SecondLevelCacheEnabled">true</prop>
                 <prop key="hibernate.cache.use_query_cache">true</prop>
-
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
                 <!-- Data source and transaction settings (JTA only)
                 <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</prop>
                 <prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</prop>
