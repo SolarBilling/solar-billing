@@ -172,7 +172,7 @@ public class CurrencyBL {
 
     @SuppressWarnings("unchecked")
     public CurrencyDTO[] getCurrencies(Integer languageId, Integer entityId) throws NamingException, SQLException {
-        List result = new ArrayList();
+        List<CurrencyDTO> result = new ArrayList<CurrencyDTO>();
         
         CurrencyDTO[] all = getSymbols();
         for (int currencyId = 1; currencyId < all.length; currencyId++) {

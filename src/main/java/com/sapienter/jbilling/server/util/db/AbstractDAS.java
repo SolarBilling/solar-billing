@@ -25,8 +25,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
@@ -34,16 +34,19 @@ import org.hibernate.criterion.Example;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 
 
 public abstract class AbstractDAS<T> extends HibernateDaoSupport {
 
-    private static final Logger LOG = Logger.getLogger(AbstractDAS.class);
     private Class<T> persistentClass;
     // if querys will be run cached or not
     private boolean queriesCached = false;
 
+    protected Session getSession()
+    {
+        return getSessionFactory().getCurrentSession();
+    }
     
     public AbstractDAS() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass()

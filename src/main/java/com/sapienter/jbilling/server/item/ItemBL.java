@@ -25,10 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
-import org.springmodules.cache.provider.CacheProviderFacade;
-import org.springmodules.cache.CachingModel;
-import org.springmodules.cache.FlushingModel;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.db.ItemDAS;
@@ -44,7 +42,6 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Constants;
-import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
@@ -58,11 +55,6 @@ public class ItemBL {
     private EventLogger eLogger = null;
     private String priceCurrencySymbol = null;
     private List<PricingField> pricingFields = null;
-
-    // item price cache for getPrice()
-    private CacheProviderFacade cache;
-    private CachingModel cacheModel;
-    private FlushingModel flushModel;
 
     public ItemBL(Integer itemId) 
             throws SessionInternalError {
@@ -90,11 +82,6 @@ public class ItemBL {
     private void init() {
         eLogger = EventLogger.getInstance();        
         itemDas = new ItemDAS();
-        cache = (CacheProviderFacade) Context.getBean(Context.Name.CACHE);
-        cacheModel = (CachingModel) Context.getBean(
-                Context.Name.CACHE_MODEL_ITEM_PRICE);
-        flushModel = (FlushingModel) Context.getBean(
-                Context.Name.CACHE_FLUSH_MODEL_ITEM_PRICE);
     }
     
     public ItemDTO getEntity() {
@@ -164,8 +151,8 @@ public class ItemBL {
     	// may be there's just one simple price
     	if (dto.getPrices() == null) {
     		if (dto.getPrice() != null) {
-    			List prices = new ArrayList();
-    			// get the defualt currency of the entity
+    			List<ItemPriceDTO> prices = new ArrayList<>();
+    			// get the default currency of the entity
                 CurrencyDTO currency = new CurrencyDAS().findNow(
                         dto.getCurrencyId());
     			if (currency == null) {
@@ -250,19 +237,12 @@ public class ItemBL {
      * It uses a cache to avoid repeating this look-up too often
      * @return The price in the requested currency
      */
+    @Cacheable("itemprice")
     public BigDecimal getPriceByCurrency(Integer currencyId, Integer entityId)
             throws SessionInternalError {
         BigDecimal retValue = null;
 
-        // try to get cached item price for this currency
-        retValue = (BigDecimal) cache.getFromCache(item.getId() +
-                currencyId.toString(), cacheModel);
-
-        if (retValue != null) {
-            return retValue;
-        }
-
-        // get the item's defualt price
+        // get the item's default price
         int prices = 0;
         BigDecimal aPrice = null;
         Integer aCurrency = null;
@@ -298,9 +278,6 @@ public class ItemBL {
                         item.getId());
             }
         }
-
-        cache.putInCache(item.getId() + currencyId.toString(), cacheModel,
-                retValue);
 
         return retValue;
     }
@@ -428,9 +405,9 @@ public class ItemBL {
         retValue.setOrderLineTypeId(other.getOrderLineTypeId());
 
         // convert prices between DTO and DTOEx (WS)
-        List otherPrices = other.getPrices();
+        List<ItemPriceDTOEx> otherPrices = other.getPrices();
         if (otherPrices != null) {
-            List prices = new ArrayList(otherPrices.size());
+            List<ItemPriceDTO> prices = new ArrayList<>(otherPrices.size());
             for (int i = 0; i < otherPrices.size(); i++) {
                 ItemPriceDTO itemPrice = new ItemPriceDTO();
                 ItemPriceDTOEx otherPrice = (ItemPriceDTOEx) otherPrices.get(i);
@@ -468,15 +445,14 @@ public class ItemBL {
         retValue.setCurrencyId(other.getCurrencyId());
         retValue.setPrice(other.getPrice());
         retValue.setOrderLineTypeId(other.getOrderLineTypeId());
-        retValue.setPrices(other.getPrices());
 
         // convert prices between DTOEx (WS) and DTO
-        List otherPrices = other.getPrices();
+        final List<ItemPriceDTO> otherPrices = other.getPrices();
         if (otherPrices != null) {
-            List prices = new ArrayList(otherPrices.size());
+            final List<ItemPriceDTOEx> prices = new ArrayList<>(otherPrices.size());
             for (int i = 0; i < otherPrices.size(); i++) {
                 ItemPriceDTOEx itemPrice = new ItemPriceDTOEx();
-                ItemPriceDTO otherPrice = (ItemPriceDTO) otherPrices.get(i);
+                ItemPriceDTO otherPrice = otherPrices.get(i);
                 itemPrice.setId(otherPrice.getId());
                 itemPrice.setCurrencyId(otherPrice.getCurrency().getId());
                 itemPrice.setPrice(otherPrice.getPrice());
@@ -571,7 +547,7 @@ public class ItemBL {
         pricingFields = fields;
     }
 
+    @CacheEvict(value = "itemprice", allEntries=true)
     public void invalidateCache() {
-        cache.flushCache(flushModel);
     }
 }

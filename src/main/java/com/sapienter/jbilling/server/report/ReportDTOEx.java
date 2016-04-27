@@ -103,12 +103,12 @@ public class ReportDTOEx extends ReportDTO {
     
     // can't have the Logger here, it is not serializable !
     
-    private List errorFields = null;
-    private List errorCodes = null;
+    private List<Integer> errorFields = null;
+    private List<Integer> errorCodes = null;
     
     // this are dynamic parameters usually coming from the gui. They will
     // replace sql parameters '?'
-    private List dynamicParameters = null;
+    private List<String> dynamicParameters = null;
     
     /*
      * Constructs
@@ -125,12 +125,12 @@ public class ReportDTOEx extends ReportDTO {
         ordenable = new Boolean(false);
         wherable = new Boolean(false);
         setIdColumn(new Integer(0));
-        fields = new ArrayList();
+        fields = new ArrayList<>();
         ordenableFields = new Integer(0);
         
-        errorFields = new ArrayList();
-        errorCodes = new ArrayList();
-        dynamicParameters = new ArrayList();
+        errorFields = new ArrayList<>();
+        errorCodes = new ArrayList<>();
+        dynamicParameters = new ArrayList<>();
         
     }
     
@@ -144,11 +144,11 @@ public class ReportDTOEx extends ReportDTO {
         errorCodes.add(new Integer(code));
     }
     
-    public List getErrorFields() {
+    public List<Integer> getErrorFields() {
         return errorFields;
     }
 
-    public List getErrorCodes() {
+    public List<Integer> getErrorCodes() {
         return errorCodes;
     }
 
@@ -171,8 +171,8 @@ public class ReportDTOEx extends ReportDTO {
 
     	boolean retValue = true;
         int fieldsOrdered = 0;
-        errorFields = new ArrayList();
-        errorCodes = new ArrayList();
+        errorFields = new ArrayList<>();
+        errorCodes = new ArrayList<>();
         
         LOG.debug("validating report. aggregated=" + isAgregated);
         

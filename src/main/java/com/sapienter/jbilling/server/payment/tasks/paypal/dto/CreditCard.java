@@ -26,13 +26,18 @@ package com.sapienter.jbilling.server.payment.tasks.paypal.dto;
 public class CreditCard {
     private final String type;
     private final String account;
-    private final String expirationDate;
+    private final String expirationMonth;
+    private final String expirationYear;
     private final String cvv2;
 
-    public CreditCard(String type, String account, String expirationDate, String cvv2) {
+    public String getExpirationMonth() { return expirationMonth; }
+    public String getExpirationYear() { return expirationYear; }
+    
+    public CreditCard(String type, String account, String expirationMonth, String expirationYear, String cvv2) {
         this.type = type;
         this.account = account;
-        this.expirationDate = expirationDate;
+        this.expirationMonth = expirationMonth;
+        this.expirationYear = expirationYear;
         this.cvv2 = cvv2;
     }
 
@@ -45,7 +50,7 @@ public class CreditCard {
     }
 
     public String getExpirationDate() {
-        return expirationDate;
+        return expirationMonth + expirationYear;
     }
 
     public String getCvv2() {

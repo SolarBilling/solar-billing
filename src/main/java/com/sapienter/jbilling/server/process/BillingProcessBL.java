@@ -1026,7 +1026,7 @@ public class BillingProcessBL extends ResultList
 
     public Integer[] getToRetry(Integer entityId)
             throws SQLException, Exception {
-        List list = new ArrayList();
+        List<Integer> list = new ArrayList<Integer>();
 
         prepareStatement(ProcessSQL.findToRetry);
         cachedResults.setInt(1, entityId.intValue());

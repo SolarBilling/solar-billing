@@ -23,10 +23,11 @@ import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.id.IdentifierGenerator;
-import org.hibernate.id.IdentifierGeneratorFactory;
+import org.hibernate.id.factory.IdentifierGeneratorFactory;
+import org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory;
 import org.hibernate.id.enhanced.TableGenerator;
-import org.hibernate.impl.SessionFactoryImpl;
-import org.hibernate.impl.StatelessSessionImpl;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.internal.StatelessSessionImpl;
 import org.hibernate.type.IntegerType;
 
 import javax.persistence.Id;
@@ -72,10 +73,9 @@ public class HibernateIdGenerator {
         configuration.setProperty(TableGenerator.INCREMENT_PARAM, "100");
 
         sessionFactory = ((SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION));
-        generator = IdentifierGeneratorFactory.create("org.hibernate.id.enhanced.TableGenerator",
+        generator = new DefaultIdentifierGeneratorFactory().createIdentifierGenerator("org.hibernate.id.enhanced.TableGenerator",
                                                       new IntegerType(),
-                                                      configuration,
-                                                      ((SessionFactoryImpl) sessionFactory).getDialect());
+                                                      configuration);
     }
 
     public Serializable getId() {

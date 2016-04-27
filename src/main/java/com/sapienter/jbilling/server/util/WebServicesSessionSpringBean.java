@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,7 +44,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import sun.jdbc.rowset.CachedRowSet;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.sapienter.jbilling.common.GatewayBL;
 import com.sapienter.jbilling.common.JBCrypto;
@@ -449,16 +451,8 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
             UserBL bl = new UserBL();
             Integer entityId = getCallerCompanyId();
 
-            CachedRowSet users = bl.getByCustomField(entityId, typeId, value);
-            LOG.debug("got collection. Now converting");
-            Integer[] ret = new Integer[users.size()];
-            int f = 0;
-            while (users.next()) {
-                ret[f] = users.getInt(1);
-                f++;
-            }
-            users.close();
-            return ret;
+            ResultSet users = bl.getByCustomField(entityId, typeId, value);
+            return getUsersFromResultSet(users);
         } catch (Exception e) { // can't remove because of the SQL Exception :(
             LOG.error("WS - getUsersByCustomField", e);
             throw new SessionInternalError("Error getting users by custom field");
@@ -483,6 +477,18 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
         return ret;
     }
 
+    private Integer[] getUsersFromResultSet(ResultSet users) throws SQLException
+    {
+        final Collection<Integer> result = new ArrayList<Integer>();
+        while (users.next()) {
+            result.add(users.getInt(1));
+        }
+        users.close();
+        final Integer[] ret = new Integer[result.size()];
+        result.toArray(ret);
+        return ret;
+    }
+
     /**
      * Retrieves an array of users in the required status 
      */
@@ -491,16 +497,8 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
             throws SessionInternalError {
         try {
             UserBL bl = new UserBL();
-            CachedRowSet users = bl.getByStatus(entityId, statusId, in);
-            LOG.debug("got collection. Now converting");
-            Integer[] ret = new Integer[users.size()];
-            int f = 0;
-            while (users.next()) {
-                ret[f] = users.getInt(1);
-                f++;
-            }
-            users.close();
-            return ret;
+            ResultSet users = bl.getByStatus(entityId, statusId, in);
+            return getUsersFromResultSet(users);
         } catch (Exception e) { // can't remove because of SQLException :(
             throw new SessionInternalError(e);
         }

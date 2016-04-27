@@ -34,6 +34,7 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.common.Util;
+import com.paypal.base.rest.PayPalRESTException;
 import com.paypal.sdk.exceptions.PayPalException;
 import com.sapienter.jbilling.common.CommonConstants;
 import org.apache.log4j.Logger;
@@ -77,7 +78,7 @@ public class PaymentPaypalExternalTask extends PaymentTaskWithTimeout implements
         return getOptionalParameter(PARAMETER_PAYPAL_SUBJECT, "");
     }
 
-    private PaypalApi getApi() throws PluggableTaskException, PayPalException {
+    private PaypalApi getApi() throws PluggableTaskException, PayPalException, PayPalRESTException {
         return new PaypalApi(getUserId(), getPassword(),  getSignature(),
                     getEnvironment(), getSubject(), getTimeoutSeconds() * 1000);
     }
@@ -202,15 +203,20 @@ public class PaymentPaypalExternalTask extends PaymentTaskWithTimeout implements
         return "";
     }
 
-    private static String convertCreditCardExpiration(Date ccExpiry) {
-        return new SimpleDateFormat("MMyyyy").format(ccExpiry);
+    private static String convertCreditCardExpirationMonth(Date ccExpiry) {
+        return new SimpleDateFormat("MM").format(ccExpiry);
+    }
+
+    private static String convertCreditCardExpirationYear(Date ccExpiry) {
+        return new SimpleDateFormat("yyyy").format(ccExpiry);
     }
 
     private static CreditCard convertCreditCard(PaymentDTOEx payment) {
         return new CreditCard(
                             convertCreditCardType(payment.getCreditCard().getCcType()),
                             payment.getCreditCard().getCcNumberPlain(),
-                            convertCreditCardExpiration(payment.getCreditCard().getExpiry()),
+                            convertCreditCardExpirationMonth(payment.getCreditCard().getExpiry()),
+                            convertCreditCardExpirationYear(payment.getCreditCard().getExpiry()),
                             payment.getCreditCard().getSecurityCode());
     }
 
@@ -261,26 +267,27 @@ public class PaymentPaypalExternalTask extends PaymentTaskWithTimeout implements
 
             return new Result(paymentAuthorization, false);
 
-        } catch (PayPalException e) {
+        } catch (PayPalException | PayPalRESTException e) {
             LOG.error("Couldn't handle payment request due to error", e);
 			payment.setPaymentResult(new PaymentResultDAS().find(Constants.RESULT_UNAVAILABLE));
             return NOT_APPLICABLE;
         }
     }
 
-    private Result doPaymentWithStoredCreditCard(PaymentDTOEx payment, PaymentAction paymentAction) throws PluggableTaskException {
+    private Result doPaymentWithStoredCreditCard(PaymentDTOEx payment, 
+    		PaymentAction paymentAction, String description ) throws PluggableTaskException {
         try {
             PaypalResult result = getApi().doReferenceTransaction(
                     payment.getAuthorization().getTransactionId(),
                     paymentAction,
-                    new Payment(formatDollarAmount(payment.getAmount()), "USD"));
+                    new Payment(formatDollarAmount(payment.getAmount()), "USD"), description);
 
             PaymentAuthorizationDTO paymentAuthorization = buildPaymentAuthorization(result);
             storePaypalResult(result, payment, paymentAuthorization, true);
 
             return new Result(paymentAuthorization, false);
 
-        } catch (PayPalException e) {
+        } catch (PayPalException | PayPalRESTException e) {
             LOG.error("Couldn't handle payment request due to error", e);
 			payment.setPaymentResult(new PaymentResultDAS().find(Constants.RESULT_UNAVAILABLE));
             return NOT_APPLICABLE;
@@ -288,20 +295,20 @@ public class PaymentPaypalExternalTask extends PaymentTaskWithTimeout implements
     }
 
     private Result doPaymentWithoutStoredCreditCard(PaymentDTOEx payment, PaymentAction paymentAction,
-                                                    boolean updateKey) throws PluggableTaskException {
+                                                    boolean updateKey, String description ) throws PluggableTaskException {
         try {
             PaypalResult result = getApi().doDirectPayment(
                     paymentAction,
                     convertPayer(payment),
                     convertCreditCard(payment),
-                    new Payment(formatDollarAmount(payment.getAmount()), "USD"));
+                    new Payment(formatDollarAmount(payment.getAmount()), "USD"), description );
 
             PaymentAuthorizationDTO paymentAuthorization = buildPaymentAuthorization(result);
             storePaypalResult(result, payment, paymentAuthorization, updateKey);
 
             return new Result(paymentAuthorization, false);
 
-        } catch (PayPalException e) {
+        } catch (PayPalException | PayPalRESTException e) {
             LOG.error("Couldn't handle payment request due to error", e);
 			payment.setPaymentResult(new PaymentResultDAS().find(Constants.RESULT_UNAVAILABLE));
             return NOT_APPLICABLE;
@@ -320,7 +327,7 @@ public class PaymentPaypalExternalTask extends PaymentTaskWithTimeout implements
 
             return new Result(paymentAuthorization, false);
 
-        } catch (PayPalException e) {
+        } catch (PayPalException | PayPalRESTException e) {
             LOG.error("Couldn't handle payment request due to error", e);
 			payment.setPaymentResult(new PaymentResultDAS().find(Constants.RESULT_UNAVAILABLE));
             return NOT_APPLICABLE;
@@ -333,20 +340,22 @@ public class PaymentPaypalExternalTask extends PaymentTaskWithTimeout implements
         if(isRefund(payment)) {
             return doRefund(payment).shouldCallOtherProcessors();
         }
+        
+        final String description = "Electricity"; // TODO should include the billing period 
 
         if(isCreditCardStored(payment)) {
-            return doPaymentWithStoredCreditCard(payment, paymentAction)
+            return doPaymentWithStoredCreditCard(payment, paymentAction, description)
                     .shouldCallOtherProcessors();
         }
 
-        return doPaymentWithoutStoredCreditCard(payment, paymentAction, updateKey)
+        return doPaymentWithoutStoredCreditCard(payment, paymentAction, updateKey, description)
                 .shouldCallOtherProcessors();
     }
 
     private void doVoid(PaymentDTOEx payment) throws PluggableTaskException {
         try {
             getApi().doVoid(payment.getAuthorization().getTransactionId());
-        } catch (PayPalException e) {
+        } catch (PayPalException | PayPalRESTException e) {
             LOG.error("Couldn't void payment authorization due to error", e);
             throw new PluggableTaskException(e);
         }

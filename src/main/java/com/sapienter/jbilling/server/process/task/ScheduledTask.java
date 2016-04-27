@@ -24,6 +24,7 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import org.apache.log4j.Logger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.impl.JobDetailImpl;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
@@ -44,7 +45,9 @@ public abstract class ScheduledTask extends PluggableTask implements IScheduledT
      * @throws com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException
      */
     public JobDetail getJobDetail() throws PluggableTaskException {
-        JobDetail detail = new JobDetail(getTaskName() + " job", Scheduler.DEFAULT_GROUP, this.getClass());
+        JobDetailImpl detail = new JobDetailImpl();
+        detail.setName(getTaskName() + " job");
+        detail.setGroup(Scheduler.DEFAULT_GROUP);
         detail.getJobDataMap().put("entityId", getEntityId());
         detail.getJobDataMap().put("taskId", getTaskId());
         detail.getJobDataMap().putAll(parameters);

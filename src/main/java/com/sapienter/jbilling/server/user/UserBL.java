@@ -22,6 +22,7 @@ package com.sapienter.jbilling.server.user;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Collection;
@@ -37,8 +38,6 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
-
-import sun.jdbc.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.JBCrypto;
 import com.sapienter.jbilling.common.PermissionConstants;
@@ -880,7 +879,7 @@ public class UserBL extends ResultList
         return retValue;
     }
 
-    public CachedRowSet findActiveWithOpenInvoices()
+    public ResultSet findActiveWithOpenInvoices()
             throws SQLException, NamingException {
         prepareStatement(UserSQL.findActiveWithOpenInvoices);
         execute();
@@ -1199,7 +1198,7 @@ public class UserBL extends ResultList
         return retValue;
     }
 
-    public CachedRowSet getByStatus(Integer entityId, Integer statusId, boolean in) {
+    public ResultSet getByStatus(Integer entityId, Integer statusId, boolean in) {
         try {
             if (in) {
                 prepareStatement(UserSQL.findInStatus);
@@ -1216,7 +1215,7 @@ public class UserBL extends ResultList
         }
     }
 
-    public CachedRowSet getByCustomField(Integer entityId, Integer typeId, String content) {
+    public ResultSet getByCustomField(Integer entityId, Integer typeId, String content) {
         try {
             prepareStatement(UserSQL.findByCustomField);
             cachedResults.setInt(1, typeId.intValue());
@@ -1230,7 +1229,7 @@ public class UserBL extends ResultList
         }
     }
 
-    public CachedRowSet getByCCNumber(Integer entityId, String number) {
+    public ResultSet getByCCNumber(Integer entityId, String number) {
         try {
 
             prepareStatement(UserSQL.findByCreditCard);

@@ -45,6 +45,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.sapienter.jbilling.server.invoice.db.InvoiceLineDTO;
+import com.sapienter.jbilling.server.item.ItemPriceDTOEx;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Constants;
@@ -87,7 +88,7 @@ public class ItemDTO extends AbstractDescription {
     private BigDecimal price = null;
     private Integer orderLineTypeId = null;
     // all the prices.ItemPriceDTOEx  
-    private List prices = null;
+    private List<ItemPriceDTO> prices = null;
 
     public ItemDTO() {
     }
@@ -114,7 +115,9 @@ public class ItemDTO extends AbstractDescription {
         this.hasDecimals = hasDecimals;
     }
 
-    public ItemDTO(int id, CompanyDTO entity, String internalNumber, BigDecimal percentage, Integer priceManual, Integer deleted, Integer hasDecimals, Set<OrderLineDTO> orderLineDTOs, Set<ItemTypeDTO> itemTypes, Set<InvoiceLineDTO> invoiceLines, Set<ItemPriceDTO> itemPrices) {
+    public ItemDTO(int id, CompanyDTO entity, String internalNumber, BigDecimal percentage, Integer priceManual, 
+    		Integer deleted, Integer hasDecimals, Set<OrderLineDTO> orderLineDTOs, Set<ItemTypeDTO> itemTypes, 
+    		Set<InvoiceLineDTO> invoiceLines, Set<ItemPriceDTO> itemPrices) {
        this.id = id;
        this.entity = entity;
        this.internalNumber = internalNumber;
@@ -387,7 +390,7 @@ public class ItemDTO extends AbstractDescription {
      * @return
      */
     @Transient
-    public List getPrices() {
+    public List<ItemPriceDTO> getPrices() {
         return prices;
     }
 
@@ -395,7 +398,7 @@ public class ItemDTO extends AbstractDescription {
      * @param prices
      */
     @Transient
-    public void setPrices(List prices) {
+    public void setPrices(List<ItemPriceDTO> prices) {
         this.prices = prices;
     }
 

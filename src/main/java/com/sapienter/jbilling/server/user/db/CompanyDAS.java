@@ -20,10 +20,12 @@
 package com.sapienter.jbilling.server.user.db;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 
 public class CompanyDAS extends AbstractDAS<CompanyDTO> {
+    @Transactional
     public List<CompanyDTO> findEntities() {
         return getSession().createCriteria(CompanyDTO.class).list();
     }

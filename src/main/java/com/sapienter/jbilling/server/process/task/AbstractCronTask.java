@@ -22,6 +22,7 @@ package com.sapienter.jbilling.server.process.task;
 import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import org.quartz.CronTrigger;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 
@@ -47,18 +48,15 @@ public abstract class AbstractCronTask extends ScheduledTask {
     protected static final String DEFAULT_CRON_EXPRESSION = "0 0 12 * * ?"; // 12:00 noon every day
 
     public CronTrigger getTrigger() throws PluggableTaskException {
-        CronTrigger trigger = new CronTrigger(getTaskName(), Scheduler.DEFAULT_GROUP);
-        
         String expression = getCronExpression();
+        
         try {
-            trigger.setCronExpression(expression);
-        } catch (ParseException e) {
-            throw new PluggableTaskException("Invalid cron expression: " + expression);
+            CronTriggerImpl trigger = new CronTriggerImpl(getTaskName(), Scheduler.DEFAULT_GROUP, expression);
+            trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING);
+            return trigger;
+        } catch (ParseException parseException) {
+            throw new PluggableTaskException("Invalid cron expression: " + expression, parseException);
         }
-
-        trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING);
-
-        return trigger;
     }
     
     /**

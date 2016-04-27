@@ -27,22 +27,22 @@ import com.sapienter.jbilling.server.util.db.MenuOptionDTO;
 import java.util.ArrayList;
 
 
-public class MenuOption extends MenuOptionDTO implements Comparator {
+public class MenuOption extends MenuOptionDTO implements Comparator<MenuOption> {
     private String display;
     private Boolean selected;
-    private List options;
+    private List<Integer> options;
     private Integer parentId;
 
     public MenuOption() {
-        options = new ArrayList();
+        options = new ArrayList<>();
     }
     
     // this makes the object ordenable, so the options get sorted for
-    // a consitent displaying
-    public int compare(Object o1, Object o2) {
+    // a consistent displaying
+    public int compare(MenuOption o1, MenuOption o2) {
         
-        return new Integer(((MenuOption)o1).getId()).compareTo(
-                new Integer(((MenuOption)o2).getId()));
+        return new Integer((o1).getId()).compareTo(
+                new Integer((o2).getId()));
     }
     /**
      * @return
@@ -54,7 +54,7 @@ public class MenuOption extends MenuOptionDTO implements Comparator {
     /**
      * @return
      */
-    public List getOptions() {
+    public List<Integer> getOptions() {
         return options;
     }
 
@@ -75,7 +75,7 @@ public class MenuOption extends MenuOptionDTO implements Comparator {
     /**
      * @param vector
      */
-    public void setOptions(List vector) {
+    public void setOptions(List<Integer> vector) {
         options = vector;
     }
 

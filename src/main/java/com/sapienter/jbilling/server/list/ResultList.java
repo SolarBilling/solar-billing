@@ -24,7 +24,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 import sun.jdbc.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.server.util.Context;
@@ -48,6 +47,18 @@ public class ResultList {
     protected CachedRowSet cachedResults;
     protected Connection conn = null;
 
+    private ResultSet results;
+
+    protected ResultSet getResultSet()
+    {
+        return results;
+    }
+
+    protected CachedRowSet getCachedResultSet()
+    {
+        return cachedResults;
+    }
+    
     protected ResultList() {
     }
 
@@ -55,7 +66,7 @@ public class ResultList {
 
         // the default is TYPE_SCROLL_INSENSITIVE and CONCUR_READ_ONLY
         // which is good
-        cachedResults = new CachedRowSet();
+        results = cachedResults = new CachedRowSet();
 
         cachedResults.setCommand(SQL);
         cachedResults.setFetchDirection(ResultSet.FETCH_UNKNOWN);

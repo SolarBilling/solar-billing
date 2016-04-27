@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.SimpleTrigger;
+import org.quartz.impl.triggers.SimpleTriggerImpl;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -57,8 +58,8 @@ public class MediationProcessTask extends AbstractSimpleScheduledTask {
      * @throws PluggableTaskException thrown if properties or plug-in parameters could not be parsed
      */
     @Override
-    public SimpleTrigger getTrigger() throws PluggableTaskException {
-        SimpleTrigger trigger = super.getTrigger();
+    public SimpleTriggerImpl getTrigger() throws PluggableTaskException {
+        SimpleTriggerImpl trigger = super.getTrigger();
 
         // trigger start time and frequency using jbilling.properties unless plug-in
         // parameters have been explicitly set to define the mediation schedule

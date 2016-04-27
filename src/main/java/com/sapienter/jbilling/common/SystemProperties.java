@@ -21,6 +21,8 @@
 
 package com.sapienter.jbilling.common;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -34,11 +36,17 @@ public class SystemProperties {
     private static SystemProperties ref;
     private Properties prop = null;
     private static final Logger LOG = Logger.getLogger(SystemProperties.class);
-
+    private static final String propertiesFileName = "/jbilling.properties";
 
     private SystemProperties() throws IOException {
         prop = new Properties();
-        prop.load(SystemProperties.class.getResourceAsStream("/jbilling.properties"));
+        final InputStream propertiesStream = 
+            SystemProperties.class.getResourceAsStream(propertiesFileName);
+        if (propertiesStream == null)
+        {
+            throw new FileNotFoundException(propertiesFileName);
+        }
+        prop.load(propertiesStream);
         LOG.debug("System properties loaded");
     }
 

@@ -23,6 +23,7 @@
  */
 package com.sapienter.jbilling.server.process;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,8 +36,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
-
-import sun.jdbc.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
@@ -358,7 +357,7 @@ public class AgeingBL {
         
         // now go over the active users with payable invoices
         UserBL user = new UserBL();
-        CachedRowSet usersSql;
+        ResultSet usersSql;
         try {
             usersSql = user.findActiveWithOpenInvoices();
         } catch (Exception e) {

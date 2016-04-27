@@ -34,29 +34,29 @@ import com.sapienter.jbilling.common.SessionInternalError;
 import java.util.ArrayList;
 
 public class Menu implements Serializable {
-    private Hashtable options;
-    private List rootOptions; 
+    private Hashtable<Integer,MenuOption> options;
+    private List<MenuOption> rootOptions; 
     private MenuOption selectedOption;
     private MenuOption selectedSubOption;
-    private List subOptions;
-    private List lmOptions;
+    private List<MenuOption> subOptions;
+    private List<MenuOption> lmOptions;
     
     public Menu() {
-        rootOptions = new ArrayList();
-        subOptions = new ArrayList();
-        lmOptions = new ArrayList();
-        options = new Hashtable();
+        rootOptions = new ArrayList<>();
+        subOptions = new ArrayList<>();
+        lmOptions = new ArrayList<>();
+        options = new Hashtable<>();
     }
     
-    public List getOptions() {
+    public List<MenuOption> getOptions() {
         return rootOptions;
     }
     
-    public List getSubOptions() {
+    public List<MenuOption> getSubOptions() {
         return subOptions;
     }
     
-    public List getLMOptions() {
+    public List<MenuOption> getLMOptions() {
         return lmOptions;
     }
     
@@ -68,8 +68,8 @@ public class Menu implements Serializable {
     // this has to be called after all the options are in the hashtable
     protected void init() throws SessionInternalError { 
         //Logger log = Logger.getLogger(Menu.class);
-        for (Iterator it = options.values().iterator(); it.hasNext();) {
-            MenuOption option = (MenuOption) it.next();
+        for (Iterator<MenuOption> it = options.values().iterator(); it.hasNext();) {
+            final MenuOption option = it.next();
 
             if (option.getParentId() == null) {
                 rootOptions.add(option);
@@ -79,7 +79,7 @@ public class Menu implements Serializable {
                     selectedOption.setSelected(new Boolean("true"));
                 }
             } else {
-                MenuOption parent = (MenuOption) options.get(
+                final MenuOption parent = options.get(
                         option.getParentId());
                         
                 if (parent == null) {
@@ -157,10 +157,10 @@ public class Menu implements Serializable {
         return retValue;
     }
     
-    private void setList(MenuOption option, List toSet) {
+    private void setList(MenuOption option, List<MenuOption> toSet) {
         toSet.clear();
-        for (Iterator it = option.getOptions().iterator(); it.hasNext(); ) {
-            Integer key = (Integer) it.next();
+        for (Iterator<Integer> it = option.getOptions().iterator(); it.hasNext(); ) {
+            Integer key = it.next();
             
             MenuOption subOption = (MenuOption) options.get(key);
             toSet.add(subOption);

@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
-
+import org.springframework.cache.annotation.Cacheable;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;
@@ -39,9 +39,6 @@ import com.sapienter.jbilling.server.util.MapPeriodToCalendar;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 import java.util.List;
-import org.springmodules.cache.CachingModel;
-import org.springmodules.cache.FlushingModel;
-import org.springmodules.cache.provider.CacheProviderFacade;
 
 public class CurrentOrder {
     private final Date eventDate;
@@ -50,11 +47,6 @@ public class CurrentOrder {
     private static final Logger LOG = Logger.getLogger(CurrentOrder.class);
     private OrderBL order = null;
     private final EventLogger eLogger = EventLogger.getInstance();
-
-    // cache management
-    private CacheProviderFacade cache;
-    private CachingModel cacheModel;
-    private FlushingModel flushModel;
 
     public CurrentOrder(Integer userId, Date eventDate) {
         LOG.debug("Current order constructed with user " + userId + " event date " +
@@ -67,29 +59,14 @@ public class CurrentOrder {
         this.eventDate = eventDate;
         user = new UserBL(userId);
 
-        cache = (CacheProviderFacade) Context.getBean(Context.Name.CACHE);
-        cacheModel = (CachingModel) Context.getBean(
-                Context.Name.CACHE_MODEL_RW);
-        flushModel = (FlushingModel) Context.getBean(
-                Context.Name.CACHE_FLUSH_MODEL_RW);
     }
     
     /**
      * Returns the ID of a one-time order, where to add an event.
      * Returns null if no applicable order
-     * @return
      */
+    @Cacheable("currentorder")
     public Integer getCurrent() {
-
-        // find in the cache
-        Integer retValue = (Integer) cache.getFromCache(userId.toString() + Util.truncateDate(eventDate) ,
-                cacheModel);
-
-        // a hit is only a hit if the order is still active
-        if (retValue != null && new OrderDAS().find(retValue).getStatusId() == Constants.ORDER_STATUS_ACTIVE) {
-            LOG.debug("cache hit for " + retValue);
-            return retValue;
-        }
 
         Integer subscriptionId = user.getEntity().getCustomer().getCurrentOrderId();
         Integer entityId = null;
@@ -160,10 +137,7 @@ public class CurrentOrder {
         } while (!orderFound);  
         
         // the result is in 'order'
-        retValue = order.getEntity().getId();
-
-        cache.putInCache(userId.toString() + Util.truncateDate(eventDate), cacheModel,
-                retValue);
+        Integer retValue = order.getEntity().getId();
         LOG.debug("Returning " + retValue);
         return retValue;
     }

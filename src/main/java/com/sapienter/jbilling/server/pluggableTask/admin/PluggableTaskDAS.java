@@ -22,19 +22,14 @@ package com.sapienter.jbilling.server.pluggableTask.admin;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import org.apache.log4j.Logger;
-import org.springmodules.cache.provider.CacheProviderFacade;
-import org.springmodules.cache.CachingModel;
-import org.springmodules.cache.FlushingModel;
-
 
 public class PluggableTaskDAS extends AbstractDAS<PluggableTaskDTO> {
 
-    private CacheProviderFacade cache;
-    private CachingModel cacheModel;
-    private FlushingModel flushModel;
     private static final Logger LOG = Logger.getLogger(PluggableTaskDAS.class);
 
 
@@ -80,37 +75,20 @@ public class PluggableTaskDAS extends AbstractDAS<PluggableTaskDTO> {
         return (PluggableTaskDTO) query.uniqueResult();
     }
 
+    @Cacheable("pluggabletask")
     public List<PluggableTaskDTO> findByEntityCategory(Integer entityId, Integer categoryId) {
-        List<PluggableTaskDTO> ret = (List<PluggableTaskDTO>) cache.getFromCache("PluggableTaskDTO" +
-                entityId + "+" + categoryId, cacheModel);
-        if (ret == null) {
-            Query query = getSession().createQuery(findByEntityCategorySQL);
-            query.setCacheable(true);
-            query.setParameter("entity", entityId);
-            query.setParameter("category", categoryId);
-            query.setComment("PluggableTaskDAS.findByEntityCategory");
+        Query query = getSession().createQuery(findByEntityCategorySQL);
+        query.setCacheable(true);
+        query.setParameter("entity", entityId);
+        query.setParameter("category", categoryId);
+        query.setComment("PluggableTaskDAS.findByEntityCategory");
 
-            ret = query.list();
-            cache.putInCache("PluggableTaskDTO" +
-                entityId + "+" + categoryId, cacheModel, ret);
-        }
+        List<PluggableTaskDTO> ret = query.list();
         return ret;
     }
 
-    public void setCache(CacheProviderFacade cache) {
-        this.cache = cache;
-    }
-
-    public void setCacheModel(CachingModel model) {
-        cacheModel = model;
-    }
-
-    public void setFlushModel(FlushingModel flushModel) {
-        this.flushModel = flushModel;
-    }
-
+    @CacheEvict(value = "pluggabletask", allEntries=true)
     public void invalidateCache() {
-        cache.flushCache(flushModel);
     }
 
     public static PluggableTaskDAS getInstance() {

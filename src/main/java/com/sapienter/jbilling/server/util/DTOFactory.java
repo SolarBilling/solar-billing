@@ -285,7 +285,7 @@ public class DTOFactory {
 	}
 
 	public static Collection reportEJB2DTO(Collection<ReportDTO> reports) {
-		List dtos = new ArrayList();
+		List<ReportDTOEx> dtos = new ArrayList<ReportDTOEx>();
 
 		for (ReportDTO report : reports) {
 			dtos.add(getReportDTOEx(report, null));
@@ -294,11 +294,10 @@ public class DTOFactory {
 		return dtos;
 	}
 
-	public static Collection reportUserEJB2DTO(Collection reports) {
-		List dtos = new ArrayList();
+	public static Collection<ReportUserDTO> reportUserEJB2DTO(Collection<ReportUserDTO> reports) {
+		List<ReportUserDTO> dtos = new ArrayList<ReportUserDTO>();
 
-		for (Iterator it = reports.iterator(); it.hasNext();) {
-			ReportUserDTO reportEJB = (ReportUserDTO) it.next();
+		for (ReportUserDTO reportEJB : reports ) {
 			dtos.add(getReportUserDTO(reportEJB));
 		}
 
@@ -312,7 +311,6 @@ public class DTOFactory {
 
 	public static MenuOption getMenuOption(Integer id, Integer languageId)
 			throws NamingException {
-		JNDILookup EJBFactory = JNDILookup.getFactory(false);
 		MenuOptionDAS menuDas = new MenuOptionDAS();
 
 		MenuOptionDTO option = menuDas.find(id);

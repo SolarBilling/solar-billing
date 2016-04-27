@@ -23,13 +23,8 @@ import org.hibernate.criterion.Restrictions;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import org.apache.log4j.Logger;
-import org.springmodules.cache.provider.CacheProviderFacade;
-import org.springmodules.cache.CachingModel;
 
 public class JbillingTableDAS extends AbstractDAS<JbillingTable> {
-
-    private CacheProviderFacade cache;
-    private CachingModel cacheModel;
 
     private static final Logger LOG = Logger.getLogger(JbillingTableDAS.class);
 
@@ -39,26 +34,12 @@ public class JbillingTableDAS extends AbstractDAS<JbillingTable> {
 
     // can not cache directly, CGLib can not proxy extenders of <> classes
     public JbillingTable findByName(String name) {
-        JbillingTable table = (JbillingTable) cache.getFromCache("JbillingTable" + name, cacheModel);
+        LOG.debug("Looking for table + " + name);
+        JbillingTable table = findByCriteriaSingle(Restrictions.eq("name", name));
         if (table == null) {
-            LOG.debug("Looking for table + " + name);
-            table = findByCriteriaSingle(Restrictions.eq("name", name));
-            if (table == null) {
-                throw new SessionInternalError("Can not find table " + name);
-            } else {
-                cache.putInCache("JbillingTable" + name, cacheModel, table);
-
-            }
-        }
+            throw new SessionInternalError("Can not find table " + name);
+        } 
         return table;
-    }
-
-    public void setCache(CacheProviderFacade cache) {
-        this.cache = cache;
-    }
-
-    public void setCacheModel(CachingModel model) {
-        cacheModel = model;
     }
 
     public static JbillingTableDAS getInstance() {

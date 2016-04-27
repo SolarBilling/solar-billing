@@ -25,7 +25,9 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.validator.Arg;
 import org.apache.commons.validator.Field;
+import org.apache.commons.validator.Validator;
 import org.apache.commons.validator.ValidatorAction;
+import org.apache.commons.validator.ValidatorResources;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
@@ -474,7 +476,9 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
 
 		// do cc number validation
 		LOG.debug("doing credit card number validation");
-		FieldChecks.validateCreditCard(myForm, va, field, errors, request);
+		final ValidatorResources validatorResources = new ValidatorResources(); // TODO is this what we want ?
+		final Validator validator = new Validator(validatorResources);
+		FieldChecks.validateCreditCard(myForm, va, field, errors, validator, request);
 	}
 	
 	private UserDTOEx getSessionUser() {

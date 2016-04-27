@@ -36,7 +36,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.RowSet;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -236,7 +236,7 @@ public class PaperInvoiceBatchBL {
         } 
     }
     
-    public String generateFile(CachedRowSet cachedRowSet, Integer entityId, 
+    public String generateFile(RowSet cachedRowSet, Integer entityId, 
             String realPath) throws SQLException,
             SessionInternalError, DocumentException,
             IOException {

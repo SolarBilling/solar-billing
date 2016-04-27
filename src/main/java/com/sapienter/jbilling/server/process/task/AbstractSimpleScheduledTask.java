@@ -31,6 +31,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
+import org.quartz.impl.triggers.SimpleTriggerImpl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,8 +78,8 @@ public abstract class AbstractSimpleScheduledTask extends ScheduledTask {
     protected static final Integer DEFAULT_REPEAT = SimpleTrigger.REPEAT_INDEFINITELY;
     protected static final Integer DEFAULT_INTERVAL = 24;
 
-    public SimpleTrigger getTrigger() throws PluggableTaskException {
-        SimpleTrigger trigger = new SimpleTrigger(getTaskName(),
+    public SimpleTriggerImpl getTrigger() throws PluggableTaskException {
+        SimpleTriggerImpl trigger = new SimpleTriggerImpl(getTaskName(),
                                                   Scheduler.DEFAULT_GROUP,
                                                   getParameter(PARAM_START_TIME, DEFAULT_START_TIME),
                                                   getParameter(PARAM_END_TIME, DEFAULT_END_TIME),

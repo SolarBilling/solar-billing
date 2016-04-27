@@ -57,7 +57,7 @@ public class DocumentationIndex {
             File dir = new File(dirName);
             String filesNames[] = dir.list();
             
-            List entries = new ArrayList();
+            List<String> entries = new ArrayList<String>();
             for (int f = 0; f < filesNames.length; f++) {
                 File thisFile = new File(dirName + "/" + filesNames[f]);
                 // skip directories
@@ -74,8 +74,7 @@ public class DocumentationIndex {
                     "/index.html"));
             result.write("<html><body>".getBytes());
             
-            for (Iterator it = entries.iterator(); it.hasNext();) {
-                String entry = (String) it.next();
+            for (String entry : entries) {
                 System.out.println("Adding entry" + entry);
 
                 if (entry.endsWith(".htm")) {
@@ -107,7 +106,6 @@ public class DocumentationIndex {
     }
     
     static String getText(String tagName) throws IOException {
-        StringBuffer retValue = new StringBuffer();
         String line = reader.readLine();
         while (line != null) {
             if (line.indexOf("<" + tagName + ">") >= 0) {
