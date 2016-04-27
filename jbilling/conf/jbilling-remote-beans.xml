@@ -27,17 +27,6 @@
     </bean>
     -->
     
-    <!-- Burlap Web Service -->
-    <!--
-    <bean id="apiClient" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean" lazy-init="true">
-        <property name="serviceUrl" value="http://localhost/billing/services/burlap.service"/>
-        <property name="serviceInterface" value="com.sapienter.jbilling.server.util.IWebServicesSessionBean"/>
-        <property name="username" value="admin"/>
-        <property name="password" value="123qwe"/>
-    </bean>
-    -->
-
-
     <!-- Hessian Web Service -->
     <!--
             Hessian/Burlap web services are incompatible with remote session beans that return Hibernate managed
