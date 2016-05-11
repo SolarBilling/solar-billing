@@ -10,7 +10,9 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="
+       http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
 
@@ -48,4 +50,5 @@
     <!-- Utility beans -->
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean"/>
     
+    <bean id="cxf" class="org.apache.cxf.bus.spring.SpringBus"/>
 </beans>
