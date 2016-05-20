@@ -2549,6 +2549,7 @@ env-entry, and ejb-ref elements should follow this fragment.
         <welcome-file>user/login.jsp</welcome-file>
     </welcome-file-list>
 
+<jsp-config>
     <!-- Struts Tag Library Descriptors -->
     <taglib>
         <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
@@ -2583,6 +2584,7 @@ env-entry, and ejb-ref elements should follow this fragment.
         <taglib-location>/WEB-INF/taglib.tld</taglib-location>
     </taglib>
 
+</jsp-config>
 
     <!-- Force SSL connections (HTTP -> HTTPS). Uncomment this section
          for web services or if force_https=true in jbilling.properties
