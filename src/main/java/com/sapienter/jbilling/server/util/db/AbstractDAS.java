@@ -42,10 +42,15 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
     private Class<T> persistentClass;
     // if querys will be run cached or not
     private boolean queriesCached = false;
+    private Session session;
 
     protected Session getSession()
     {
-        return getSessionFactory().getCurrentSession();
+        if ((session == null) || !session.isOpen())
+        {
+            session = getSessionFactory().openSession(); // getCurrentSession();
+        }
+        return session;
     }
     
     public AbstractDAS() {
