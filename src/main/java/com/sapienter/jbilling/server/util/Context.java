@@ -25,6 +25,8 @@ import java.util.Map;
 import org.springframework.beans.factory.access.BeanFactoryReference;
 import org.springframework.context.access.ContextSingletonBeanFactoryLocator;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.sapienter.jbilling.common.SpringORMConfig;
 
 public class Context {
 
@@ -33,8 +35,16 @@ public class Context {
             ContextSingletonBeanFactoryLocator.getInstance(
             "jbilling-beansRefFactory.xml").useBeanFactory(
             "com.sapienter.jbilling");
-    private static final ApplicationContext spring = (ApplicationContext)
-            factoryRef.getFactory();
+    private static final AnnotationConfigApplicationContext spring = getApplicationContext();
+
+    static private AnnotationConfigApplicationContext getApplicationContext()
+    {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.setParent((ApplicationContext)factoryRef.getFactory());
+        context.register(SpringORMConfig.class);
+        context.refresh();
+        return context;
+    }
     
     public enum Name {
         ITEM_SESSION, 
