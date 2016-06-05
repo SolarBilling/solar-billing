@@ -66,9 +66,14 @@
 		<artifactId>groovy-all</artifactId>
 		<version>2.4.6</version>
 	</dependency>
-<dependency>			
+	<dependency>
 	<groupId>org.apache.activemq</groupId>
 		<artifactId>activemq-pool</artifactId>
+			<version>5.13.2</version>
+	</dependency>
+	<dependency>			
+	<groupId>org.apache.activemq</groupId>
+		<artifactId>activemq-broker</artifactId>
 			<version>5.13.2</version>
 	</dependency>
 	<dependency>
@@ -227,17 +232,17 @@
 <dependency>
 	<groupId>org.springframework.integration</groupId>
 		<artifactId>spring-integration-mail</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-jms</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-context-support</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 <dependency>
             <groupId>junit</groupId>
@@ -247,23 +252,18 @@
         </dependency>
 <dependency>
 	<groupId>org.hibernate</groupId>
-		<artifactId>hibernate-annotations</artifactId>
-			<version>3.5.6-Final</version>
-	</dependency>
-<dependency>
-	<groupId>org.hibernate</groupId>
 		<artifactId>hibernate-ehcache</artifactId>
-		<version>4.3.11.Final</version>
+		<version>5.0.9.Final</version>
 	</dependency>
 	<dependency>
 	<groupId>org.hibernate</groupId>
 		<artifactId>hibernate-core</artifactId>
-			<version>4.3.11.Final</version>
+			<version>5.0.9.Final</version>
 			</dependency>
 	<dependency>
 	<groupId>org.hibernate</groupId>
 		<artifactId>hibernate-c3p0</artifactId>
-			<version>4.3.11.Final</version>
+			<version>5.0.9.Final</version>
 			</dependency>
 <dependency>
 	<groupId>javax.persistence</groupId>
@@ -280,25 +280,25 @@
 		<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
 			</dependency>
-			<dependency>
+	<dependency>
 	<groupId>org.hibernate</groupId>
 		<artifactId>hibernate-validator</artifactId>
-			<version>5.2.2.Final</version>
-			</dependency>
+		<version>5.2.2.Final</version>
+	</dependency>
 																		     <dependency>
              <groupId>org.springframework</groupId>
                      <artifactId>spring-context</artifactId>
-                             <version>4.2.4.RELEASE</version>
+                             <version>4.2.6.RELEASE</version>
                                  </dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-webmvc</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-test</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>aopalliance</groupId>
@@ -308,18 +308,24 @@
 			<dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-orm</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 			<dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-tx</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
 			<dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-aop</artifactId>
-			<version>4.2.4.RELEASE</version>
+			<version>4.2.6.RELEASE</version>
 			</dependency>
+<dependency>
+    <groupId>dom4j</groupId>
+    <artifactId>dom4j</artifactId>
+    <version>1.6.1</version>
+</dependency>
+
 			<dependency>
 	<groupId>org.springframework.data</groupId>
 		<artifactId>spring-data-commons</artifactId>
