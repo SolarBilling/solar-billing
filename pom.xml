@@ -66,6 +66,11 @@
 		<artifactId>groovy-all</artifactId>
 		<version>2.4.6</version>
 	</dependency>
+<dependency>
+    <groupId>org.apache.activemq</groupId>
+    <artifactId>activemq-kahadb-store</artifactId>
+    <version>5.13.2</version>
+</dependency>
 	<dependency>
 	<groupId>org.apache.activemq</groupId>
 		<artifactId>activemq-pool</artifactId>
