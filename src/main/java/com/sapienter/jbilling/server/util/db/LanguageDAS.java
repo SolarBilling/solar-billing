@@ -31,7 +31,16 @@ public class LanguageDAS extends AbstractDAS<LanguageDTO> {
     public LanguageDTO findByCode(String code) {
         Query query = getSession().createQuery(findByCodeSQL);
         query.setParameter("code", code);
-        return (LanguageDTO) query.uniqueResult();
+        LanguageDTO language = (LanguageDTO) query.uniqueResult();
+        if (language == null)
+        {
+            LOG.error("no language found for code '" + code + "'");
+            if (!"en".equals(code))
+            {
+                language = findByCode("en");
+            }
+        }
+        return language;
     }
 
 }
