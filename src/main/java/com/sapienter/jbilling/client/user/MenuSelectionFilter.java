@@ -90,14 +90,14 @@ public final class MenuSelectionFilter implements Filter {
                     }
                     */
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.error("exception selection an option:" + optionStr, e);
                 throw new ServletException(e);
             }
         }
-        
+        log.debug("doFilter: request = " + req + ", filter chain = " + fChain);
         fChain.doFilter(req, res);
-
+        log.debug("doFilter: response = " + res);
     }
 
     /**
