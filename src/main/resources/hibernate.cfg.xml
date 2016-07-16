@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
     "-//Hibernate/Hibernate Configuration DTD//EN"
-    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
 
@@ -24,7 +24,7 @@
         <property name="jta.UserTransaction">java:comp/UserTransaction</property>
         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
         <!-- mapping files -->
-        <mapping resource="com/sapienter/jbilling/server/util/db/PreferenceDTO.hbm.xml"/>
+        <mapping class="com.sapienter.jbilling.server.util.db.PreferenceDTO"/>
         <mapping class="com.sapienter.jbilling.server.util.db.PreferenceTypeDTO"/>
         <mapping class="com.sapienter.jbilling.server.util.db.LanguageDTO"/>
         <mapping class="com.sapienter.jbilling.server.util.db.CurrencyDTO"/>
@@ -115,7 +115,6 @@
         <mapping class="com.sapienter.jbilling.server.mediation.db.MediationRecordDTO"/>
         <mapping class="com.sapienter.jbilling.server.mediation.db.MediationRecordLineDTO"/>
         <mapping class="com.sapienter.jbilling.server.mediation.db.MediationRecordStatusDTO"/>
-        <mapping class="com.sapienter.jbilling.server.util.db.JbillingTable"/>
         <mapping class="com.sapienter.jbilling.server.util.db.InternationalDescription"/>
         <mapping class="com.sapienter.jbilling.server.util.db.AbstractGenericStatus"/>
         <mapping class="com.sapienter.jbilling.server.user.partner.db.Partner"/>
@@ -124,6 +123,7 @@
         <mapping class="com.sapienter.jbilling.server.mediation.db.MediationConfiguration"/>
         <mapping class="com.sapienter.jbilling.server.mediation.db.MediationProcess"/>
         <mapping class="com.sapienter.jbilling.server.mediation.db.MediationOrderMap"/>
+        <mapping class="com.sapienter.jbilling.server.util.db.JbillingTable"/>
 
         <!-- cache settings -->
 
