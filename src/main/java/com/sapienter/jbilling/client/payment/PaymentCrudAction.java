@@ -48,6 +48,8 @@ import com.sapienter.jbilling.server.user.db.CreditCardDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 
 public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
+        private boolean isOldStruts = false;
+        
 	private static final String CREDIT_CARD_MASK = "************";
 
 	private static final String FORM = "payment";
@@ -466,10 +468,11 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
 		va.setName("creditCard");
 		va.setClassname("org.apache.struts.validator.FieldChecks");
 		va.setMethod("validateCreditCard");
+		final String actionErrors = isOldStruts ? "org.apache.struts.action.ActionErrors, " : "org.apache.struts.action.ActionMessages, ";
+
 		va.setMethodParams("java.lang.Object, "
 		        + "org.apache.commons.validator.ValidatorAction, "
-		        + "org.apache.commons.validator.Field, "
-		        + "org.apache.struts.action.ActionErrors, "
+		        + "org.apache.commons.validator.Field, " + actionErrors
 		        + "javax.servlet.http.HttpServletRequest");
 		va.setDepends("");
 		va.setMsg("errors.creditcard");
