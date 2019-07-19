@@ -37,12 +37,15 @@ import org.apache.commons.validator.util.ValidatorUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.validator.Resources;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetFactory;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.JBCrypto;
 import com.sapienter.jbilling.common.JNDILookup;
+import com.sapienter.jbilling.server.list.ListBL;
 import com.sapienter.jbilling.server.user.IUserSessionBean;
 import com.sapienter.jbilling.server.user.UserSQL;
 import com.sapienter.jbilling.server.util.Context;
@@ -63,7 +66,8 @@ public class RepeatedPasswordValidator {
     		throws SQLException, NamingException {
 
     	String[] passw = null;
-    	CachedRowSet cachedResults = new CachedRowSet();
+        final RowSetFactory rowsetFactory = ListBL.getRowSetFactory();
+    	CachedRowSet cachedResults = rowsetFactory.createCachedRowSet();
     	JNDILookup jndi = JNDILookup.getFactory();
     	Connection conn = jndi.lookUpDataSource().getConnection();
     	cachedResults.setCommand(UserSQL.findUsedPasswords);

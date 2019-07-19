@@ -24,10 +24,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 
 import com.sapienter.jbilling.server.util.Context;
 import javax.sql.DataSource;
+import javax.sql.RowSet;
 
 /**
  * Makes a JDBC query using the sql string got as a parameter.
@@ -54,7 +56,7 @@ public class ResultList {
         return results;
     }
 
-    protected CachedRowSet getCachedResultSet()
+    protected RowSet getCachedResultSet()
     {
         return cachedResults;
     }
@@ -66,7 +68,7 @@ public class ResultList {
 
         // the default is TYPE_SCROLL_INSENSITIVE and CONCUR_READ_ONLY
         // which is good
-        results = cachedResults = new CachedRowSet();
+        results = cachedResults = RowSetProvider.newFactory().createCachedRowSet();
 
         cachedResults.setCommand(SQL);
         cachedResults.setFetchDirection(ResultSet.FETCH_UNKNOWN);

@@ -30,11 +30,13 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.sql.RowSet;
+import javax.sql.rowset.CachedRowSet;
+
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
-import sun.jdbc.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.common.Util;

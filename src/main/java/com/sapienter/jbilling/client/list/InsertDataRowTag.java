@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.validator.Resources;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.SessionInternalError;

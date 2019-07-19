@@ -23,7 +23,7 @@ package com.sapienter.jbilling.server.list;
 import java.util.Collection;
 import java.util.Hashtable;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;

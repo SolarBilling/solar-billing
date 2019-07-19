@@ -42,7 +42,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.Resources;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.server.report.Field;

@@ -28,7 +28,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.client.list.ListTagBase;
 import com.sapienter.jbilling.client.util.Constants;
@@ -65,7 +65,7 @@ public class ExecuteTag extends ListTagBase {
                 throw new JspException("CustomerListTag: session timed out.");
             }
             
-            queryResults = (CachedRowSet) session.getAttribute(
+            CachedRowSet queryResults = (CachedRowSet) session.getAttribute(
                     Constants.SESSION_REPORT_RESULT);
 
             if (queryResults == null) {

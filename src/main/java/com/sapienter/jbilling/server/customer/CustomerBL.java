@@ -22,7 +22,7 @@ package com.sapienter.jbilling.server.customer;
 
 import java.sql.SQLException;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.server.list.ResultList;
 import com.sapienter.jbilling.server.user.UserBL;

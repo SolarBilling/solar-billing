@@ -30,7 +30,7 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.db.ItemDTO;

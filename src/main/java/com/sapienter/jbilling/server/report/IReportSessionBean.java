@@ -22,7 +22,7 @@ package com.sapienter.jbilling.server.report;
 
 import java.util.Collection;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 

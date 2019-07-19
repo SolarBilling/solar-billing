@@ -174,7 +174,7 @@ public class InvoiceSessionBean implements IInvoiceSessionBean {
 
         try {
             InvoiceBL invoiceBL = new InvoiceBL();
-            sun.jdbc.rowset.CachedRowSet cachedRowSet = null;
+            javax.sql.rowset.CachedRowSet cachedRowSet = null;
             Integer entityId = (Integer) map.get("entityId");
 
             if (operationType.equals(com.sapienter.jbilling.common.Constants.OPERATION_TYPE_CUSTOMER)) {

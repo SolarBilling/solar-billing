@@ -36,8 +36,12 @@ import java.util.Iterator;
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
+import org.hibernate.JDBCException;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import sun.jdbc.rowset.CachedRowSet;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
 
 import com.sapienter.jbilling.common.JNDILookup;
 import com.sapienter.jbilling.common.SessionInternalError;
@@ -64,6 +68,15 @@ public class ListBL {
     private ListDTO list = null;
     private static final Logger LOG = Logger.getLogger(ListBL.class);;
     private Hashtable parameters = null;
+    @Autowired RowSetFactory rowsetFactory = getRowSetFactory();
+    
+    static public RowSetFactory getRowSetFactory() {
+    	try {
+    	    return RowSetProvider.newFactory();
+    	} catch (SQLException sqlException) {
+    		throw new JDBCException("Failed to create RowSetFactory", sqlException);
+    	}
+    }
 
     public ListBL(Integer listId) throws NamingException {
         init();
@@ -487,7 +500,7 @@ public class ListBL {
         }
 
         // run it
-        CachedRowSet results = new CachedRowSet();
+        CachedRowSet results = rowsetFactory.createCachedRowSet();
         stmt = conn.prepareStatement(sql.toString());
         stmt.setMaxRows(size);
         parameterIndex = setSQLParameters(stmt, start);
@@ -584,7 +597,7 @@ public class ListBL {
         // execute
         stmt.setMaxRows(500); // at no time we want more than 500 rows returned
         ResultSet res = stmt.executeQuery();
-        CachedRowSet result = new CachedRowSet();
+        CachedRowSet result = rowsetFactory.createCachedRowSet();
         result.populate(res);
 
         // close the connection
