@@ -25,6 +25,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -228,7 +232,11 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 	 */
 	public Collection<InvoiceDTO> findProccesableByProcess(Integer processId) {
 
-		BillingProcessDTO process = new BillingProcessDAS().find(processId);
+		final BillingProcessDTO process = new BillingProcessDAS().find(processId);
+		final CriteriaBuilder criteriaBuilder = getSession().getCriteriaBuilder();
+		final CriteriaQuery<InvoiceDTO> criteriaQuery = criteriaBuilder.createQuery(InvoiceDTO.class);
+		final Root<InvoiceDTO> root = criteriaQuery.from(InvoiceDTO.class);
+		/*
 		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
 		criteria.add(Restrictions.eq("billingProcess", process));
                 criteria.createAlias("invoiceStatus", "s")
@@ -236,9 +244,18 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 		criteria.add(Restrictions.eq("isReview", 0));
 		criteria.add(Restrictions.eq("inProcessPayment", 1));
 		criteria.add(Restrictions.eq("deleted", 0));
-
 		return criteria.list();
-
+		*/
+		
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("billingProcess"), process),
+				criteriaBuilder.equal(root.get("invoiceStatus.id"), Constants.INVOICE_STATUS_UNPAID),
+				criteriaBuilder.equal(root.get("isReview"), 0),
+				criteriaBuilder.equal(root.get("inProcessPayment"), 1),
+				criteriaBuilder.equal(root.get("deleted"), 0)
+		);
+		org.hibernate.query.Query<InvoiceDTO> query = getSession().createQuery(criteriaQuery);
+		return query.list();
 	}
 
 	public InvoiceDTO create(Integer userId, NewInvoiceDTO invoice,
