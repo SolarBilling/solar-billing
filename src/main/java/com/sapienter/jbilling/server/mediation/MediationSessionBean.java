@@ -262,7 +262,7 @@ public class MediationSessionBean implements IMediationSessionBean {
         //propagate proxy objects for using out of the transaction
         recordStatusDas.touch(statuses);
         for (MediationRecordStatusDTO status : statuses) {
-            Long recordsCount = recordDas.countMediationRecordsByEntityIdAndStatus(entityId, status);
+            long recordsCount = recordDas.countMediationRecordsByEntityIdAndStatus(entityId, status);
             resultMap.put(status, recordsCount);
         }
         return resultMap;

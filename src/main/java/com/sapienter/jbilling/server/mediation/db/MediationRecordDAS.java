@@ -21,9 +21,6 @@ package com.sapienter.jbilling.server.mediation.db;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 
-import org.hibernate.Session;
-import org.hibernate.Query;
-
 import java.util.List;
 
 public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
@@ -70,11 +67,10 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
                     " WHERE mediationRecord.process.configuration.entityId = :entity " +
                     " and mediationRecord.recordStatus = :status";
 
-    public Long countMediationRecordsByEntityIdAndStatus(Integer entityId, MediationRecordStatusDTO status) {
-        Query<MediationRecordDTO> query = getSession().createQuery(countMediationRecordsByEntityAndStatusHQL);
-        query.setParameter("entity", entityId);
-        query.setParameter("status", status);
-        return Long.valueOf(query.list().size());
+    public int countMediationRecordsByEntityIdAndStatus(Integer entityId, MediationRecordStatusDTO status) {
+        return getSession().createQuery(countMediationRecordsByEntityAndStatusHQL).
+        		setParameter("entity", entityId).
+        		setParameter("status", status).list().size();
     }
 
     private static final String findByMediationProcessHQL =
@@ -83,8 +79,7 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
                     " WHERE mediationRecord.process.id = :processId";
 
     public List<MediationRecordDTO> findByProcess(Integer mediationProcessId) {
-        Query<MediationRecordDTO> query = getSession().createQuery(findByMediationProcessHQL);
-        query.setParameter("processId", mediationProcessId);
-        return query.list();
+        return getSession().createQuery(findByMediationProcessHQL).
+            setParameter("processId", mediationProcessId).list();
     }
 }

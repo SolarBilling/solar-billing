@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -116,10 +115,10 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
 		Criteria criteria = getSession().createCriteria(OrderDTO.class);
 
 		criteria.add(Restrictions.eq("deleted", 0));
-		criteria.add(Restrictions.or(Expression.le("activeSince", today),
-				Expression.isNull("activeSince")));
-		criteria.add(Restrictions.or(Expression.gt("activeUntil", today),
-				Expression.isNull("activeUntil")));
+		criteria.add(Restrictions.or(Restrictions.le("activeSince", today),
+				Restrictions.isNull("activeSince")));
+		criteria.add(Restrictions.or(Restrictions.gt("activeUntil", today),
+				Restrictions.isNull("activeUntil")));
 
 		return criteria.list();
 	}
@@ -133,8 +132,8 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
 		Criteria criteria = getSession().createCriteria(OrderDTO.class);
 
 		criteria.add(Restrictions.eq("deleted", 0));
-		criteria.add(Restrictions.or(Expression.gt("activeSince", today),
-				Expression.le("activeUntil", today)));
+		criteria.add(Restrictions.or(Restrictions.gt("activeSince", today),
+				Restrictions.le("activeUntil", today)));
 
 		return criteria.list();
 	}
