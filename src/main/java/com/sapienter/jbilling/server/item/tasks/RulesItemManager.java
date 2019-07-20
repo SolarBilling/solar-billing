@@ -69,6 +69,7 @@ public class RulesItemManager extends BasicItemManager {
             throw new TaskException(e);
         }
         session = knowledgeBase.newStatefulKnowledgeSession();
+        // TODO Why does this list contain OrderDTO, OrderManager and Subscription ? change this to be type-safe...
         List<Object> rulesMemoryContext = new ArrayList<Object>();
         rulesMemoryContext.add(helperOrder);
 

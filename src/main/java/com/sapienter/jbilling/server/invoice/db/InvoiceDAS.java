@@ -66,7 +66,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
                      "    and itemType.id = :typeId" +
                      "  order by invoice.id desc";
         List<Integer> data = getSession()
-                        .createQuery(hql)
+                        .createQuery(hql, Integer.class)
                         .setParameter("userId", userId)
                         .setParameter("typeId", itemTypeId)
                         .setMaxResults(maxResults)

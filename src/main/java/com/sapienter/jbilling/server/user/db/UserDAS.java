@@ -116,21 +116,21 @@ public class UserDAS extends AbstractDAS<UserDTO> {
 	}
     
     public List<UserDTO> findInStatus(Integer entityId, Integer statusId) {
-        Query<UserDTO> query = getSession().createQuery(findInStatusSQL);
+        Query<UserDTO> query = getSession().createQuery(findInStatusSQL, UserDTO.class);
         query.setParameter("entity", entityId);
         query.setParameter("status", statusId);
         return query.list();
     }
     
     public List<UserDTO> findNotInStatus(Integer entityId, Integer statusId) {
-        Query<UserDTO> query = getSession().createQuery(findNotInStatusSQL);
+        Query<UserDTO> query = getSession().createQuery(findNotInStatusSQL, UserDTO.class);
         query.setParameter("entity", entityId);
         query.setParameter("status", statusId);
         return query.list();
     }
 
     public List<UserDTO> findByCustomField(Integer entityId, Integer typeId, String value) {
-        Query<UserDTO> query = getSession().createQuery(findByCustomField);
+        Query<UserDTO> query = getSession().createQuery(findByCustomField, UserDTO.class);
         query.setParameter("entity", entityId);
         query.setParameter("type", typeId);
         query.setParameter("content", value);
@@ -138,7 +138,7 @@ public class UserDAS extends AbstractDAS<UserDTO> {
     }
     
     public List<UserDTO> findAgeing() {
-        Query<UserDTO> query = getSession().createQuery(findAgeingSQL);
+        Query<UserDTO> query = getSession().createQuery(findAgeingSQL, UserDTO.class);
         return query.list();
     }
     

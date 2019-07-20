@@ -77,7 +77,7 @@ public class InternationalDescriptionDAS extends AbstractDAS<InternationalDescri
             "AND b.name = :table " +
             "AND a.id.foreignId = :foreing ";
 
-        Query<InternationalDescriptionDTO> query = getSession().createQuery(QUERY);
+        Query<InternationalDescriptionDTO> query = getSession().createQuery(QUERY, InternationalDescriptionDTO.class);
         query.setParameter("table", table);
         query.setParameter("foreing", foreignId);
         return query.list();

@@ -110,8 +110,8 @@ import org.apache.velocity.tools.generic.ResourceTool;
 import org.apache.velocity.tools.generic.AlternatorTool;
 import org.apache.velocity.tools.generic.ValueParser;
 import org.apache.velocity.tools.generic.ListTool;
+import org.apache.velocity.tools.generic.LoopTool;
 import org.apache.velocity.tools.generic.SortTool;
-import org.apache.velocity.tools.generic.IteratorTool;
 
 
 
@@ -1058,7 +1058,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
             retValue.addParameter("tools-valueParser", new ValueParser());
             retValue.addParameter("tools-list", new ListTool());
             retValue.addParameter("tools-sort", new SortTool());
-            retValue.addParameter("tools-iterator", new IteratorTool());
+            retValue.addParameter("tools-iterator", new LoopTool());
 
             
         } catch (Exception e) {

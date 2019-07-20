@@ -60,7 +60,7 @@ public class MediationProcessDAS extends AbstractDAS<MediationProcess> {
      * @return true if process running, false if not
      */
     public boolean isProcessing(Integer entityId) {
-        Query<MediationProcess> query = getSession().createQuery(IS_PROCESS_RUNNING_HQL);
+        Query<MediationProcess> query = getSession().createQuery(IS_PROCESS_RUNNING_HQL, MediationProcess.class);
         query.setParameter("entityId", entityId);
 
         return !query.list().isEmpty();

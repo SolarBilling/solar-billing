@@ -42,10 +42,10 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         " where ol.deleted = 0 " +
                         "   and ol.item.id= :item and (ol.quantity - cast(ol.quantity as integer)) <> 0";
 
-        Query<Long> query = getSession().createQuery(hql);
+        Query<Long> query = getSession().createQuery(hql, Long.class);
         query.setParameter("item", itemId);
 
-        return (Long) query.uniqueResult();
+        return query.uniqueResult();
     }
 
     @SuppressWarnings("unchecked")
@@ -75,7 +75,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         + "  and line.purchaseOrder.orderStatus.id = :status "
                         + "  and line.purchaseOrder.deleted = 0 ";
 
-        Query<OrderLineDTO> query = getSession().createQuery(hql);
+        Query<OrderLineDTO> query = getSession().createQuery(hql, OrderLineDTO.class);
         query.setParameter("itemId", itemId);
         query.setParameter("userId", userId);
         query.setParameter("period", Constants.ORDER_PERIOD_ONCE);

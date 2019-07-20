@@ -59,7 +59,7 @@ public class PluggableTaskDAS extends AbstractDAS<PluggableTaskDTO> {
     }
     
     public List<PluggableTaskDTO> findAllByEntity(Integer entityId) {
-        Query<PluggableTaskDTO> query = getSession().createQuery(findAllByEntitySQL);
+        Query<PluggableTaskDTO> query = getSession().createQuery(findAllByEntitySQL, PluggableTaskDTO.class);
         query.setParameter("entity", entityId);
         query.setCacheable(true);
         query.setComment("PluggableTaskDAS.findAllByEntity");
@@ -67,7 +67,7 @@ public class PluggableTaskDAS extends AbstractDAS<PluggableTaskDTO> {
     }
     
     public PluggableTaskDTO findByEntityType(Integer entityId, Integer typeId) {
-        Query<PluggableTaskDTO> query = getSession().createQuery(findByEntityTypeSQL);
+        Query<PluggableTaskDTO> query = getSession().createQuery(findByEntityTypeSQL, PluggableTaskDTO.class);
         query.setCacheable(true);
         query.setParameter("entity", entityId);
         query.setParameter("type", typeId);
@@ -77,7 +77,7 @@ public class PluggableTaskDAS extends AbstractDAS<PluggableTaskDTO> {
 
     @Cacheable("pluggabletask")
     public List<PluggableTaskDTO> findByEntityCategory(Integer entityId, Integer categoryId) {
-        Query<PluggableTaskDTO> query = getSession().createQuery(findByEntityCategorySQL);
+        Query<PluggableTaskDTO> query = getSession().createQuery(findByEntityCategorySQL, PluggableTaskDTO.class);
         query.setCacheable(true);
         query.setParameter("entity", entityId);
         query.setParameter("category", categoryId);
