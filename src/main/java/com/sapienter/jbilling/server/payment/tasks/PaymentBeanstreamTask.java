@@ -21,6 +21,7 @@ package com.sapienter.jbilling.server.payment.tasks;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -436,7 +437,7 @@ public class PaymentBeanstreamTask extends PaymentTaskWithTimeout implements
 				paymentDTO.setCode1(responseDTO.trnApproved);
 
 				return paymentDTO;
-			} catch (Exception e) {
+			} catch (RuntimeException | UnsupportedEncodingException | NoSuchFieldException | IllegalAccessException e) {
 				throw new PluggableTaskException(e);
 			}
 		}
