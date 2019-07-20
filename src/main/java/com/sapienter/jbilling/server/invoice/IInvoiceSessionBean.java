@@ -60,9 +60,9 @@ public interface IInvoiceSessionBean {
     /**
      * The real path is known only to the web server
      * It should have the token _FILE_NAME_ to be replaced by the generated file
+     * The values in the map include Integer, Date and String
      */
-    public String generatePDFFile(java.util.Map map, String realPath) 
-            throws SessionInternalError;
+    String generatePDFFile(java.util.Map<String, Object> map, String realPath); 
 
     // only for unit tests
     public Set<InvoiceDTO> getAllInvoices(Integer userId);

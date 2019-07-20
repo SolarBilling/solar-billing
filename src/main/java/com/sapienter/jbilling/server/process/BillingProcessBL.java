@@ -907,9 +907,9 @@ public class BillingProcessBL extends ResultList
             // go over the totals, since there's one per currency
             for (Iterator<BillingProcessRunTotalDTOEx<BigDecimal>> it2 = runDto.getTotals().iterator(); it2.hasNext();) {
                 // the total to process 
-                final BillingProcessRunTotalDTOEx totalDto = it2.next();
+                final BillingProcessRunTotalDTOEx<BigDecimal> totalDto = it2.next();
 
-                BillingProcessRunTotalDTOEx sum = getTotal(totalDto.getCurrency(), grandTotal.getTotals());
+                BillingProcessRunTotalDTOEx<BigDecimal> sum = getTotal(totalDto.getCurrency(), grandTotal.getTotals());
 
                 BigDecimal totalTmp = totalDto.getTotalInvoiced().add(sum.getTotalInvoiced());
                 sum.setTotalInvoiced(totalTmp);

@@ -280,7 +280,7 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
                     tIt.hasNext();) {
                 ProcessRunTotalDTO totalRow = 
                         tIt.next();
-                BillingProcessRunTotalDTOEx totalDto = getTotalDTO(totalRow,
+                BillingProcessRunTotalDTOEx<BigDecimal> totalDto = getTotalDTO(totalRow,
                         language);
                 dto.getTotals().add(totalDto);
             }
@@ -289,10 +289,10 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
         return dto;
     }
     
-    public BillingProcessRunTotalDTOEx getTotalDTO(
+    public BillingProcessRunTotalDTOEx<BigDecimal> getTotalDTO(
             ProcessRunTotalDTO row, Integer languageId) {
-        BillingProcessRunTotalDTOEx retValue = 
-                new BillingProcessRunTotalDTOEx();
+        BillingProcessRunTotalDTOEx<BigDecimal> retValue = 
+                new BillingProcessRunTotalDTOEx<BigDecimal>();
         retValue.setCurrency(row.getCurrency());
         retValue.setId(row.getId());
         retValue.setTotalInvoiced(row.getTotalInvoiced());

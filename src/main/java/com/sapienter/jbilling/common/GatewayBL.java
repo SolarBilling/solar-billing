@@ -784,10 +784,6 @@ public class GatewayBL {
         return retValue;
     }
 
-    private Float getFloatPar(String name) {
-        return getFloatPar(name, false);
-    }
-
     private Float getFloatPar(String name, boolean required) {
         Float retValue = null;
         String field = request.getParameter(name);
@@ -810,6 +806,7 @@ public class GatewayBL {
         return retValue;
     }
 
+/*
     private Double getDoublePar(String name) {
         Double retValue = null;
         String field = request.getParameter(name);
@@ -825,7 +822,8 @@ public class GatewayBL {
 
         return retValue;
     }
-
+*/
+    
     public String getResult() {
         String result;
         String userSeparator = request.getParameter("s_separator");

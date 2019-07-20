@@ -162,7 +162,7 @@ public class InvoiceSessionBean implements IInvoiceSessionBean {
      * The real path is known only to the web server
      * It should have the token _FILE_NAME_ to be replaced by the generated file
      */
-    public String generatePDFFile(java.util.Map map, String realPath) throws SessionInternalError {
+    @Override public String generatePDFFile(final java.util.Map<String, Object> map, final String realPath) {
         Integer operationType = (Integer) map.get("operationType");
 
         try {

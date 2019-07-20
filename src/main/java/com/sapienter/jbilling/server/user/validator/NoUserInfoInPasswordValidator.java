@@ -140,7 +140,7 @@ public class NoUserInfoInPasswordValidator {
 		}
 		if (retVal == false) {
 			errors.add(field.getKey(),
-					Resources.getActionError(
+					Resources.getActionMessage(
 							request,
 							va,
 							field));

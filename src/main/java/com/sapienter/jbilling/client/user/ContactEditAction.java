@@ -152,10 +152,9 @@ public class ContactEditAction extends Action {
         }
         
         LOG.debug("After contact: action = " + action);
-        final Map fieldsTable = (Map) contactForm.get("fieldsTable");
+        final Map<String,?> fieldsTable = (Map<String,?>) contactForm.get("fieldsTable");
         LOG.debug("Fields number:" + fieldsTable.size());
-        for (Iterator<String> it = fieldsTable.keySet().iterator(); it.hasNext();) {
-            String key = it.next();
+        for (String key : fieldsTable.keySet()) {
             LOG.debug("field " + key + " is " + fieldsTable.get(key));
         }
         return mapping.findForward(forward);

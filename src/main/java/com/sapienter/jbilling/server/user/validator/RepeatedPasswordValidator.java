@@ -176,7 +176,7 @@ public class RepeatedPasswordValidator {
 		
 		if (result == false) {
 			errors.add(field.getKey(),
-				Resources.getActionError(
+				Resources.getActionMessage(
 						request,
 						va,
 						field));

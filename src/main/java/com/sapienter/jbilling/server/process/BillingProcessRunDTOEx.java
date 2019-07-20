@@ -112,7 +112,7 @@ public class BillingProcessRunDTOEx extends ProcessRunDTO {
     public String toString() {
         StringBuffer ret = new StringBuffer(super.toString());
         ret.append(" totals: ");
-        for (BillingProcessRunTotalDTOEx x : totals) {
+        for (BillingProcessRunTotalDTOEx<BigDecimal> x : totals) {
             ret.append(x.toString());
         }
 

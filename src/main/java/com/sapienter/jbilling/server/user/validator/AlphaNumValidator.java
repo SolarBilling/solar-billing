@@ -62,7 +62,7 @@ public class AlphaNumValidator {
 			try {
 				if (!basicValidation(value)) {
 					errors.add(field.getKey(),
-							Resources.getActionError(
+							Resources.getActionMessage(
 									request,
 									va,
 									field));
@@ -71,7 +71,7 @@ public class AlphaNumValidator {
 				}
 			} catch (Exception e) {
 				errors.add(field.getKey(),
-						Resources.getActionError(
+						Resources.getActionMessage(
 								request,
 								va,
 								field));
