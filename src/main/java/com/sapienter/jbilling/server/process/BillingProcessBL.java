@@ -1137,7 +1137,6 @@ public class BillingProcessBL extends ResultList
         getHome().delete(review);
     }
 
-    @SuppressWarnings("unchecked")
     private void processOrderToInvoiceEvents(NewInvoiceDTO newInvoice, Integer entityId) {
         List<OrderDTO> orders = newInvoice.getOrders();
         List<List<PeriodOfTime>> periods = newInvoice.getPeriods();
@@ -1154,7 +1153,6 @@ public class BillingProcessBL extends ResultList
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void processOrderAddedOnInvoiceEvents(NewInvoiceDTO newInvoice, Integer entityId) {
         List<OrderDTO> orders = newInvoice.getOrders();
         List<List<PeriodOfTime>> periods = newInvoice.getPeriods();

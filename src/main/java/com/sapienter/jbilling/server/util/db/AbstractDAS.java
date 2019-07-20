@@ -91,7 +91,6 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
      * @param id
      * @return
      */
-    @SuppressWarnings("unchecked")
     public T find(Serializable id) {
     	if (id == null) return null;
         T entity = (T) getHibernateTemplate().load(getPersistentClass(), id);
@@ -105,7 +104,6 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
      * @param id
      * @return
      */
-    @SuppressWarnings("unchecked")
     public T findNow(Serializable id) {
     	if (id == null) return null;
         T entity = (T) getHibernateTemplate().get(getPersistentClass(), id);
@@ -119,7 +117,6 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
      * @param id
      * @return
      */
-    @SuppressWarnings("unchecked")
     public T findForUpdate(Serializable id) {
         if (id == null) {
             return null;
@@ -129,7 +126,6 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
         return entity;
     }
 
-    @SuppressWarnings("unchecked")
     public List<T> findAll() {
         return findByCriteria();
     }
@@ -158,7 +154,6 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
         return (T) crit.uniqueResult();
     }
     
-    @SuppressWarnings("unchecked")
     public T makePersistent(T entity) {
         getHibernateTemplate().saveOrUpdate(entity);
         return entity;

@@ -144,7 +144,6 @@ public class CurrencyBL {
      * @throws NamingException
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public CurrencyDTO[] getSymbols() throws NamingException, SQLException {
         JNDILookup jndi = JNDILookup.getFactory();
         Connection conn = jndi.lookUpDataSource().getConnection();
@@ -170,7 +169,6 @@ public class CurrencyBL {
         return (CurrencyDTO []) results.toArray(retValue);
     }
 
-    @SuppressWarnings("unchecked")
     public CurrencyDTO[] getCurrencies(Integer languageId, Integer entityId) throws NamingException, SQLException {
         List<CurrencyDTO> result = new ArrayList<CurrencyDTO>();
         

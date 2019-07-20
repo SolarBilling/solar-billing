@@ -74,7 +74,6 @@ public class ItemTypeWS implements Serializable {
     }
 
     @Override
-    @SuppressWarnings("RedundantIfStatement")
     public boolean equals(Object o) {
         if (this == o)
             return true;

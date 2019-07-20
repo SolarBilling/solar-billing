@@ -45,7 +45,6 @@ public abstract class PreferencesCrudActionBase<DTO> extends UpdateOnlyCrudActio
 		return myUserSession;
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected final PreferencesMap getEntityPreferences(Integer[] ids) throws RemoteException {
 		return new PreferencesMap(myUserSession.getEntityParameters(entityId, ids));
 	}

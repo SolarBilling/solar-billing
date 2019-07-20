@@ -217,7 +217,6 @@ public class PartnerCrudAction extends CrudActionBase<Partner> {
 		return partner;
 	}
 
-	@SuppressWarnings("unchecked")
 	private PreferencesMap mapEntityParameters(Integer[] ids) throws RemoteException {
 		HashMap<Integer, String> result = myUserSession.getEntityParameters(entityId, ids);
 		return new PreferencesMap(result);
