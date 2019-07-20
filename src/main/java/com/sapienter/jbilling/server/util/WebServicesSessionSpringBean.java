@@ -148,7 +148,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
             InvoiceBL bl = new InvoiceBL();
             Integer invoiceId = bl.getLastByUser(userId);
             if (invoiceId != null) {
-                retValue = bl.getWS(new InvoiceDAS().find(invoiceId));
+                retValue = InvoiceBL.getWS(new InvoiceDAS().find(invoiceId));
             }
             return retValue;
         } catch (Exception e) { // needed because the sql exception :(
@@ -1615,7 +1615,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
             InvoiceBL bl = new InvoiceBL();
             Integer invoiceId = bl.getLastByUserAndItemType(userId, itemTypeId);
             if (invoiceId != null) {
-                retValue = bl.getWS(new InvoiceDAS().find(invoiceId));
+                retValue = InvoiceBL.getWS(new InvoiceDAS().find(invoiceId));
             }
             return retValue;
         } catch (Exception e) { // forced by SQLException

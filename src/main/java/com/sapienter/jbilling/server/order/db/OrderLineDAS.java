@@ -23,7 +23,7 @@ import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import org.joda.time.DateMidnight;

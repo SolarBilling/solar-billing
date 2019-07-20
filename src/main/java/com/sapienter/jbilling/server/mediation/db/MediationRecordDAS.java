@@ -20,6 +20,8 @@
 package com.sapienter.jbilling.server.mediation.db;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
+
+import org.hibernate.Session;
 import org.hibernate.Query;
 
 import java.util.List;
@@ -34,10 +36,7 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
 
     @SuppressWarnings("unchecked")
     public MediationRecordDTO findNewestByKey(String key) {
-        Query<MediationRecordDTO> query = getSession().createQuery(findByKeyHQL);
-        query.setParameter("key", key);
-
-        List<MediationRecordDTO> results = query.list();
+        List<MediationRecordDTO> results = getSession().createQuery(findByKeyHQL).setParameter("key", key).list();
         return (results.isEmpty() ? null : results.get(0));
     }
 
@@ -61,11 +60,8 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
                  Native query using hardcoded status id's to avoid joins keeps query execution time low, please
                  do not try and replace this query with HQL or Hibernate Criteria!
          */
-        Query query = getSession()
-                .createNativeQuery(isProcessedSQL)
-                .setString("key", key);
-
-        return !query.list().isEmpty();
+        return getSession().createSQLQuery(isProcessedSQL)
+                .setString("key", key).scroll().first();
     }
 
     private static final String countMediationRecordsByEntityAndStatusHQL =

@@ -21,7 +21,7 @@ package com.sapienter.jbilling.server.pluggableTask.admin;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 

@@ -34,7 +34,7 @@ import org.hibernate.criterion.Example;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 
 public abstract class AbstractDAS<T> extends HibernateDaoSupport {
