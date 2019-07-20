@@ -23,7 +23,7 @@ import java.util.List;
 
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 public class CreditCardDAS extends AbstractDAS<CreditCardDTO> {
 

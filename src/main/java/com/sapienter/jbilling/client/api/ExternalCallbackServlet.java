@@ -78,7 +78,7 @@ public class ExternalCallbackServlet extends HttpServlet {
                 LOG.debug("parameter : " + parameter + 
                         " value : " + value);
                 validationStr = validationStr + "&" + parameter + "=" + 
-                    URLEncoder.encode(value);
+                    URLEncoder.encode(value, "UTF-8");
             }
             
             LOG.debug("About to call paypal for validation.  Request" + validationStr);

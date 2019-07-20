@@ -19,7 +19,7 @@
 */
 package com.sapienter.jbilling.server.util.db;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 public class PreferenceDAS extends AbstractDAS<PreferenceDTO> {
     private static final String findByType_Row =

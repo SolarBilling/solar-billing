@@ -62,7 +62,7 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
                  do not try and replace this query with HQL or Hibernate Criteria!
          */
         Query query = getSession()
-                .createSQLQuery(isProcessedSQL)
+                .createNativeQuery(isProcessedSQL)
                 .setString("key", key);
 
         return !query.list().isEmpty();

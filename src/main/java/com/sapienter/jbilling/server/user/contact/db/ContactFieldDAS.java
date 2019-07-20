@@ -19,7 +19,7 @@
 */
 package com.sapienter.jbilling.server.user.contact.db;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 

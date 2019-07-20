@@ -21,7 +21,7 @@
 package com.sapienter.jbilling.server.mediation.db;
 
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import java.util.List;
 

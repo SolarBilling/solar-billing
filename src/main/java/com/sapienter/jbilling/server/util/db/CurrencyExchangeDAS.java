@@ -21,7 +21,7 @@ package com.sapienter.jbilling.server.util.db;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 
 public class CurrencyExchangeDAS extends AbstractDAS<CurrencyExchangeDTO> {

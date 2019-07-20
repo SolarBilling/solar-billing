@@ -21,7 +21,7 @@ package com.sapienter.jbilling.server.util.db;
 
 import java.util.Collection;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 
 /**

@@ -19,7 +19,7 @@
 */
 package com.sapienter.jbilling.server.user.contact.db;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.criterion.Restrictions;
 
 import com.sapienter.jbilling.server.util.Constants;

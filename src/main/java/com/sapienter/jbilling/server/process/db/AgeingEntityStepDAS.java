@@ -19,7 +19,7 @@
  */
 package com.sapienter.jbilling.server.process.db;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.UserStatusDAS;
