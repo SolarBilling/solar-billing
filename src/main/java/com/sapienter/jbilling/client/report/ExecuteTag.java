@@ -25,8 +25,8 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -50,7 +50,7 @@ public class ExecuteTag extends ListTagBase {
         int retValue = SKIP_BODY;
 
         log = Logger.getLogger(ExecuteTag.class);
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
 
         try {
             // I'll get the entity id first from the session
@@ -88,8 +88,8 @@ public class ExecuteTag extends ListTagBase {
             }
 
         } catch (Exception e) {
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                    new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 
                     errors);
 

@@ -30,8 +30,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -61,7 +61,7 @@ public class GenericListAction extends Action {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         ActionForward retValue = null;
         HttpSession session = request.getSession(false);
         Logger log = Logger.getLogger(GenericListAction.class);
@@ -79,8 +79,8 @@ public class GenericListAction extends Action {
                     action.equals("inverse")) {
                 String listId = request.getParameter("listId");
                 if (!list.getListId().toString().equals(listId)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("list.error.navBack"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("list.error.navBack"));
                     saveErrors(request, errors);
                     action = ""; // to avoid any other if
                 }
@@ -118,18 +118,18 @@ public class GenericListAction extends Action {
                             "list.prompt.pageSize"); 
                     Integer size = null;
                     if (sizeStr == null) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("errors.required", field));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("errors.required", field));
                     } else {
                         try {
                             size = Integer.valueOf(sizeStr);
                             if (size.intValue() < 20 || size.intValue() > 500) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("errors.range", field, "20", "500"));
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("errors.range", field, "20", "500"));
                             }
                         } catch (NumberFormatException e) {
-                            errors.add(ActionErrors.GLOBAL_ERROR,
-                                    new ActionError("errors.integer", field));
+                            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                    new ActionMessage("errors.integer", field));
                         }
                     }
                     
@@ -166,32 +166,32 @@ public class GenericListAction extends Action {
                     // verify that the page is consitent, and no 'back' button
                     // was involved
                     if (!list.getListId().toString().equals(listId)) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("list.error.searchBack"));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("list.error.searchBack"));
                     } else {
                         if (dataType.equals("integer")) {
                             if (search1 == null || search1.length() == 0) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("errors.required", prompt));
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("errors.required", prompt));
                             } else {
                                 try {
                                     intParam = Integer.valueOf(search1.trim());
                                     start = intParam.toString();
                                 } catch (NumberFormatException e) {
-                                    errors.add(ActionErrors.GLOBAL_ERROR,
-                                            new ActionError("errors.integer", prompt));
+                                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                            new ActionMessage("errors.integer", prompt));
                                 }
                             }
                         }
                         if (dataType.equals("string")) {
                             if (search1 == null || search1.length() == 0) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("errors.required", prompt));
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("errors.required", prompt));
                             } else {
                                 search1 = search1.trim();
                                 if (search1.length() < 3) {
-                                    errors.add(ActionErrors.GLOBAL_ERROR,
-                                            new ActionError("errors.minlength", prompt, "3"));
+                                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                            new ActionMessage("errors.minlength", prompt, "3"));
                                 } else {
                                     start = search1;
                                 }
@@ -211,28 +211,28 @@ public class GenericListAction extends Action {
                                 validateDate(search5);
                                 validateDate(search6);
                             } catch (NumberFormatException e) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("list.error.invalidDate", prompt));
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("list.error.invalidDate", prompt));
                             }
                             start = search3 + '-' + search1 + '-' + search2;
                             end = search6 + '-' + search4 + '-' + search5;
                             if (Util.parseDate(start) == null) {
                                 if (start.length() > 2) {
-                                    errors.add(ActionErrors.GLOBAL_ERROR,
-                                            new ActionError("list.error.invalidFrom"));
+                                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                            new ActionMessage("list.error.invalidFrom"));
                                 }
                                 start = null;
                             }
                             if (Util.parseDate(end) == null) {
                                 if (end.length() > 2) {
-                                    errors.add(ActionErrors.GLOBAL_ERROR,
-                                            new ActionError("list.error.invalidTo"));
+                                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                            new ActionMessage("list.error.invalidTo"));
                                 }
                                 end = null;
                             }
                             if (start == null && end == null) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("errors.required", prompt));
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("errors.required", prompt));
                             } 
                         }
                     }
@@ -288,8 +288,8 @@ public class GenericListAction extends Action {
         try {
             if (selectionStr == null) {
                 // it didn't make a pick ...not good ...
-                errors.add( ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.error.listSelection"));
+                errors.add( ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.error.listSelection"));
                 saveErrors(request, errors);
                 retValue = (mapping.findForward(forwardFrom));
             
@@ -364,8 +364,8 @@ public class GenericListAction extends Action {
             }
         } catch (Exception e) {
             errors.add(
-                ActionErrors.GLOBAL_ERROR,
-                new ActionError("all.internal"));
+                ActionMessages.GLOBAL_MESSAGE,
+                new ActionMessage("all.internal"));
             saveErrors(request, errors);
             retValue = (mapping.findForward(forwardFrom));
             log.error("Exception", e);

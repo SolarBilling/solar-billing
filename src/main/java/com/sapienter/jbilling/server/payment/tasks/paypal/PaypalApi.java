@@ -26,8 +26,6 @@ import java.util.Map;
 
 import com.paypal.api.payments.*;
 import com.paypal.sdk.exceptions.PayPalException;
-import com.paypal.core.NVPUtil;
-import com.paypal.core.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
 import com.sapienter.jbilling.server.payment.tasks.paypal.dto.*;

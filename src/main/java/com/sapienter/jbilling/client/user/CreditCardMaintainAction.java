@@ -24,8 +24,8 @@ import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.user.PaymentMethodCrudContext.CCContext;
 import com.sapienter.jbilling.client.util.Constants;
@@ -84,7 +84,7 @@ public class CreditCardMaintainAction extends
 			cal.setTime(dto.getCcExpiry());
 			cal.add(GregorianCalendar.MONTH, 1); // add 1 month
 			if (Calendar.getInstance().getTime().after(cal.getTime())) {
-				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"creditcard.error.expired", "payment.cc.date"));
 			}
 		}
@@ -97,8 +97,8 @@ public class CreditCardMaintainAction extends
 			Integer paymentMethod = Util.getPaymentMethod(dto.getNumber());
 			if (!getPaymentSession().isMethodAccepted(entityId, paymentMethod)) {
 				errors.add( //
-						ActionErrors.GLOBAL_ERROR, //
-						new ActionError("payment.error.notAccepted",
+						ActionMessages.GLOBAL_MESSAGE, //
+						new ActionMessage("payment.error.notAccepted",
 								"payment.method"));
 			}
 		}

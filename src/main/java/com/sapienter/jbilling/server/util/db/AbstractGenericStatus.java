@@ -46,8 +46,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 )
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public abstract class AbstractGenericStatus extends AbstractDescription {
-
-    protected int id;
+	private static final long serialVersionUID = 1L;
+	protected int id;
     protected int statusValue;
 
     @Id 

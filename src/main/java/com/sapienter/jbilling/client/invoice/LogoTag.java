@@ -31,8 +31,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.Util;
@@ -48,7 +48,7 @@ import com.sapienter.jbilling.common.Util;
 public class LogoTag extends TagSupport {
      public int doStartTag() throws JspException {
         Logger log = Logger.getLogger(LogoTag.class);
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         
         log.debug("Running invoice logo file download:");
         
@@ -80,8 +80,8 @@ public class LogoTag extends TagSupport {
             out.close();
         } catch (Exception e) {
             log.error("Exception", e);
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                    new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 
                     errors);
         }

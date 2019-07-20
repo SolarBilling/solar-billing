@@ -24,12 +24,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import com.sapienter.jbilling.common.Constants;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 public class MessageDTO implements Serializable {
-    // message type definitions (synch with DB)
+	private static final long serialVersionUID = 1L;
+	// message type definitions (synch with DB)
     public static final Integer TYPE_INVOICE_EMAIL = new Integer(1);
     public static final Integer TYPE_AGEING = new Integer(2); // take from 2 to 9
     public static final Integer TYPE_CLERK_PAYOUT = new Integer(10);

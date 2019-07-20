@@ -35,7 +35,6 @@ import javax.persistence.Table;
 import org.apache.log4j.Logger;
 
 import com.sapienter.jbilling.server.util.Constants;
-import com.sapienter.jbilling.server.util.Context;
 import javax.persistence.Transient;
 
 @Entity

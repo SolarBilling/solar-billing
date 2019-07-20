@@ -44,7 +44,6 @@ import com.sapienter.jbilling.server.item.CurrencyBL;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDAS;
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDTO;
-import java.math.RoundingMode;
 
 
 /**

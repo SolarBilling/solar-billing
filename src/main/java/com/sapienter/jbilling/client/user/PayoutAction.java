@@ -36,8 +36,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -63,7 +63,7 @@ public class PayoutAction extends Action {
         
         Logger log = Logger.getLogger(PayoutAction.class);
         String forward = "error";
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         try {
             IUserSessionBean userSession = (IUserSessionBean) Context.getBean(
                     Context.Name.USER_SESSION);
@@ -105,8 +105,8 @@ public class PayoutAction extends Action {
                     if (startDate == null) {
                         String field = Resources.getMessage(request, 
                                 "payout.prompt.startDate"); 
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("errors.date", field));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("errors.date", field));
                     } 
                     endDate = Util.getDate(Integer.valueOf(
                             (String) myForm.get("end_year")), 
@@ -115,8 +115,8 @@ public class PayoutAction extends Action {
                     if (endDate == null) {
                         String field = Resources.getMessage(request, 
                                 "payout.prompt.endDate"); 
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("errors.date", field));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("errors.date", field));
                     } 
                 }
                 

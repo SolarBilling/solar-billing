@@ -35,8 +35,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -63,7 +63,7 @@ public class NewOrderItemAction extends Action {
         HttpServletResponse response)
         throws IOException, ServletException {
 
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         OrderDTO summary = null;
 
         // get the item id and quantity from the form
@@ -80,7 +80,7 @@ public class NewOrderItemAction extends Action {
 
         if( quantity == null ){ 
             // No update on the summary, log errors
-        	errors.add( ActionErrors.GLOBAL_ERROR, new ActionError("errors.invalid", "Quantity"));
+        	errors.add( ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.invalid", "Quantity"));
             saveErrors(request, errors);
             
             // go back to the new order page, so the user can keep adding items 
@@ -122,20 +122,20 @@ public class NewOrderItemAction extends Action {
             // this has been already logged ...
             LOG.error("Exception: ", e);
             errors.add(
-                ActionErrors.GLOBAL_ERROR,
-                new ActionError("all.internal"));
+                ActionMessages.GLOBAL_MESSAGE,
+                new ActionMessage("all.internal"));
         } catch (Exception e) {
             if (e instanceof ItemDecimalsException ){
             	errors.add(
-            			ActionErrors.GLOBAL_ERROR,
-            			new ActionError("order.error.item.decimals"));
+            			ActionMessages.GLOBAL_MESSAGE,
+            			new ActionMessage("order.error.item.decimals"));
             } else if (e.getCause().getMessage().equals("Item Manager task error")) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("order.error.task"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("order.error.task"));
                 LOG.error("Error at the AddItemAction", e);
             } else {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.internal"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.internal"));
                 LOG.error("Error at the AddItemAction", e);
             }
         }

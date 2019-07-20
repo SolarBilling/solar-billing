@@ -32,13 +32,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.util.RequestUtils;
 import org.apache.struts.validator.DynaValidatorForm;
@@ -60,7 +58,7 @@ import com.sapienter.jbilling.server.util.Context;
 public abstract class CrudAction extends Action {
     protected ActionMapping mapping = null;
     protected HttpServletRequest request = null;
-    protected ActionErrors errors = null;
+    protected ActionMessages errors = null;
     protected ActionMessages messages = null;
     protected Logger LOG = null;
     protected HttpSession session = null;
@@ -98,7 +96,7 @@ public abstract class CrudAction extends Action {
         this.mapping = mapping;
         this.request = request;
         LOG = Logger.getLogger(CrudAction.class);
-        errors = new ActionErrors();
+        errors = new ActionMessages();
         messages = new ActionMessages();
         action = request.getParameter("action");
         session = request.getSession(false);
@@ -187,17 +185,17 @@ public abstract class CrudAction extends Action {
                 postDelete();
             } else if (!otherAction(action)){
                 LOG.error("Invalid action:" + action);
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("all.internal"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("all.internal"));
             }
         } catch (OptimisticLockException e) {
             LOG.debug("optimistic lock exception");
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                   new ActionError("errors.modified"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                   new ActionMessage("errors.modified"));
         } catch (Exception e) {
             LOG.error("Exception ", e);
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                   new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                   new ActionMessage("all.internal"));
         }
 
         // Remove any error messages attribute if none are required
@@ -246,7 +244,7 @@ public abstract class CrudAction extends Action {
         
     protected void preEdit() {
         // do the validation, before moving any info to the dto
-        errors = new ActionErrors(myForm.validate(mapping, request));
+        errors = new ActionMessages(myForm.validate(mapping, request));
         forward = "edit";
     }
     
@@ -413,16 +411,16 @@ public abstract class CrudAction extends Action {
     protected void required(String field, String key) {
         if (field == null || field.trim().length() == 0) {
             String name = Resources.getMessage(request, key);
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("errors.required", name));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("errors.required", name));
         }
     }
     
     protected void required(Date field, String key) {
         if (field == null) {
             String name = Resources.getMessage(request, key);
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("errors.required", name));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("errors.required", name));
         }
     }
 

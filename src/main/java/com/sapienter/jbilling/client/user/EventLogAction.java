@@ -30,13 +30,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.server.user.IUserSessionBean;
@@ -50,7 +48,7 @@ public class EventLogAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         ActionMessages messages = new ActionMessages();
         
         HttpSession session = request.getSession(false);
@@ -78,8 +76,8 @@ public class EventLogAction extends Action {
                 throw new ServletException("action not supported: " + action);
             }
         } catch (Exception e) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.internal"));
             LOG.debug("Exception:", e);
         }
 

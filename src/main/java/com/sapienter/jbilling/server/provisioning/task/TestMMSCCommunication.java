@@ -20,9 +20,6 @@
 
 package com.sapienter.jbilling.server.provisioning.task;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import com.sapienter.jbilling.server.provisioning.task.mmsc.AddCustomerRequest;

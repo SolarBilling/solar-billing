@@ -31,14 +31,13 @@ import java.util.Date;
 
 import com.sapienter.jbilling.server.item.ItemDTOEx;
 import com.sapienter.jbilling.server.util.Constants;
-import java.math.RoundingMode;
 
 /**
  * @author Emil
  */
 public class OrderLineWS implements Serializable {
-
-    private int id;
+	private static final long serialVersionUID = 1L;
+	private int id;
     private Integer orderId;
     private String amount;
     private String quantity;

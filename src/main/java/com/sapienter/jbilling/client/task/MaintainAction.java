@@ -24,8 +24,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.client.util.UpdateOnlyCrudActionBase;
@@ -73,7 +73,7 @@ public class MaintainAction extends
 			try {
 				next.expandValue();
 			} catch (NumberFormatException e) {
-				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"task.parameter.prompt.invalid", names[f]));
 			}
 		}

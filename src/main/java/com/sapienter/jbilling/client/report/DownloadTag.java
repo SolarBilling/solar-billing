@@ -37,8 +37,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.Resources;
 
@@ -62,7 +62,7 @@ public class DownloadTag extends TagSupport {
         int retValue = SKIP_BODY;
         
         Logger log = Logger.getLogger(DownloadTag.class);
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         
         log.debug("Running download:");
         
@@ -121,8 +121,8 @@ public class DownloadTag extends TagSupport {
             out.close();
         } catch (Exception e) {
             log.error("Exception", e);
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                    new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 
                     errors);
         }

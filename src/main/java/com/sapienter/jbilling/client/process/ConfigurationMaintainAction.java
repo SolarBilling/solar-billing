@@ -20,8 +20,8 @@
 
 package com.sapienter.jbilling.client.process;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.UpdateOnlyCrudActionBase;
 import com.sapienter.jbilling.common.SessionInternalError;
@@ -98,7 +98,7 @@ public class ConfigurationMaintainAction extends
 
 		if (dto.getAutoPayment().intValue() == 0
 				&& dto.getRetries().intValue() > 0) {
-			errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					"process.configuration.error.auto"));
 		}
 

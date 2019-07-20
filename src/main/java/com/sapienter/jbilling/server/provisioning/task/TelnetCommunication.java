@@ -23,7 +23,6 @@ package com.sapienter.jbilling.server.provisioning.task;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.SocketException;
 import java.util.Map;
 
 import org.apache.commons.net.telnet.TelnetClient;

@@ -40,7 +40,6 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Version;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -68,8 +67,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "invoice")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class InvoiceDTO implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    private static final Logger LOG = Logger.getLogger(InvoiceDTO.class);
+	private static final Logger LOG = Logger.getLogger(InvoiceDTO.class);
 
     private static final int PROCESS = 1;
     public static final int DO_NOT_PROCESS = 0;

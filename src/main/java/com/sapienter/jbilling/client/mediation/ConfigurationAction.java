@@ -25,8 +25,8 @@ import java.util.List;
 
 import javax.persistence.OptimisticLockException;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.CrudAction;
 import com.sapienter.jbilling.common.InvalidArgumentException;
@@ -74,8 +74,8 @@ public class ConfigurationAction extends CrudAction {
                 setup();
                 throw new OptimisticLockException();
             } else if (e.getCause().getClass().equals(InvalidArgumentException.class)) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("mediation.configuration.error"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("mediation.configuration.error"));
                 return null;
             } else {
                 throw new SessionInternalError("update configuration action", ConfigurationAction.class, e);

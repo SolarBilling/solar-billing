@@ -27,7 +27,6 @@ package com.sapienter.jbilling.server.process;
 import java.util.Date;
 
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
-import com.sapienter.jbilling.server.process.db.ProcessRunDTO;
 import java.util.List;
 
 
@@ -36,8 +35,8 @@ import java.util.List;
  * @author Emil
  */
 public class BillingProcessDTOEx extends BillingProcessDTO {
-
-    private List<BillingProcessRunDTOEx> runs = null;
+	private static final long serialVersionUID = 1L;
+	private List<BillingProcessRunDTOEx> runs = null;
     private BillingProcessRunDTOEx grandTotal = null;
     private Integer retries = null;
     private Date billingDateEnd = null;

@@ -29,8 +29,8 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -253,7 +253,7 @@ public class GenericListTag extends ListTagBase {
             return retValue;
         }
         
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         Hashtable<String, Integer> parameters = new Hashtable<String, Integer>();
         
         try {
@@ -468,8 +468,8 @@ public class GenericListTag extends ListTagBase {
             }
 
         } catch (SessionInternalError e) {
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                    new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 
                     errors);
             log.error("Session exception at Generic List tag.", e);

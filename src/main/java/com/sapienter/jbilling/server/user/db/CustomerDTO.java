@@ -44,10 +44,8 @@ import org.apache.log4j.Logger;
 import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDeliveryMethodDTO;
 import com.sapienter.jbilling.server.user.UserWS;
-import com.sapienter.jbilling.server.user.event.DynamicBalanceChangeEvent;
 import com.sapienter.jbilling.server.user.partner.db.Partner;
 import com.sapienter.jbilling.server.user.partner.db.PartnerDAS;
-import com.sapienter.jbilling.server.system.event.EventManager;
 
 import java.math.BigDecimal;
 

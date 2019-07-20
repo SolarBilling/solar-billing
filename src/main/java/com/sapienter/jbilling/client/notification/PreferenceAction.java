@@ -29,8 +29,8 @@ package com.sapienter.jbilling.client.notification;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.client.util.PreferencesCrudActionBase;
@@ -72,13 +72,13 @@ public class PreferenceAction extends PreferencesCrudActionBase<PreferenceAction
 		result.setNextReminder(getIntegerFieldValue(FIELD_NEXT_REMINDER));
 		
 		if (!result.validateDayValuesIncremental()){
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("notification.orderDays.error"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("notification.orderDays.error"));
 		}
 		
 		if (!result.validateReminders()){
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("notification.reminders.error"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("notification.reminders.error"));
 		}
 		
 		return result;

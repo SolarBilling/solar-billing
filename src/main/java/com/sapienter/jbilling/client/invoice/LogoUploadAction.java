@@ -32,13 +32,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.upload.FormFile;
 
@@ -59,7 +57,7 @@ public class LogoUploadAction extends Action {
         HttpSession session = request.getSession(false);
         DynaActionForm logoUploadForm = (DynaActionForm) form;
         ActionMessages messages = new ActionMessages();
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         Integer entityId = (Integer) session.getAttribute(
                 Constants.SESSION_ENTITY_ID_KEY);
 
@@ -92,16 +90,16 @@ public class LogoUploadAction extends Action {
                     return mapping.findForward("done");
                 } else {
                     errors.add("logoFile", 
-                            new ActionError("invoice.logo.fileType"));
+                            new ActionMessage("invoice.logo.fileType"));
                 }
             } else {
                 errors.add("logoFile", 
-                        new ActionError("invoice.logo.fileSize"));
+                        new ActionMessage("invoice.logo.fileSize"));
             }
         } catch (Exception e) {
             log.error("Exception ", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                    new ActionError("invoice.logo.error"));
+                    new ActionMessage("invoice.logo.error"));
         }
 
         saveErrors(request, errors);

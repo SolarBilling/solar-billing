@@ -22,7 +22,6 @@ package com.sapienter.jbilling.server.invoice;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,14 +65,13 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.PreferenceBL;
-import com.sapienter.jbilling.server.util.Util;
 import com.sapienter.jbilling.server.util.audit.EventLogger;
 import java.util.ArrayList;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
-
-    private InvoiceDAS invoiceDas = null;
+	private static final long serialVersionUID = 1L;
+	private InvoiceDAS invoiceDas = null;
     private InvoiceDTO invoice = null;
     private static final Logger LOG = Logger.getLogger(InvoiceBL.class);
     private EventLogger eLogger = null;

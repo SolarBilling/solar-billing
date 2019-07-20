@@ -28,13 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.server.user.IUserSessionBean;
 import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
@@ -46,7 +44,7 @@ public class ForgetPasswordAction extends Action {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
     	Logger log = Logger.getLogger(ForgetPasswordAction.class);
-    	ActionErrors errors = new ActionErrors();
+    	ActionMessages errors = new ActionMessages();
         ActionMessages messages = new ActionMessages();
     	
     	UserLoginForm info = (UserLoginForm) form;
@@ -63,10 +61,10 @@ public class ForgetPasswordAction extends Action {
                     Context.getBean(Context.Name.USER_SESSION);
             myRemoteSession.sendLostPassword(entityId, username);
     	} catch( NotificationNotFoundException e) {
-    		errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+    		errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                     "forgetPassword.errors.notificationnotactivated"));
     	} catch (Exception e) {
-        	errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("all.internal"));
+        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("all.internal"));
         }
     	
     	if (!errors.isEmpty()) {

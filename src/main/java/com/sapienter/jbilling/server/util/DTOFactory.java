@@ -21,7 +21,6 @@
 package com.sapienter.jbilling.server.util;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import com.sapienter.jbilling.common.JNDILookup;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
 import com.sapienter.jbilling.server.item.CurrencyBL;

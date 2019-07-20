@@ -32,8 +32,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -77,7 +77,7 @@ public final class UserLoginAction extends Action {
 
         // Get the values from the form and do further validation
         // or parsing
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         Locale locale = null;
         boolean internalLogin = false;
         UserLoginForm info = (UserLoginForm) form;
@@ -113,8 +113,8 @@ public final class UserLoginAction extends Action {
         if (lock.exists()) {
             LOG.debug("Denying login. Lock present.");
             errors.add(
-                    ActionErrors.GLOBAL_ERROR,
-                    new ActionError("user.login.lock"));
+                    ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("user.login.lock"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
@@ -128,12 +128,12 @@ public final class UserLoginAction extends Action {
             Integer result = myRemoteSession.authenticate(user);
             if (result.equals(Constants.AUTH_WRONG_CREDENTIALS)) {
                 errors.add(
-                    ActionErrors.GLOBAL_ERROR,
-                    new ActionError("user.login.badpassword"));
+                    ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("user.login.badpassword"));
             } else if (result.equals(Constants.AUTH_LOCKED)) {
                 errors.add(
-                        ActionErrors.GLOBAL_ERROR,
-                        new ActionError("user.login.passwordLocked"));
+                        ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("user.login.passwordLocked"));
             } else {
                 user = myRemoteSession.getGUIDTO(user.getUserName(), user.getEntityId());
                 // children accounts can not login. They have no invoices and
@@ -141,8 +141,8 @@ public final class UserLoginAction extends Action {
                 if (user.getCustomer() != null && 
                         user.getCustomer().getParent() != null) {
                     errors.add(
-                            ActionErrors.GLOBAL_ERROR,
-                            new ActionError("user.login.badpassword"));
+                            ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("user.login.badpassword"));
                 }
                 locale = myRemoteSession.getLocale(user.getUserId());
                 // it is authenticated, let's create the session
@@ -150,8 +150,8 @@ public final class UserLoginAction extends Action {
 
         } catch (Exception e) {
             errors.add(
-                ActionErrors.GLOBAL_ERROR,
-                new ActionError("all.internal"));
+                ActionMessages.GLOBAL_MESSAGE,
+                new ActionMessage("all.internal"));
         }
 
         // Report any errors we have discovered back to the original form

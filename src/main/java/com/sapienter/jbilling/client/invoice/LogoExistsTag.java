@@ -28,8 +28,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.Util;
@@ -51,7 +51,7 @@ public class LogoExistsTag extends TagSupport {
 
      public int doEndTag() throws JspException {
         Logger log = Logger.getLogger(LogoExistsTag.class);
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         
         log.debug("Checking whether invoice logo file exists:");
         
@@ -69,8 +69,8 @@ public class LogoExistsTag extends TagSupport {
 
         } catch (Exception e) {
             log.error("Exception", e);
-            errors.add(ActionErrors.GLOBAL_ERROR, 
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                    new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 
                     errors);
         }

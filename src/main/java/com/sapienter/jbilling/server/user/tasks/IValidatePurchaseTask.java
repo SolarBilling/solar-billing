@@ -22,7 +22,6 @@ package com.sapienter.jbilling.server.user.tasks;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.List;
 
 import com.sapienter.jbilling.server.item.PricingField;
 import com.sapienter.jbilling.server.item.db.ItemDTO;

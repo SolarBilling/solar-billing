@@ -30,13 +30,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.Resources;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -55,7 +53,7 @@ public class SubmitAction extends Action {
             throws IOException, ServletException {
         
         log = Logger.getLogger(SubmitAction.class);
-        ActionErrors errors = new ActionErrors();        
+        ActionMessages errors = new ActionMessages();        
         log.debug("In submit action");
         HttpSession session = request.getSession();
         
@@ -148,8 +146,8 @@ public class SubmitAction extends Action {
                 log.debug("It is a save");
                 if (reportForm.getSaveName() == null  ||
                         reportForm.getSaveName().length() == 0) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.dto.save"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.dto.save"));
                     saveErrors(request, errors);        
                     return mapping.findForward("error");
                 } 
@@ -173,8 +171,8 @@ public class SubmitAction extends Action {
                     saveMessages(request, messages);
                 } catch (Exception e) {
                     log.error(e);
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("all.internal"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("all.internal"));
                     saveErrors(request, errors);
                 }        
                 
@@ -202,7 +200,7 @@ public class SubmitAction extends Action {
 
     }
     
-    private void translateErrors(ReportDTOEx report, ActionErrors errors, 
+    private void translateErrors(ReportDTOEx report, ActionMessages errors, 
             HttpServletRequest request) {
         for (int f=0; f < report.getErrorCodes().size(); f++) {
             int code = ((Integer) report.getErrorCodes().get(f)).intValue();
@@ -215,92 +213,92 @@ public class SubmitAction extends Action {
             }
             switch (code) {
                 case ReportDTOEx.ERROR_ADD_AGREGATE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.dto.add.agregate", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.dto.add.agregate", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_AGREGATE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.dto.agregate", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.dto.agregate", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_DATATYPE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.dataType", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.dataType", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_FUNCTION:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.function", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.function", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_ISNULL:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.isNull", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.isNull", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_MISSING:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.dto.missing")); 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.dto.missing")); 
                 break;
                 case ReportDTOEx.ERROR_NO_OPERATOR:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.noOperator", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.noOperator", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_OPERATOR:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.operator", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.operator", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_TITLE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.title", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.title", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_WHERE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.where", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.where", 
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_WHERE_NOINTEGER:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.where.noInteger",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.where.noInteger",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_WHERE_NODATE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.where.noDate",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.where.noDate",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_WHERE_NOFLOAT:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.where.noFloat",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.where.noFloat",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_ORDER:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.dto.order",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.dto.order",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_ORDER_RANGE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.order",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.order",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_ORDER_AGGREGATE:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.dto.order.aggregate",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.dto.order.aggregate",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_IN_OP_EQUAL:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.inOperator",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.inOperator",
                             fieldName));
                 break;
                 case ReportDTOEx.ERROR_NULL_OPERATOR:
-                    errors.add(ActionErrors.GLOBAL_ERROR, 
-                            new ActionError("report.error.field.operatorNull",
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, 
+                            new ActionMessage("report.error.field.operatorNull",
                             fieldName));
                 break;
 

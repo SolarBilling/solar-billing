@@ -29,13 +29,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -59,7 +57,7 @@ public class CreateAction extends Action {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
     
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         ActionMessages messages = new ActionMessages();
         String retValue = "done";
         Integer newUserId = null;
@@ -79,8 +77,8 @@ public class CreateAction extends Action {
         // verify that the password and the verification password are the same
         if (!((String) userForm.get("password")).equals((String) 
                 userForm.get("verifyPassword"))) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("user.create.error.password_match"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("user.create.error.password_match"));
         } else {
          
             try {
@@ -161,15 +159,15 @@ public class CreateAction extends Action {
                                 customerDto.getParent().getId());
                         if (parent == null || !parent.getEntityId().equals(entityId) ||
                                 parent.getDeleted() == 1) {
-                            errors.add(ActionErrors.GLOBAL_ERROR,
-                                    new ActionError(
+                            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                    new ActionMessage(
                                     "user.create.error.noParent"));
                         } else {
                             if (parent.getCustomer() == null ||
                                     parent.getCustomer().getIsParent() == null ||
                                     parent.getCustomer().getIsParent().intValue() == 0) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError(
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage(
                                         "user.create.error.badParent"));
                             }
                         }
@@ -183,8 +181,8 @@ public class CreateAction extends Action {
                             customerDto.getParent() == null) {
                         // it has to be a child with a parent for this flag to 
                         // make any sense
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError(
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage(
                                     "user.create.error.invoiceChild"));
                     }
                                     
@@ -198,8 +196,8 @@ public class CreateAction extends Action {
                     UserDTO user = myRemoteSession.getUserDTO(
                             dto.getUserName(), entityId);
                     if (user != null) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("user.create.error.taken", 
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("user.create.error.taken", 
                                 (String) userForm.get("username")));
                     } else {
                         // leave the data available to the next step
@@ -214,17 +212,17 @@ public class CreateAction extends Action {
                 } else if (errors.isEmpty()) {
                     newUserId = myRemoteSession.create(dto, contact);
                     if (newUserId == null) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("user.create.error.taken", 
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("user.create.error.taken", 
                                 (String) userForm.get("username")));
                     } else if (newUserId.intValue() == -1) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("user.create.error.badPartner"));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("user.create.error.badPartner"));
                     }
                 }
             } catch (Exception e) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("all.internal"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("all.internal"));
                 LOG.error("Exception", e);
             }
         }

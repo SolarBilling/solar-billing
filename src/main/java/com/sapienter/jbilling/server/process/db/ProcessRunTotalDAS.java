@@ -23,7 +23,6 @@ package com.sapienter.jbilling.server.process.db;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
 import org.hibernate.Criteria;
-import org.hibernate.LockMode;
 import org.hibernate.criterion.Restrictions;
 
 import java.math.BigDecimal;

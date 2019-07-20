@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.validator.Validator;
 import org.apache.commons.validator.ValidatorException;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -50,7 +50,8 @@ import com.sapienter.jbilling.server.order.db.OrderLineDTO;
  * @author Emil
  */
 public class NewOrderDTOForm extends ActionForm {
-    private Hashtable<Integer, OrderLineDTO> orderLines = null;
+	private static final long serialVersionUID = 1L;
+	private Hashtable<Integer, OrderLineDTO> orderLines = null;
     
     public NewOrderDTOForm() {
         orderLines = new Hashtable<Integer, OrderLineDTO>();
@@ -91,7 +92,7 @@ public class NewOrderDTOForm extends ActionForm {
      * by the normal xml declarations).
      * @see org.apache.struts.action.ActionForm#validate(ActionMapping, HttpServletRequest)
      */
-    public ActionErrors validate(
+    @Override public ActionErrors validate(
         ActionMapping mapping,
         HttpServletRequest request) {
 
@@ -119,8 +120,8 @@ public class NewOrderDTOForm extends ActionForm {
                     if (!errors.isEmpty()) {
                         log.debug("line = " + line);
                         errors.add(
-                            ActionErrors.GLOBAL_ERROR,
-                            new ActionError(
+                            ActionErrors.GLOBAL_MESSAGE,
+                            new ActionMessage(
                                 "order.review.bad_order_line",
                                 new Integer(lineNumber)));
                         break;

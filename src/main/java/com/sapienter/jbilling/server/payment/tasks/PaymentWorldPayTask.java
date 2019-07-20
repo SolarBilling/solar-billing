@@ -20,30 +20,14 @@
 
 package com.sapienter.jbilling.server.payment.tasks;
 
-import com.sapienter.jbilling.server.payment.IExternalCreditCardStorage;
 import com.sapienter.jbilling.server.payment.PaymentDTOEx;
 import com.sapienter.jbilling.server.payment.db.PaymentAuthorizationDTO;
-import com.sapienter.jbilling.server.payment.db.PaymentResultDAS;
-import com.sapienter.jbilling.server.pluggableTask.PaymentTask;
-import com.sapienter.jbilling.server.pluggableTask.PaymentTaskWithTimeout;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskDTO;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.user.ContactBL;
-import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
-import com.sapienter.jbilling.server.util.Constants;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.util.ParameterParser;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * A pluggable PaymentTask that uses RBS WorldPay gateway for credit card

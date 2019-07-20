@@ -22,7 +22,6 @@ package com.sapienter.jbilling.server.mediation.db;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import org.hibernate.Query;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {

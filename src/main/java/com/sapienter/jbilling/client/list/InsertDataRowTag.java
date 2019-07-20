@@ -49,7 +49,6 @@ import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.list.ListDTO;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  * This tag will display all the colums of a query previously done with 
@@ -65,7 +64,9 @@ import java.math.BigInteger;
  */
 
 public class InsertDataRowTag extends BodyTagSupport {
-    public int doStartTag() throws JspException {
+	private static final long serialVersionUID = 1L;
+
+	public int doStartTag() throws JspException {
         Logger log = Logger.getLogger(InsertDataRowTag.class);
         //log.debug("bp1");
         CachedRowSet results = ((ListTagBase) getParent()).getQueryResults();

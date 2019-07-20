@@ -20,7 +20,6 @@
 package com.sapienter.jbilling.server.notification.db;
 
 import java.util.Date;
-import java.util.HashSet;
 
 import com.sapienter.jbilling.server.notification.MessageSection;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;

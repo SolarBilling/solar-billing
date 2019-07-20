@@ -26,8 +26,8 @@ import java.util.GregorianCalendar;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.validator.Resources;
 
@@ -47,7 +47,7 @@ public class FormDateHelper {
 		myRequest = request;
 	}
 
-	public Date parseDate(String prefix, String prompt, ActionErrors errorsCollector) {
+	public Date parseDate(String prefix, String prompt, ActionMessages errorsCollector) {
         Date date = null;
         String year = (String) myForm.get(prefix + SUFFIX_YEAR);
         String month = (String) myForm.get(prefix + SUFFIX_MONTH);
@@ -62,8 +62,8 @@ public class FormDateHelper {
             (day.length() > 0 && (month.length() <= 0 || year.length() <= 0)) ) {
             // get the localized name of this field
             String field = Resources.getMessage(myRequest, prompt); 
-            errorsCollector.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("errors.incomplete.date", field));
+            errorsCollector.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("errors.incomplete.date", field));
             return null;
         }
         if (year.length() > 0 && month.length() > 0 && day.length() > 0) {
@@ -78,8 +78,8 @@ public class FormDateHelper {
             if (date == null) {
                 // get the localized name of this field
                 String field = Resources.getMessage(myRequest, prompt); 
-                errorsCollector.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("errors.date", field));
+                errorsCollector.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("errors.date", field));
             } 
         }
         return date;

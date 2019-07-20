@@ -20,8 +20,6 @@
 
 package com.sapienter.jbilling.server.order;
 
-import com.sapienter.jbilling.server.util.Constants;
-
 /**
  * @author Emil
  */

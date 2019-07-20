@@ -19,11 +19,9 @@
  */
 package com.sapienter.jbilling.server.process.task;
 
-import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import org.quartz.CronTrigger;
 import org.quartz.impl.triggers.CronTriggerImpl;
-import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 
 import java.text.ParseException;

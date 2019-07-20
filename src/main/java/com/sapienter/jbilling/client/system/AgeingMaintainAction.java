@@ -31,13 +31,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.Resources;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -55,7 +53,7 @@ public class AgeingMaintainAction extends Action {
         
         Logger log = Logger.getLogger(AgeingMaintainAction.class);
         ActionMessages messages = new ActionMessages();
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         
         try {
             IBillingProcessSessionBean processSession = 
@@ -102,16 +100,16 @@ public class AgeingMaintainAction extends Action {
                             myForm.getGracePeriod().length() == 0) {
                         String field = Resources.getMessage(request, 
                                 "system.ageing.gracePeriod"); 
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("errors.required", field));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("errors.required", field));
                     } else {
                         try {
                             Integer.valueOf(myForm.getGracePeriod().trim());
                         } catch(NumberFormatException e) {
                             String field = Resources.getMessage(request, 
                                     "system.ageing.gracePeriod"); 
-                            errors.add(ActionErrors.GLOBAL_ERROR,
-                                    new ActionError("errors.integer", field));
+                            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                    new ActionMessage("errors.integer", field));
                             
                         }
                     }
@@ -136,8 +134,8 @@ public class AgeingMaintainAction extends Action {
                                     line.getWelcomeMessage().length() == 0)) {
                                 String field = Resources.getMessage(request, 
                                         "system.ageing.welcomeMessage"); 
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("errors.required.line", field,
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("errors.required.line", field,
                                                 line.getStatusId()));
                             }
                             // active and deleted don't check days
@@ -147,13 +145,13 @@ public class AgeingMaintainAction extends Action {
                             } else if ((line.getDays() <= 0) && f != lastSelected) {
                                 String field = Resources.getMessage(request, 
                                         "system.ageing.days"); 
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("errors.required.line", field,
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("errors.required.line", field,
                                             line.getStatusId()));
                             } else if (f == lastSelected && 
                                     (line.getDays() != 0)) {
-                                errors.add(ActionErrors.GLOBAL_ERROR,
-                                        new ActionError("system.ageing.error.lastDay"));              
+                                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                        new ActionMessage("system.ageing.error.lastDay"));              
                             }
                         }                                
                     }

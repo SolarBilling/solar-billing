@@ -20,15 +20,11 @@
 
 package com.sapienter.jbilling.common;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.rmi.PortableRemoteObject;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;

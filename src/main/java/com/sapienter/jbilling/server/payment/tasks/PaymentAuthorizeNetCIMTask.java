@@ -46,13 +46,9 @@ import com.sapienter.jbilling.server.pluggableTask.PaymentTask;
 import com.sapienter.jbilling.server.pluggableTask.PaymentTaskWithTimeout;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.user.ContactBL;
-import com.sapienter.jbilling.server.user.ContactDTOEx;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.CreditCardBL;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
-import com.sapienter.jbilling.server.user.db.CreditCardDAS;
-import com.sapienter.jbilling.server.user.contact.db.ContactFieldDTO;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.util.Constants;
 
@@ -180,7 +176,7 @@ public class PaymentAuthorizeNetCIMTask extends PaymentTaskWithTimeout
         if (!creditCard.isNumberObsucred()) {
             try {
                 return api.createCustomerProfile(CustomerProfileData.buildFromContactAndCreditCard(contact, creditCard));
-            } catch (DublicateProfileRecordException e) {
+            } catch (DuplicateProfileRecordException e) {
                 return updateProfile(contact, creditCard, e.getProfileId(), api);
             }
         } else {
@@ -206,11 +202,11 @@ public class PaymentAuthorizeNetCIMTask extends PaymentTaskWithTimeout
 }
 
 
-class DublicateProfileRecordException extends Exception {
+class DuplicateProfileRecordException extends RuntimeException {
+	private static final long serialVersionUID = 1L;
+	private final String profileId;
 
-    private final String profileId;
-
-    DublicateProfileRecordException(String profileId, String errorMessage) {
+    DuplicateProfileRecordException(String profileId, String errorMessage) {
         super(errorMessage);
         this.profileId = profileId;
     }
@@ -449,7 +445,7 @@ class AuthorizeNetCIMApi {
     }
 
     public CustomerProfileData createCustomerProfile(CustomerProfileData customerProfile)
-        throws DublicateProfileRecordException, PluggableTaskException {
+        throws DuplicateProfileRecordException, PluggableTaskException {
 
         String XML = buildCreateCustomerProfileRequest(customerProfile);
         String HTTPResponse = sendViaXML(XML);
@@ -742,7 +738,7 @@ class AuthorizeNetCIMApi {
     }
 
     private CustomerProfileData parseCreateCustomerProfileResponse(String HTTPResponse)
-        throws PluggableTaskException, DublicateProfileRecordException {
+        throws PluggableTaskException, DuplicateProfileRecordException {
 
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -785,7 +781,7 @@ class AuthorizeNetCIMApi {
             String customerPaymentProfileId = numericStringNodeLst.item(0).getNodeValue();
 
             return new CustomerProfileData(customerProfileId, customerPaymentProfileId);
-        } catch (DublicateProfileRecordException e) {
+        } catch (DuplicateProfileRecordException e) {
             throw e;
         } catch (Exception e) {
             LOG.error(e);
@@ -897,12 +893,12 @@ class AuthorizeNetCIMApi {
     }
 
     private static void throwDuplicateProfileError(String errorMessage, String serverErrorMessage)
-        throws DublicateProfileRecordException {
+        throws DuplicateProfileRecordException {
 
         int idStart = serverErrorMessage.indexOf(DUBLICATE_PROFILE_ID_PREFIX) + DUBLICATE_PROFILE_ID_PREFIX.length();
         int idEnd = serverErrorMessage.indexOf(' ', idStart);
         String profileId = serverErrorMessage.substring(idStart, idEnd);
 
-        throw new DublicateProfileRecordException(profileId, errorMessage);
+        throw new DuplicateProfileRecordException(profileId, errorMessage);
     }
 }

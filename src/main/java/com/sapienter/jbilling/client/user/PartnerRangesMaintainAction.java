@@ -29,8 +29,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.client.util.CrudActionBase;
@@ -97,14 +97,14 @@ public class PartnerRangesMaintainAction extends CrudActionBase<PartnerRangedMai
                             (range.getPercentageRate() == null && range.getReferralFee() == null) ||
                             (range.getPercentageRate() != null && range.getReferralFee() != null)) {
                     
-                    	errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("partner.ranges.error", f + 1));
+                    	errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("partner.ranges.error", f + 1));
                     } else {
                         ranges.add(range);
                     }
                 } catch (NumberFormatException e) {
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("partner.ranges.error", f + 1)); 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("partner.ranges.error", f + 1)); 
                 }
             } 
         }
@@ -130,12 +130,12 @@ public class PartnerRangesMaintainAction extends CrudActionBase<PartnerRangedMai
         
         for (PartnerRange range: partnerRanges) {
             if (range.getRangeTo() <= range.getRangeFrom()) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("partner.ranges.error.consec"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("partner.ranges.error.consec"));
                 break;
             } else if (range.getRangeFrom() != last + 1) {
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("partner.ranges.error.gap"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("partner.ranges.error.gap"));
                 break;
             } else {
                 last = range.getRangeTo();

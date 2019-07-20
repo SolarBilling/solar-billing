@@ -20,7 +20,6 @@
 
 package com.sapienter.jbilling.client.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 

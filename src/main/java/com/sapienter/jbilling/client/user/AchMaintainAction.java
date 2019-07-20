@@ -22,8 +22,8 @@ package com.sapienter.jbilling.client.user;
 
 import java.rmi.RemoteException;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.user.PaymentMethodCrudContext.AchContext;
 import com.sapienter.jbilling.client.util.Constants;
@@ -66,22 +66,22 @@ public class AchMaintainAction extends
 		if (isFieldMasked(dto.getAbaRouting()) ||
 				isFieldMasked(dto.getAccountName()) ||
 				isFieldMasked(dto.getBankAccount())) {
-			ActionError isMasked = new ActionError(//
+			ActionMessage isMasked = new ActionMessage(//
 					"ach.error.dataMasked", //
 					"ach.data" //
 			);
-			errors.add(ActionErrors.GLOBAL_ERROR, isMasked);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, isMasked);
 		
 		}
 		// verify that this entity actually accepts this kind of
 		// payment method
 		else if (!getPaymentSession().isMethodAccepted(entityId,
 				Constants.PAYMENT_METHOD_ACH)) {
-			ActionError notAccepted = new ActionError(//
+			ActionMessage notAccepted = new ActionMessage(//
 					"payment.error.notAccepted", //
 					"payment.method" //
 			);
-			errors.add(ActionErrors.GLOBAL_ERROR, notAccepted);
+			errors.add(ActionMessages.GLOBAL_MESSAGE, notAccepted);
 		}
 
 		AchContext result = new AchContext(dto);

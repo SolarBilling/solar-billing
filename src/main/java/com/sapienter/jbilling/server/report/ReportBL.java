@@ -23,7 +23,6 @@ package com.sapienter.jbilling.server.report;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 

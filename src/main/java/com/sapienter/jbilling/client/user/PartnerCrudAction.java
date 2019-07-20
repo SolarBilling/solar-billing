@@ -24,8 +24,8 @@ import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.client.util.CrudActionBase;
@@ -121,16 +121,16 @@ public class PartnerCrudAction extends CrudActionBase<Partner> {
         Integer clerkId = Integer.valueOf((String) myForm.get(FIELD_CLERK));
         UserDTOEx clerk = getUser(clerkId);
         if (clerk == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("partner.error.clerknotfound"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("partner.error.clerknotfound"));
         }
         if (!entityId.equals(clerk.getEntityId()) || 
                 clerk.getDeleted() == 1 ||
                 clerk.getMainRoleId().intValue() > 
                 Constants.TYPE_CLERK.intValue()) {
             	
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("partner.error.clerkinvalid"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("partner.error.clerkinvalid"));
         } else {
             dto.setRelatedClerkUserId(clerkId);
         }

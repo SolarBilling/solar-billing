@@ -20,7 +20,6 @@
 package com.sapienter.jbilling.server.util.api;
 
 import java.io.IOException;
-import java.util.Properties;
 
 public final class JbillingAPIFactory {
     

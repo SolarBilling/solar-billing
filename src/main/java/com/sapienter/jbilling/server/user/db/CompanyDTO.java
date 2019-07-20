@@ -23,7 +23,6 @@ package com.sapienter.jbilling.server.user.db;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,9 +65,8 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
 @Table(name="entity")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CompanyDTO  implements java.io.Serializable {
-
-
-     private int id;
+	private static final long serialVersionUID = 1L;
+	private int id;
      private CurrencyDTO currencyDTO;
      private LanguageDTO language;
      private String externalId;

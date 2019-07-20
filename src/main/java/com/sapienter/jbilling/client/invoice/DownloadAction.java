@@ -35,13 +35,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.DynaValidatorForm;
 
 import com.sapienter.jbilling.client.util.FormDateHelper;
@@ -71,7 +69,7 @@ public final class DownloadAction extends Action {
 
         DynaValidatorForm downloadForm = (DynaValidatorForm) form;
         
-        ActionErrors errors = validate(mapping, request, downloadForm);
+        ActionMessages errors = validate(mapping, request, downloadForm);
 
         Integer operationType = (Integer) downloadForm.get("operationType");
 		if (operationType != null && errors.isEmpty()) {
@@ -134,10 +132,10 @@ public final class DownloadAction extends Action {
         
 	}
     
-    public ActionErrors validate(ActionMapping mapping,
+    public ActionMessages validate(ActionMapping mapping,
             HttpServletRequest request, DynaValidatorForm form) {
 
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         Integer operationType = (Integer) form.get("operationType");
         String customer = (String) form.get("customer");
         String rangeStart = (String) form.get("rangeStart");
@@ -151,31 +149,31 @@ public final class DownloadAction extends Action {
         if (operationType != null) {
             if (operationType.equals(Constants.OPERATION_TYPE_CUSTOMER)) {
                 if (isEmpty(customer)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.customer.required"));
                 } else if (Long.parseLong(customer) <= 0) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.positive.value"));
                 }
             } else if (operationType.equals(Constants.OPERATION_TYPE_RANGE)) {
                 if (isEmpty(rangeStart) || isEmpty(rangeEnd)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.both.ranges"));
                 } else if ((!isEmpty(rangeStart) && (Long.parseLong(rangeStart) <= 0))
                         || (!isEmpty(rangeEnd) && (Long.parseLong(rangeEnd) <= 0))) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.positive.value"));
                 } else if (Long.parseLong(rangeStart) > Long
                         .parseLong(rangeEnd)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.process"));
                 }
             } else if (operationType.equals(Constants.OPERATION_TYPE_PROCESS)) {
                 if (isEmpty(process)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.process.required"));
                 } else if ((Long.parseLong(process) <= 0)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.positive.value"));
                 }
             } else if (operationType.equals(Constants.OPERATION_TYPE_DATE)) {
@@ -184,17 +182,17 @@ public final class DownloadAction extends Action {
                 dateTo = helper.parseDate("date_to", process, errors);
 
                 if (dateFrom == null || dateTo == null) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.date.required"));
                 }
                 
                 if (errors.isEmpty() && dateFrom.after(dateTo)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                             "invoice.download.err.dates.range"));
                 }
             } else if (operationType.equals(Constants.OPERATION_TYPE_NUMBER)) {
                 if (isEmpty(numberFrom) || isEmpty(numberTo)) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                         "invoice.download.err.number.required"));
                 }
             }

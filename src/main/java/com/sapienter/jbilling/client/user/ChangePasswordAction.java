@@ -29,8 +29,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -51,7 +51,7 @@ public class ChangePasswordAction extends Action {
             HttpServletResponse response)
             throws IOException, ServletException {
 
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         DynaValidatorForm info = (DynaValidatorForm) form;
         String password = (String) info.get("password");
         String verifyPassword = (String) info.get("verifyPassword");
@@ -59,14 +59,14 @@ public class ChangePasswordAction extends Action {
         Integer userId = (Integer) session.getAttribute(Constants.SESSION_USER_ID);
         
         if (!password.equals(verifyPassword)) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("user.create.error.password_match"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("user.create.error.password_match"));
         }
 
         String oldPassword = (String) session.getAttribute("jsp_initial_password");
         if (oldPassword.equalsIgnoreCase(password)) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("errors.repeated", "New password"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("errors.repeated", "New password"));
         }
 
 
@@ -77,8 +77,8 @@ public class ChangePasswordAction extends Action {
             myRemoteSession = (IUserSessionBean) Context.getBean(
                     Context.Name.USER_SESSION);
         } catch (Exception e) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.internal"));
         }
         
         if (!errors.isEmpty()) {
@@ -96,8 +96,8 @@ public class ChangePasswordAction extends Action {
             // with the menu and other fields needed for the login
             user = myRemoteSession.getGUIDTO(user.getUserName(), user.getEntityId());
         } catch (Exception e) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.internal"));
         }
 
         LOG.debug("Password changed for user " + userId);

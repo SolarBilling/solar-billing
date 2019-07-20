@@ -29,13 +29,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.DynaValidatorForm;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -60,7 +58,7 @@ public class MaintainAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         ActionMessages messages = new ActionMessages();
         
         HttpSession session = request.getSession(false);
@@ -142,7 +140,7 @@ public class MaintainAction extends Action {
             // Validate and Confirm deletion
             if (action.equals("confirmDelete")){
                 if( userSession.isParentCustomer(userId) && userSession.hasSubAccounts( userId)  ){
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("user.delete.hasChild"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("user.delete.hasChild"));
                     forward = "edit";
                 } else {
                     userDto = userSession.getUserDTOEx(userId);
@@ -185,8 +183,8 @@ public class MaintainAction extends Action {
                         password.trim().length() == 0 || vPassword == null ||
                         vPassword.trim().length() == 0 ||
                         !password.equals(vPassword))) {
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("user.create.error.password_match"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("user.create.error.password_match"));
                 }
                 
                 //XXX
@@ -201,8 +199,8 @@ public class MaintainAction extends Action {
 				 * 		!userDto.getPassword().equals((String) userForm.get(
 				 * 			"oldPassword"))) {
 				 * 
-				 * 		errors.add(ActionErrors.GLOBAL_ERROR,
-				 * 			new ActionError("user.edit.error.invalidOldPassword"));
+				 * 		errors.add(ActionMessages.GLOBAL_MESSAGE,
+				 * 			new ActionMessage("user.edit.error.invalidOldPassword"));
 				 * }
 				 * </code>
 				 */
@@ -212,8 +210,8 @@ public class MaintainAction extends Action {
                 if (errors.isEmpty() && partnerId != null && partnerId.length() > 0) {
                     if (userSession.getPartnerDTO(Integer.valueOf(partnerId)) ==
                             null) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("user.create.error.badPartner"));
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("user.create.error.badPartner"));
                     }
                 }
 
@@ -226,8 +224,8 @@ public class MaintainAction extends Action {
                             (Integer) userForm.get("entity"));
 
                     if (testUser != null) {
-                        errors.add(ActionErrors.GLOBAL_ERROR,
-                                new ActionError("user.create.error.taken", 
+                        errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                new ActionMessage("user.create.error.taken", 
                                     (String) userForm.get("username")));
                     }
                 }
@@ -236,17 +234,17 @@ public class MaintainAction extends Action {
                         " credit limit is " + userForm.get("credit_limit"));
                 if (Constants.BALANCE_CREDIT_LIMIT.equals((Integer) userForm.get("balance_type"))
                         && ((String) userForm.get("credit_limit")).trim().length() == 0) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("user.edit.error.invalidCreditLimit"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("user.edit.error.invalidCreditLimit"));
                 }
 
                 if (!Constants.BALANCE_CREDIT_LIMIT.equals((Integer) userForm.get("balance_type")) &&
                         ((String) userForm.get("credit_limit")).trim().length() != 0) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("user.edit.error.invalidNonCreditLimit"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("user.edit.error.invalidNonCreditLimit"));
                 }
 
                 if (!Constants.BALANCE_PRE_PAID.equals((Integer) userForm.get("balance_type")) &&
                         ((String) userForm.get("auto_recharge")).trim().length() != 0) {
-                    errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("user.edit.error.invalidNonAutoRecharge"));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("user.edit.error.invalidNonAutoRecharge"));
                 }
 
                 if (errors.isEmpty()) {              
@@ -342,8 +340,8 @@ public class MaintainAction extends Action {
             }
             saveMessages(request, messages);
         } catch (Exception e) {
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.internal"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.internal"));
             LOG.debug("Exception:", e);
         }
         

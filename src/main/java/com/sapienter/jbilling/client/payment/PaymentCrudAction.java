@@ -29,8 +29,8 @@ import org.apache.commons.validator.Validator;
 import org.apache.commons.validator.ValidatorAction;
 import org.apache.commons.validator.ValidatorResources;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.FieldChecks;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -302,8 +302,8 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
                 cal.setTime(ccDto.getCcExpiry());
                 cal.add(GregorianCalendar.MONTH, 1); // add 1 month
                 if (Calendar.getInstance().getTime().after(cal.getTime())) {
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("creditcard.error.expired", 
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("creditcard.error.expired", 
                                 "payment.cc.date"));
                 }
             }
@@ -363,7 +363,7 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
              * 
              */
             
-            ActionError realTimeNoPayment = null;
+            ActionMessage realTimeNoPayment = null;
             boolean processNow = (Boolean) myForm.get(FIELD_PROCESS_NOW);
             if ("cc".equals(payMethod) && processNow){
                 if (refundPayment == null || 
@@ -371,14 +371,14 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
                     refundPayment.getAuthorization() == null ||
                     !Constants.RESULT_OK.equals(refundPayment.getPaymentResult().getId())) {
                 	
-                	realTimeNoPayment = new ActionError(//
+                	realTimeNoPayment = new ActionMessage(//
                 			"refund.error.realtimeNoPayment", 
                     		"payment.cc.processNow");
                 }
             }
             
             if (realTimeNoPayment != null){
-            	errors.add(ActionErrors.GLOBAL_ERROR, realTimeNoPayment);	
+            	errors.add(ActionMessages.GLOBAL_MESSAGE, realTimeNoPayment);	
             } else {
                 dto.setPayment(refundPayment);
             }
@@ -406,8 +406,8 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
                     session.getAttribute(Constants.SESSION_ENTITY_ID_KEY),
                     dto.getPaymentMethod().getId())) {
             	
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                        new ActionError("payment.error.notAccepted", 
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("payment.error.notAccepted", 
                             "payment.method"));
             }
         }
@@ -468,11 +468,11 @@ public class PaymentCrudAction extends CrudActionBase<PaymentDTOEx> {
 		va.setName("creditCard");
 		va.setClassname("org.apache.struts.validator.FieldChecks");
 		va.setMethod("validateCreditCard");
-		final String actionErrors = isOldStruts ? "org.apache.struts.action.ActionErrors, " : "org.apache.struts.action.ActionMessages, ";
+		final String ActionMessages = isOldStruts ? "org.apache.struts.action.ActionMessages, " : "org.apache.struts.action.ActionMessages, ";
 
 		va.setMethodParams("java.lang.Object, "
 		        + "org.apache.commons.validator.ValidatorAction, "
-		        + "org.apache.commons.validator.Field, " + actionErrors
+		        + "org.apache.commons.validator.Field, " + ActionMessages
 		        + "javax.servlet.http.HttpServletRequest");
 		va.setDepends("");
 		va.setMsg("errors.creditcard");

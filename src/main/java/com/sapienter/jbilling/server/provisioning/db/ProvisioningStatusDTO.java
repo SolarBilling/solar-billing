@@ -19,14 +19,8 @@
 */
 package com.sapienter.jbilling.server.provisioning.db;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import com.sapienter.jbilling.server.util.Constants;
@@ -40,7 +34,8 @@ public class ProvisioningStatusDTO extends AbstractGenericStatus
 
 //    private Set<OrderLineDTO> orderLines = new HashSet<OrderLineDTO>(0);
 
-    public ProvisioningStatusDTO() {
+	private static final long serialVersionUID = 1L;
+	public ProvisioningStatusDTO() {
     }
 	
     public ProvisioningStatusDTO(int statusValue) {

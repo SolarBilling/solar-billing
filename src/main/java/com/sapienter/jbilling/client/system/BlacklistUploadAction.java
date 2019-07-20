@@ -34,13 +34,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.upload.FormFile;
 
@@ -68,7 +66,7 @@ public class BlacklistUploadAction extends Action {
         HttpSession session = request.getSession(false);
         DynaActionForm blacklistUploadForm = (DynaActionForm) form;
         ActionMessages messages = new ActionMessages();
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         Integer entityId = (Integer) session.getAttribute(
                 Constants.SESSION_ENTITY_ID_KEY);
         String filePath = null; // csv temp file path
@@ -115,17 +113,17 @@ public class BlacklistUploadAction extends Action {
                 // most likely file is too big 
                 // see '<controller maxFileSize="..." />' in struts-config.xml
                 errors.add("csvFile", 
-                        new ActionError("system.blacklist.error.file_size"));
+                        new ActionMessage("system.blacklist.error.file_size"));
             }
         } catch (CsvProcessor.ParseException pe) {
             LOG.error("CSV Parse Exception", pe);
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                    new ActionError("system.blacklist.error.parse_exception",
+                    new ActionMessage("system.blacklist.error.parse_exception",
                     pe.getMessage()));
         } catch (Exception e) {
             LOG.error("Exception ", e);
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                    new ActionError("all.internal"));
+                    new ActionMessage("all.internal"));
         } finally {
             // delete the csv temp file, if it was created
             if (filePath != null) {
@@ -147,12 +145,12 @@ public class BlacklistUploadAction extends Action {
      * Creates a temp file for the server to process. 
      * Returns the absolute path to the file.
      */
-    private String processFile(FormFile csvFile, ActionErrors errors) 
+    private String processFile(FormFile csvFile, ActionMessages errors) 
             throws FileNotFoundException, IOException {
         // check a file was actually uploaded
         if (csvFile.getFileSize() == 0) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
-                    new ActionError("system.blacklist.error.empty_file"));
+                    new ActionMessage("system.blacklist.error.empty_file"));
             return null;
         }
 

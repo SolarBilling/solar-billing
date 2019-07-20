@@ -26,8 +26,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.client.util.CrudActionBase;
@@ -308,15 +308,15 @@ public class OrderCrudAction extends CrudActionBase<OrderDTO> {
     }
 
     private void addError(String arg0, String arg1) {
-        addError(new ActionError(arg0, arg1));
+        addError(new ActionMessage(arg0, arg1));
     }
 
     private void addError(String msg) {
-        addError(new ActionError(msg));
+        addError(new ActionMessage(msg));
     }
 
-    private void addError(ActionError err) {
-        errors.add(ActionErrors.GLOBAL_ERROR, err);
+    private void addError(ActionMessage err) {
+        errors.add(ActionMessages.GLOBAL_MESSAGE, err);
     }
 
 }

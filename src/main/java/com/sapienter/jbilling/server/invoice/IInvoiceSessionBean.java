@@ -20,12 +20,10 @@
 
 package com.sapienter.jbilling.server.invoice;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import java.util.Set;
 
 /**

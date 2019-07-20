@@ -23,8 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -80,7 +80,7 @@ public class MaintainAction extends CrudActionBase<ItemDTO> {
         // the validation has to be manual
         if (dto.getTypes().length == 0) {
             String field = Resources.getMessage(request, "item.prompt.types");
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.required", field));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.required", field));
         }
 
         // get the prices. At least one has to be present
@@ -94,8 +94,8 @@ public class MaintainAction extends CrudActionBase<ItemDTO> {
                 BigDecimal price = string2decimal(priceStr);
                 if (price == null) {
                     String field = Resources.getMessage(request, "item.prompt.price");
-                    errors.add(ActionErrors.GLOBAL_ERROR,
-                            new ActionError("errors.float", field));
+                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("errors.float", field));
                     break;
                 } else {
                     atLeastOnePriceFound = true;
@@ -106,14 +106,14 @@ public class MaintainAction extends CrudActionBase<ItemDTO> {
 
         // either is a percentage or a price is required.
         if (!atLeastOnePriceFound && dto.getPercentage() == null) {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("item.error.price"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("item.error.price"));
         }
 
         // If the item has an ID (aka it is not being created)
         //  Validate the change on "Allow decimal quantity" flag and block it if there is an
         //   active order with the item
         if (!myItemSession.validateDecimals(dto.getHasDecimals(), (Integer) myForm.get(FIELD_ID))) {
-            errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("item.error.decimals"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("item.error.decimals"));
         }
 
         return dto;

@@ -37,7 +37,6 @@ import org.apache.commons.validator.util.ValidatorUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.validator.Resources;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetFactory;

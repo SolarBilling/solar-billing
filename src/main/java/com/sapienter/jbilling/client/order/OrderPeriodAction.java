@@ -33,13 +33,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.util.RequestUtils;
 import org.apache.struts.validator.DynaValidatorForm;
@@ -71,7 +69,7 @@ public class OrderPeriodAction extends Action {
 		try {
 			String ret = "view";
 			ActionMessages messages = new ActionMessages();
-			ActionErrors errors = new ActionErrors();
+			ActionMessages errors = new ActionMessages();
 
 			String action = request.getParameter("action");
 			IOrderSessionBean orderSession = (IOrderSessionBean) 
@@ -121,7 +119,7 @@ public class OrderPeriodAction extends Action {
 							throw new Exception();
 						}
 					} catch (Exception e) {
-						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 								"order.period.error.value"));
 						break;
 					}
@@ -129,7 +127,7 @@ public class OrderPeriodAction extends Action {
 							.get("description"))[f]);
 					if (orgPeriods[f].getDescription() == null
 							|| orgPeriods[f].getDescription().trim().length() == 0) {
-						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 								"order.period.error.description"));
 						break;
 					}
@@ -143,11 +141,11 @@ public class OrderPeriodAction extends Action {
 						saveMessages(request, messages);
 			        } catch (Exception e) {
 			        	if (e.getCause().getClass().equals(StaleObjectStateException.class)) {
-				            errors.add(ActionErrors.GLOBAL_ERROR,
-				                   new ActionError("errors.modified"));
+				            errors.add(ActionMessages.GLOBAL_MESSAGE,
+				                   new ActionMessage("errors.modified"));
 			        	} else {
-			        		errors.add(ActionErrors.GLOBAL_ERROR,
-					                   new ActionError("all.internal"));
+			        		errors.add(ActionMessages.GLOBAL_MESSAGE,
+					                   new ActionMessage("all.internal"));
 			        	}
 						saveErrors(request, errors);
 					}
@@ -166,7 +164,7 @@ public class OrderPeriodAction extends Action {
 							new ActionMessage("order.period.deleted", id));
 					saveMessages(request, messages);
 				} else {
-					errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 							"order.period.error.delete"));
 					saveErrors(request, errors);
 				}

@@ -36,13 +36,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.Resources;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -54,7 +52,6 @@ import com.sapienter.jbilling.server.order.IOrderSessionBean;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 import com.sapienter.jbilling.server.util.Context;
-import java.math.BigDecimal;
 
 /**
  * @author Emil
@@ -68,7 +65,7 @@ public class ReviewOrderAction extends Action {
         throws IOException, ServletException {
 
         log = Logger.getLogger(ReviewOrderAction.class);
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         ActionMessages messages = new ActionMessages();
         session = request.getSession(false);
         OrderDTO newOrder = (OrderDTO) session.getAttribute(
@@ -127,8 +124,8 @@ public class ReviewOrderAction extends Action {
                         if (line.getPrice() == null) {
                             String field = Resources.getMessage(request, 
                                     "order.line.prompt.price");
-                            errors.add(ActionErrors.GLOBAL_ERROR,
-                                    new ActionError("errors.float", field));
+                            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                    new ActionMessage("errors.float", field));
                             saveErrors(request, errors);
                             forward = "show";
                             break;
@@ -209,8 +206,8 @@ public class ReviewOrderAction extends Action {
                 log.error(
                     "ReviewAction called with unsupported action: " + action);
                 errors.add(
-                    ActionErrors.GLOBAL_ERROR,
-                    new ActionError("all.internal"));
+                    ActionMessages.GLOBAL_MESSAGE,
+                    new ActionMessage("all.internal"));
                 saveErrors(request, errors);
                 forward = "show";
             }
@@ -219,12 +216,12 @@ public class ReviewOrderAction extends Action {
             
             if( e instanceof ItemDecimalsException ){
             	errors.add(
-                		ActionErrors.GLOBAL_ERROR,
-                		new ActionError("order.error.item.decimals"));
+                		ActionMessages.GLOBAL_MESSAGE,
+                		new ActionMessage("order.error.item.decimals"));
             } else {
 	            errors.add(
-	                ActionErrors.GLOBAL_ERROR,
-	                new ActionError("all.internal"));
+	                ActionMessages.GLOBAL_MESSAGE,
+	                new ActionMessage("all.internal"));
             }
             
             forward = "show";
