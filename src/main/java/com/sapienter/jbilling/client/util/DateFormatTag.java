@@ -39,7 +39,11 @@ import org.apache.struts.validator.Resources;
  *          body-content="JSP"
  */
 public class DateFormatTag extends TagSupport {
-    public String format;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public String format;
     
     public int doStartTag() throws JspException {
         int retValue = EVAL_BODY_INCLUDE;

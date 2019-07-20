@@ -54,7 +54,11 @@ import com.sapienter.jbilling.server.util.db.JbillingTable;
 public class ContactMapDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private JbillingTable jbillingTable;
      private ContactTypeDTO contactType;
      private ContactDTO contact;

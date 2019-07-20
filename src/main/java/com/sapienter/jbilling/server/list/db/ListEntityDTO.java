@@ -53,7 +53,11 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
         "list_id", "entity_id" }))
 public class ListEntityDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private ListDTO list;
     private CompanyDTO entity;
     private int totalRecords;

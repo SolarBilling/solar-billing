@@ -27,6 +27,11 @@ package com.sapienter.jbilling.server.pluggableTask;
 public class TaskException extends Exception {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor for TaskException.
      */
     public TaskException() {

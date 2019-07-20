@@ -32,7 +32,12 @@ import javax.persistence.Transient;
 public class ProcessRunStatusDTO extends AbstractGenericStatus implements java.io.Serializable {
 
 
-    public ProcessRunStatusDTO() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ProcessRunStatusDTO() {
     }
 
 

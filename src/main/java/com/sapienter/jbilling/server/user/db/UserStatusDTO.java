@@ -39,7 +39,11 @@ import com.sapienter.jbilling.server.util.db.AbstractGenericStatus;
 @DiscriminatorValue("user_status")
 public class UserStatusDTO extends AbstractGenericStatus implements java.io.Serializable {
 
-     private int canLogin;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int canLogin;
      private Set<AgeingEntityStepDTO> ageingEntitySteps = new HashSet<AgeingEntityStepDTO>(0);
      private Set<UserDTO> baseUsers = new HashSet<UserDTO>(0);
 

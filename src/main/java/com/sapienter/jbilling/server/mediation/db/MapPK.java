@@ -27,7 +27,11 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class MapPK implements Serializable {
-    @Column(name = "mediation_process_id")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Column(name = "mediation_process_id")
     private Integer mediationProcessId;
     @Column(name = "order_id")
     private Integer orderId;

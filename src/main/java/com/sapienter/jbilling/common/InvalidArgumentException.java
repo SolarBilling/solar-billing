@@ -22,7 +22,11 @@ package com.sapienter.jbilling.common;
 import org.apache.log4j.Logger;
 
 public class InvalidArgumentException extends RuntimeException {
-    private final Integer code;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final Integer code;
     private final Exception e;
     private static final Logger LOG = Logger.getLogger(InvalidArgumentException.class);
     

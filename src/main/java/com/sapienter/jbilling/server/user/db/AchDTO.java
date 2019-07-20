@@ -46,6 +46,10 @@ import com.sapienter.jbilling.server.payment.db.PaymentDTO;
 @Table(name = "ach")
 public class AchDTO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private UserDTO baseUser;
 	private String abaRouting;

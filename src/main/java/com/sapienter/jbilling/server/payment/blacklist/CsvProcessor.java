@@ -57,7 +57,11 @@ public class CsvProcessor {
      * ParseException thrown when unexpected or missing data encountered.
      */
     public static class ParseException extends RuntimeException {
-        private int lineNum;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private int lineNum;
         private Column column;
 
         public ParseException(String message, int lineNum, Column column) {

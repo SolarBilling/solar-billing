@@ -39,7 +39,11 @@ import com.sapienter.jbilling.server.user.UserDTOEx;
 
 public class PermissionTag extends TagSupport {
 
-    private Integer permission = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer permission = null;
     private Boolean negative = new Boolean(false);
     private Integer typeId = null;
     private Integer foreignId = null;

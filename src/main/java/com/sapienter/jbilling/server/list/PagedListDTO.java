@@ -33,6 +33,10 @@ import com.sapienter.jbilling.server.list.db.ListFieldDTO;
  * 
  */
 public class PagedListDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer count = null;
 	private Integer keyFieldId = null;
 	private Integer pageSize = null;

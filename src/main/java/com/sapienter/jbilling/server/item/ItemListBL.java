@@ -45,7 +45,11 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 public final class ItemListBL extends ResultList 
         implements ItemSQL, Serializable { 
 	
-    private static final Logger LOG = Logger.getLogger(ItemListBL.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(ItemListBL.class);
 
 
 	public CachedRowSet getList(Integer entityID) 

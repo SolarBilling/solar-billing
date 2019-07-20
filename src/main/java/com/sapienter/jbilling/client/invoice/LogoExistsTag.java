@@ -45,7 +45,12 @@ import com.sapienter.jbilling.common.Util;
  *          tei-class="com.sapienter.jbilling.client.invoice.LogoExistsTagTEI"
  */
 public class LogoExistsTag extends TagSupport {
-     public int doStartTag() {
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public int doStartTag() {
          return SKIP_BODY;
      }
 

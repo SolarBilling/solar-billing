@@ -39,7 +39,11 @@ import com.sapienter.jbilling.server.list.ListDTO;
 
 public abstract class ListTagBase extends TagSupport {
 
-    public static final int METHOD_JDBC = 1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static final int METHOD_JDBC = 1;
     public static final int METHOD_EJB = 2;
 
     protected CachedRowSet queryResults = null;

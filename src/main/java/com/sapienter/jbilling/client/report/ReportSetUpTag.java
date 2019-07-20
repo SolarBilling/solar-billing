@@ -53,7 +53,11 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class ReportSetUpTag extends TagSupport {
 
-    private static final Logger LOG = Logger.getLogger(ReportSetUpTag.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(ReportSetUpTag.class);
     
     public int doStartTag() throws JspException {
         int retValue = SKIP_BODY;

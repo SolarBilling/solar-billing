@@ -35,7 +35,11 @@ import com.sapienter.jbilling.server.process.AgeingDTOEx;
  */
 public class AgeingArrayForm extends ActionForm {
 
-    private AgeingDTOEx[] lines = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private AgeingDTOEx[] lines = null;
     private String gracePeriod = null;
     private String urlCallback = null;
     private Integer languageId = null;

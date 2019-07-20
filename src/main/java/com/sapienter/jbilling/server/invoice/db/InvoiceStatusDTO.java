@@ -33,7 +33,11 @@ import java.util.HashSet;
 @DiscriminatorValue("invoice_status")
 public class InvoiceStatusDTO extends AbstractGenericStatus implements Serializable {
 
-    private Set<InvoiceDTO> invoiceDTOs = new HashSet<InvoiceDTO>(0);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Set<InvoiceDTO> invoiceDTOs = new HashSet<InvoiceDTO>(0);
 
     public InvoiceStatusDTO() { }
 

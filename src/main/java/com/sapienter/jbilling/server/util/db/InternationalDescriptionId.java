@@ -27,7 +27,11 @@ import javax.persistence.Embeddable;
 public class InternationalDescriptionId  implements java.io.Serializable {
 
 
-     private int tableId;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int tableId;
      private int foreignId;
      private String psudoColumn;
      private int languageId;

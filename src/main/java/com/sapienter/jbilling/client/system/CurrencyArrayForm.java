@@ -35,7 +35,11 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
  */
 public class CurrencyArrayForm extends ActionForm {
 
-    private CurrencyDTO[] lines = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private CurrencyDTO[] lines = null;
     private Integer defaultCurrencyId = null;
     /**
      * 

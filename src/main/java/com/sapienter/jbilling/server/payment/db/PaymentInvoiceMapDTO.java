@@ -59,7 +59,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PaymentInvoiceMapDTO implements Serializable {
 
-    private static final Logger log = Logger.getLogger(PaymentInvoiceMapDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = Logger.getLogger(PaymentInvoiceMapDTO.class);
 
     private int id;
     private PaymentDTO payment;

@@ -53,7 +53,11 @@ import java.math.BigDecimal;
 public class ItemPriceDTO  implements java.io.Serializable {
 
 
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer id;
     private CurrencyDTO currencyDTO;
     private ItemDTO item;
     private BigDecimal price;

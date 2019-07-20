@@ -56,7 +56,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PluggableTaskParameterDTO implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(PluggableTaskParameterDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = Logger.getLogger(PluggableTaskParameterDTO.class);
     
     public static final int INT = 1;
     public static final int STR = 2;

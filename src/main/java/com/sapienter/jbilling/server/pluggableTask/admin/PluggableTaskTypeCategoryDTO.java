@@ -35,7 +35,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class PluggableTaskTypeCategoryDTO implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(PluggableTaskTypeCategoryDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = Logger.getLogger(PluggableTaskTypeCategoryDTO.class);
     
     @Id
     public Integer Id;

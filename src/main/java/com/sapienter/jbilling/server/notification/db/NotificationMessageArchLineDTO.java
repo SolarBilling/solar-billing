@@ -44,7 +44,11 @@ import javax.persistence.Version;
 @Table(name = "notification_message_arch_line")
 public class NotificationMessageArchLineDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private NotificationMessageArchDTO notificationMessageArch;
     private int section;
     private String content;

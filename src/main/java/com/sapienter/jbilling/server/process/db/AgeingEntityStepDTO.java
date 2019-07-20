@@ -52,7 +52,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class AgeingEntityStepDTO extends AbstractDescription implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private CompanyDTO company;
     private UserStatusDTO userStatus;
     private int days;

@@ -50,7 +50,11 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class GetUserTag extends TagSupport {
     
-    Integer userId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	Integer userId = null;
     Boolean createForm = new Boolean(false);
     
     public int doStartTag() throws JspException {

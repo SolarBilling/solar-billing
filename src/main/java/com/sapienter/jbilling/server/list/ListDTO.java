@@ -25,7 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListDTO implements Serializable {
-    private List<Object[]> lines = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Object[]> lines = null;
     private Integer types[] = null;
     
     public ListDTO() {

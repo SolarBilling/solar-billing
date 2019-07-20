@@ -45,7 +45,12 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class WelcomeTag extends TagSupport {
 
-    public int doStartTag() throws JspException {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public int doStartTag() throws JspException {
         HttpSession session = pageContext.getSession();
         // gather some information about the logged user
         Integer entityId = (Integer) session.getAttribute(

@@ -60,7 +60,12 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 @Table(name = "partner")
 public class Partner implements java.io.Serializable {
 
-    private Set<PartnerRange> ranges = new HashSet<PartnerRange>(0);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Set<PartnerRange> ranges = new HashSet<PartnerRange>(0);
 
     private Integer relatedClerkUserId = null;
 

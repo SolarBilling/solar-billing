@@ -52,7 +52,12 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskDTO;
 public class MediationConfiguration implements Serializable {
     //private static final Logger LOG = Logger.getLogger(MediationConfiguration.class);
    
-    @Id @GeneratedValue(strategy=GenerationType.TABLE, generator="mediation_cfg_GEN")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue(strategy=GenerationType.TABLE, generator="mediation_cfg_GEN")
     private Integer id;
    
     @Column(name = "entity_id")

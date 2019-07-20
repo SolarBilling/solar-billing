@@ -35,7 +35,11 @@ import java.util.Date;
  */
 public class PaymentWS implements Serializable {
 
-    private Integer userId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer userId = null;
     private PaymentInfoChequeDTO cheque = null;
     private CreditCardDTO creditCard = null;
     private AchDTO ach = null;

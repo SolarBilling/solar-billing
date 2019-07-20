@@ -35,6 +35,11 @@ import com.sapienter.jbilling.server.report.db.ReportFieldDTO;
 
 public class Field extends ReportFieldDTO {
     
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger LOG = Logger.getLogger(Field.class);
 	
     /*

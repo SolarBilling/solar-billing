@@ -50,7 +50,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProcessRunTotalPmDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private PaymentMethodDTO paymentMethod;
     private BigDecimal total;
     private ProcessRunTotalDTO processRunTotal;

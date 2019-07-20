@@ -53,7 +53,11 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 @Table(name = "report")
 public class ReportDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private String titleKey;
     private String instructionskey;
     private String tablesList;

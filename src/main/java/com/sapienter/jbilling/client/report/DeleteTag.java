@@ -48,7 +48,11 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class DeleteTag extends TagSupport {
 
-    Integer reportId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	Integer reportId = null;
 
     public int doStartTag() throws JspException {
         int retValue = SKIP_BODY;

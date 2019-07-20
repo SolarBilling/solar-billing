@@ -39,7 +39,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class EventLogMessageDTO  implements java.io.Serializable {
 
-    @Id 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id 
     @Column(name="id", unique=true, nullable=false)
     private int id;
 

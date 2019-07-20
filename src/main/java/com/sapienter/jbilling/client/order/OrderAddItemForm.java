@@ -32,7 +32,11 @@ import java.math.BigDecimal;
  *
  */
 public class OrderAddItemForm extends ValidatorForm implements Serializable {
-    private BigDecimal quantity = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private BigDecimal quantity = null;
     private Integer itemID = null;
     /**
      * Returns the itemID.

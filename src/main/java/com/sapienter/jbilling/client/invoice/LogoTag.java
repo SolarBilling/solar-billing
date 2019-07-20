@@ -46,7 +46,12 @@ import com.sapienter.jbilling.common.Util;
  *          body-content="empty"
  */
 public class LogoTag extends TagSupport {
-     public int doStartTag() throws JspException {
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public int doStartTag() throws JspException {
         Logger log = Logger.getLogger(LogoTag.class);
         ActionMessages errors = new ActionMessages();
         

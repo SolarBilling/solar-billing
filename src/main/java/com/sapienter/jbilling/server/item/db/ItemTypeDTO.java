@@ -61,7 +61,11 @@ public class ItemTypeDTO extends AbstractDescription
         implements java.io.Serializable {
 
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private CompanyDTO entity;
     private String description;
     private int orderLineTypeId;

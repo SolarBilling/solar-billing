@@ -58,7 +58,11 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NotificationMessageDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private NotificationMessageTypeDTO notificationMessageType;
     private CompanyDTO entity;
     private LanguageDTO language;

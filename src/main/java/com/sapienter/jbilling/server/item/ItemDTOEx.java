@@ -28,7 +28,11 @@ import java.util.List;
 
 public class ItemDTOEx implements Serializable {
 
-    // ItemDTO
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// ItemDTO
     private Integer id;
     private String number;
     private BigDecimal percentage;

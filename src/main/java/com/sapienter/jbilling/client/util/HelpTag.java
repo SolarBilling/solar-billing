@@ -41,7 +41,11 @@ import com.sapienter.jbilling.server.user.UserDTOEx;
  */
 public class HelpTag extends TagSupport {
 
-    private String page = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String page = null;
     private String anchor = null;
     private Boolean isMenu = null;
     

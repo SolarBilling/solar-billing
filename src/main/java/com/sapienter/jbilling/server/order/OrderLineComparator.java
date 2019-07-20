@@ -35,7 +35,12 @@ import com.sapienter.jbilling.server.order.db.OrderLineDTO;
  */
 public class OrderLineComparator implements Comparator<OrderLineDTO>, Serializable {
 
-    /* (non-Javadoc)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(OrderLineDTO o1, OrderLineDTO o2) {

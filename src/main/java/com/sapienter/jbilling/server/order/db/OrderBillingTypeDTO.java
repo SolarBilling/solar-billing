@@ -45,7 +45,11 @@ import com.sapienter.jbilling.server.util.db.AbstractDescription;
 public class OrderBillingTypeDTO extends AbstractDescription implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private Set<OrderDTO> orderDTOs = new HashSet<OrderDTO>(0);
 
     public OrderBillingTypeDTO() {

@@ -32,7 +32,11 @@ import com.sapienter.jbilling.server.payment.PaymentAuthorizationDTOEx;
  * @author Emil
  */
 public class CreateResponseWS implements Serializable {
-    private Integer userId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer userId = null;
     private Integer orderId = null;
     private Integer invoiceId = null;
     private Integer paymentId = null;

@@ -74,6 +74,11 @@ import java.util.ArrayList;
 // No cache, mutable and critical
 public class OrderDTO implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger LOG = Logger.getLogger(OrderDTO.class);
 
      private Integer id;

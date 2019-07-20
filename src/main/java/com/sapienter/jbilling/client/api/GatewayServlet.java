@@ -40,7 +40,12 @@ import com.sapienter.jbilling.common.GatewayBL;
  */
 public class GatewayServlet extends HttpServlet {
 
-    public void doPost(HttpServletRequest request, 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public void doPost(HttpServletRequest request, 
             HttpServletResponse response) 
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();

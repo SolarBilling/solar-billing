@@ -67,7 +67,11 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
 @Table(name = "base_user")
 public class UserDTO implements java.io.Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private CurrencyDTO currencyDTO;
     private CompanyDTO company;
     private SubscriberStatusDTO subscriberStatus;

@@ -22,6 +22,11 @@ package com.sapienter.jbilling.server.item;
 public class ItemDecimalsException extends RuntimeException {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor for ItemDecimalsException.
      */
     public ItemDecimalsException() {

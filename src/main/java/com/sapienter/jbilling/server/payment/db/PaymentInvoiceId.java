@@ -29,7 +29,11 @@ import javax.persistence.Embeddable;
 public class PaymentInvoiceId  implements java.io.Serializable {
 
 
-     private Integer paymentId;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer paymentId;
      private Integer invoiceId;
      private Double amount;
      private Date createDatetime;

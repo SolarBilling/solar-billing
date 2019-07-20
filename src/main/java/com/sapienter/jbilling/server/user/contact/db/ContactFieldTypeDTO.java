@@ -44,7 +44,11 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 public class ContactFieldTypeDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private CompanyDTO entity;
      private String promptKey;
      private String dataType;

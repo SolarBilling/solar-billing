@@ -54,7 +54,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class ContactDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private String organizationName;
      private String address1;
      private String address2;

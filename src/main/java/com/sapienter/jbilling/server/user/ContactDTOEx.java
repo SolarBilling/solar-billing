@@ -37,7 +37,11 @@ import com.sapienter.jbilling.server.user.contact.db.ContactFieldTypeDTO;
  */
 public class ContactDTOEx extends ContactDTO implements Serializable  {
     
-    private Hashtable<String, ContactFieldDTO> fieldsTable = null; // the entity specific fields
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Hashtable<String, ContactFieldDTO> fieldsTable = null; // the entity specific fields
     private Integer type = null; // the contact type
 
     /**

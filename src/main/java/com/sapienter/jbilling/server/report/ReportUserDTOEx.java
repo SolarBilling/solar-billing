@@ -27,7 +27,11 @@ import com.sapienter.jbilling.server.report.db.ReportUserDTO;
 
 public class ReportUserDTOEx extends ReportUserDTO {
 
-    Integer reportId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	Integer reportId = null;
 
     /**
      * @param id

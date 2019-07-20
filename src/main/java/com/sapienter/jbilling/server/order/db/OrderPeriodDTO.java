@@ -60,7 +60,11 @@ import com.sapienter.jbilling.server.util.db.AbstractDescription;
 public class OrderPeriodDTO extends AbstractDescription implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private CompanyDTO company;
      private PeriodUnitDTO periodUnitDTO;
      private Integer value;

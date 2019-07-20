@@ -50,7 +50,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class ContactFieldDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private ContactFieldTypeDTO type;
      private ContactDTO contact;
      private String content;

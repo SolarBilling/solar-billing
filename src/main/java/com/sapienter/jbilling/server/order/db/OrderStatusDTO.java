@@ -38,7 +38,11 @@ import com.sapienter.jbilling.server.util.db.AbstractGenericStatus;
 public class OrderStatusDTO  extends AbstractGenericStatus implements java.io.Serializable {
 
 
-     private Set<OrderDTO> orderDTOs = new HashSet<OrderDTO>(0);
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Set<OrderDTO> orderDTOs = new HashSet<OrderDTO>(0);
 
     public OrderStatusDTO() {
     }

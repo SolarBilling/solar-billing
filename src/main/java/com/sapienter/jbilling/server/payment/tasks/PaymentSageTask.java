@@ -465,6 +465,11 @@ public class PaymentSageTask extends PaymentTaskWithTimeout implements
 	 * Class for request parameters keeping
 	 */
 	private static class NVPList extends LinkedList<NameValuePair> {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public void add(String name, String value) {
 			add(new NameValuePair(name, value));
 		}

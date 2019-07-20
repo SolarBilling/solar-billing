@@ -37,7 +37,11 @@ import com.sapienter.jbilling.server.util.Constants;
  * @author Emil
  */
 public class UserWS implements Serializable {
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private Integer currencyId;
     private String password;
     private int deleted;

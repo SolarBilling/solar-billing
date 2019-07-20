@@ -41,7 +41,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class OrderLineTypeDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private Integer editable;
      private Set<OrderLineDTO> orderLineDTOs = new HashSet<OrderLineDTO>(0);
 

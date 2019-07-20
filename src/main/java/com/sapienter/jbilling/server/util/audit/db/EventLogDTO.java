@@ -55,7 +55,12 @@ import com.sapienter.jbilling.server.util.db.JbillingTable;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class EventLogDTO  implements java.io.Serializable {
 
-    @Id @GeneratedValue(strategy=GenerationType.TABLE, generator="event_log_GEN")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue(strategy=GenerationType.TABLE, generator="event_log_GEN")
     @Column(name="id", unique=true, nullable=false)
     private Integer id;
 

@@ -28,7 +28,11 @@ import java.util.ArrayList;
 
 
 public class MenuOption extends MenuOptionDTO implements Comparator<MenuOption> {
-    private String display;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String display;
     private Boolean selected;
     private List<Integer> options;
     private Integer parentId;

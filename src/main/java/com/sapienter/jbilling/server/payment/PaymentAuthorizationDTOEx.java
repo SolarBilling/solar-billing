@@ -29,7 +29,11 @@ import com.sapienter.jbilling.server.entity.PaymentAuthorizationDTO;
  * @author Emil
  */
 public class PaymentAuthorizationDTOEx extends PaymentAuthorizationDTO implements Serializable {
-    private Boolean result;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Boolean result;
     
     public PaymentAuthorizationDTOEx() {
         super();

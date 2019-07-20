@@ -39,6 +39,11 @@ public final class UserLoginForm
     implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * The username.
      */
     private String sUserName = null;

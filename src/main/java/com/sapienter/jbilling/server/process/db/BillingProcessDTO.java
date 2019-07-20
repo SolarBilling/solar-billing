@@ -61,7 +61,11 @@ import org.hibernate.annotations.OrderBy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BillingProcessDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private PeriodUnitDTO periodUnitDTO;
     private PaperInvoiceBatchDTO paperInvoiceBatch;
     private CompanyDTO entity;

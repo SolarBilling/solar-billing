@@ -55,7 +55,11 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "pluggable_task")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PluggableTaskDTO implements java.io.Serializable {
-    private static final Logger LOG = Logger.getLogger(PluggableTaskDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(PluggableTaskDTO.class);
     //  this is in synch with the DB (pluggable task type)
     public static final Integer TYPE_EMAIL = new Integer(9);
    

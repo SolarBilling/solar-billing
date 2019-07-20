@@ -40,7 +40,12 @@ import com.sapienter.jbilling.server.util.db.AbstractDescription;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class PluggableTaskTypeDTO extends AbstractDescription implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(PluggableTaskTypeDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = Logger.getLogger(PluggableTaskTypeDTO.class);
 
     @Id
     @Column(name = "id")

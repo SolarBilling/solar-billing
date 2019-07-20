@@ -23,7 +23,11 @@ package com.sapienter.jbilling.server.notification;
 import java.io.Serializable;
 
 public class MessageSection implements Serializable {
-    private Integer section;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer section;
     private String content;
     
     public MessageSection(Integer section, String content) {

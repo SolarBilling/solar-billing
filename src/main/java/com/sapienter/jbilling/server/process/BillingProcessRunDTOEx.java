@@ -37,7 +37,11 @@ import java.util.ArrayList;
  */
 public class BillingProcessRunDTOEx extends ProcessRunDTO {
 
-    List<BillingProcessRunTotalDTOEx<BigDecimal>> totals = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	List<BillingProcessRunTotalDTOEx<BigDecimal>> totals = null;
     String statusStr;
     Integer usersSucceeded;
     Integer usersFailed;

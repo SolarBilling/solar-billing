@@ -46,7 +46,11 @@ import javax.persistence.Version;
 // no cache : it is hardly ever re-read 
 public class MediationRecordDTO implements Serializable {
 
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer id;
     private String key;
     private Date started;
     private MediationProcess process;

@@ -40,7 +40,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class PreferenceTypeDTO  implements java.io.Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private Integer intDefValue;
     private String strDefValue;
     private BigDecimal floatDefValue;

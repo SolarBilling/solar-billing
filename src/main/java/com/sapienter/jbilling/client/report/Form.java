@@ -30,7 +30,11 @@ import org.apache.struts.action.ActionMapping;
  * user's preferences.
  */
 public class Form extends ActionForm {
-    private boolean select[] = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private boolean select[] = null;
     private String where[] = null;
     private String orderBy[] = null;
     private String operator[] = null;

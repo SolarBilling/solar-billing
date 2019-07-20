@@ -35,7 +35,12 @@ import javax.persistence.Table;
 // no cache, this is only a temp class until the order is JPAed
 public class MediationOrderMap implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     private Integer mediationProcessId;
     
     @Id

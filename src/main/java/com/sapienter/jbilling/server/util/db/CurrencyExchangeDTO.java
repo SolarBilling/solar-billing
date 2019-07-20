@@ -53,7 +53,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class CurrencyExchangeDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private CurrencyDTO currencyDTO;
      private Integer entityId;
      private BigDecimal rate;

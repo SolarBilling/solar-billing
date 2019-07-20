@@ -45,7 +45,11 @@ import java.util.ArrayList;
 
 public class NewInvoiceDTO extends InvoiceDTO {
 
-    private List<OrderDTO> orders = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<OrderDTO> orders = null;
     private Set<InvoiceDTO> invoices = null;
     private List<InvoiceLineDTO> resultLines = null;
     private List<List<PeriodOfTime>> periods = new ArrayList<List<PeriodOfTime>>();

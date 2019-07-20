@@ -54,7 +54,11 @@ import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
 public class OrderProcessDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private BillingProcessDTO billingProcessDTO;
      private OrderDTO orderDTO;
      private InvoiceDTO invoiceDTO;

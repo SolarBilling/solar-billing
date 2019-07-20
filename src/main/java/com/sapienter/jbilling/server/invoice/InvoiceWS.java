@@ -32,7 +32,11 @@ import java.util.Date;
  */
 public class InvoiceWS implements Serializable {
 
-    private Integer delegatedInvoiceId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer delegatedInvoiceId = null;
     private Integer payments[] = null;
     private Integer userId = null;
     private InvoiceLineDTO invoiceLines[] = null;

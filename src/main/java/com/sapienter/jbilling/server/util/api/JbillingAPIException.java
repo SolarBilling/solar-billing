@@ -27,7 +27,12 @@ package com.sapienter.jbilling.server.util.api;
  *
  */
 public class JbillingAPIException extends Exception {
-    public JbillingAPIException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public JbillingAPIException() {
         super();
     }
 

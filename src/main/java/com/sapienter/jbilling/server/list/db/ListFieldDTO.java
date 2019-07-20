@@ -48,7 +48,11 @@ import javax.persistence.Version;
 @Table(name = "list_field")
 public class ListFieldDTO implements Serializable, Comparable<ListFieldDTO> {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private ListDTO list;
     private String titleKey;
     private String columnName;

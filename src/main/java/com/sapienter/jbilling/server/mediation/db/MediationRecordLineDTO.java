@@ -57,7 +57,11 @@ import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 // no cache : it is hardly ever re-read 
 public class MediationRecordLineDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private MediationRecordDTO record;
     private OrderLineDTO orderLine;
     private Date eventDate;

@@ -62,7 +62,12 @@ import java.math.BigDecimal;
 @Table(name="customer")
 public class CustomerDTO  implements java.io.Serializable {
 
-    private static final Logger LOG = Logger.getLogger(CustomerDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = Logger.getLogger(CustomerDTO.class);
 
      private int id;
      private UserDTO baseUser;

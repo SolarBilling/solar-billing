@@ -45,7 +45,11 @@ import javax.persistence.Version;
 @Table(name = "list_field_entity")
 public class ListFieldEntityDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private ListEntityDTO listEntity;
     private ListFieldDTO listField;
     private Integer minValue;

@@ -44,7 +44,11 @@ import javax.persistence.Version;
 @Table(name = "report_field")
 public class ReportFieldDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private ReportDTO report;
     private Integer reportUserId;
     private int positionNumber;

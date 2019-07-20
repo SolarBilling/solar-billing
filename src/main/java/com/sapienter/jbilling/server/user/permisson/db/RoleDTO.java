@@ -48,7 +48,11 @@ import com.sapienter.jbilling.server.util.db.AbstractDescription;
 public class RoleDTO extends AbstractDescription implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private Set<UserDTO> baseUsers = new HashSet<UserDTO>(0);
      private Set<PermissionDTO> permissions = new HashSet<PermissionDTO>(0);
 

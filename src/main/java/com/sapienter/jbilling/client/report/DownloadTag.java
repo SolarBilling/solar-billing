@@ -58,7 +58,12 @@ import com.sapienter.jbilling.server.report.ReportDTOEx;
  */
 public class DownloadTag extends TagSupport {
 
-    public int doStartTag() throws JspException {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public int doStartTag() throws JspException {
         int retValue = SKIP_BODY;
         
         Logger log = Logger.getLogger(DownloadTag.class);

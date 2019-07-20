@@ -36,6 +36,11 @@ import org.apache.struts.validator.DynaValidatorForm;
 public class DynaForm extends DynaValidatorForm {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     public DynaForm() {

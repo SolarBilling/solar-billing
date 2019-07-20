@@ -29,7 +29,11 @@ import java.io.Serializable;
  */
 public class ItemTypeWS implements Serializable {
 
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer id;
     private String description;
     private Integer orderLineTypeId;
 

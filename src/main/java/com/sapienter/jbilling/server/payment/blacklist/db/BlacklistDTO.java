@@ -57,7 +57,11 @@ public class BlacklistDTO implements Serializable {
 
     // constants
     
-    // blacklist types
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// blacklist types
     public static final Integer TYPE_USER_ID = new Integer(1);
     public static final Integer TYPE_NAME = new Integer(2);
     public static final Integer TYPE_CC_NUMBER = new Integer(3);

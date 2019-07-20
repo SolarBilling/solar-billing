@@ -55,6 +55,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class InvoiceDeliveryMethodDTO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private Set<CompanyDTO> entities = new HashSet<CompanyDTO>(0);
 	private Set<CustomerDTO> customers = new HashSet<CustomerDTO>(0);

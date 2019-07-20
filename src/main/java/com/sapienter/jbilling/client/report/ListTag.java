@@ -50,7 +50,11 @@ import com.sapienter.jbilling.server.util.Context;
 
 public class ListTag extends TagSupport {
     
-    // this can be:
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// this can be:
     //     entity = all the reports for the entity (in session)
     //     user   = all the saved reports for the give user/report type
     String mode = null;

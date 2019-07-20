@@ -26,7 +26,11 @@ import com.sapienter.jbilling.server.payment.db.PaymentAuthorizationDTO;
 
 
 public class AuthorizeNetResponseDTO implements Serializable {
-    private PaymentAuthorizationDTO dbRow = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private PaymentAuthorizationDTO dbRow = null;
     
     public AuthorizeNetResponseDTO(String rawResponse) {
         // wow, how easy this is ?!! :)

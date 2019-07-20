@@ -41,7 +41,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class PermissionTypeDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private String description;
      private Set<PermissionDTO> permissions = new HashSet<PermissionDTO>(0);
 

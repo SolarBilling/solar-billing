@@ -49,7 +49,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class NotificationMessageTypeDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private Set<NotificationMessageDTO> notificationMessages = new HashSet<NotificationMessageDTO>(
             0);
     private int versionNum;

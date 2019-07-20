@@ -52,7 +52,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PaperInvoiceBatchDTO implements java.io.Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private int totalInvoices;
     private Date deliveryDate;
     private int isSelfManaged;

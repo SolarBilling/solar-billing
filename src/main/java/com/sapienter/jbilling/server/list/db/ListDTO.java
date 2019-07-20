@@ -46,7 +46,11 @@ import javax.persistence.Version;
 @Table(name = "list")
 public class ListDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private String legacyName;
     private String titleKey;
     private String instrKey;

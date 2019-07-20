@@ -46,7 +46,11 @@ import com.sapienter.jbilling.server.util.audit.db.EventLogDTO;
 public class JbillingTable  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private String name;
      private Set<ContactMapDTO> contactMaps = new HashSet<ContactMapDTO>(0);
      private Set<PreferenceDTO> preferences = new HashSet<PreferenceDTO>(0);

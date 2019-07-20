@@ -54,7 +54,11 @@ import com.sapienter.jbilling.server.util.Constants;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class CurrencyDTO extends AbstractDescription  implements java.io.Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private String symbol;
     private String code;
     private String countryCode;

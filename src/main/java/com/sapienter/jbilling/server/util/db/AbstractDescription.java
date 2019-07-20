@@ -29,7 +29,11 @@ import com.sapienter.jbilling.server.util.Context;
 
 public abstract class AbstractDescription implements Serializable {
 	
-    private static final Logger LOG = Logger.getLogger(AbstractDescription.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(AbstractDescription.class);
 	private String description = null;
     // do not add not Serializable fields here... or feel the pain.
 	abstract public int getId();

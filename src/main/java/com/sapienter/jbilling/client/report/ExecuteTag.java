@@ -46,7 +46,12 @@ import com.sapienter.jbilling.server.util.Context;
  *          body-content="JSP"
  */
 public class ExecuteTag extends ListTagBase {
-    public int doStartTag() throws JspException {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public int doStartTag() throws JspException {
         int retValue = SKIP_BODY;
 
         log = Logger.getLogger(ExecuteTag.class);

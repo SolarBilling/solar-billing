@@ -51,7 +51,11 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 @Table(name = "notification_message_arch")
 public class NotificationMessageArchDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private UserDTO baseUser;
     private Integer typeId;
     private Date createDatetime;

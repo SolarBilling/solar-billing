@@ -33,7 +33,11 @@ import java.util.Date;
  */
 public class OrderWS implements Serializable {
 
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer id;
     private Integer createdBy;
     private Integer statusId;
     private Integer billingTypeId;

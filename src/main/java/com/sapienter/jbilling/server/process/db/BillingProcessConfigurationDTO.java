@@ -48,6 +48,10 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 @Table(name = "billing_process_configuration")
 public class BillingProcessConfigurationDTO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private PeriodUnitDTO periodUnitDTO;
 	private CompanyDTO entity;

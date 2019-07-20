@@ -37,7 +37,11 @@ import java.util.ArrayList;
 
 public class PaymentDTOEx extends PaymentDTO {
     
-    private Integer userId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer userId = null;
     private PaymentInfoChequeDTO cheque = null;
     private AchDTO ach = null;
     private CreditCardDTO creditCard = null;

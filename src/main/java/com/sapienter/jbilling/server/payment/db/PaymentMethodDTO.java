@@ -47,7 +47,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class PaymentMethodDTO extends AbstractDescription implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private Set<PaymentDTO> payments = new HashSet<PaymentDTO>(0);
     private Set<CompanyDTO> entities = new HashSet<CompanyDTO>(0);
     private Set<ProcessRunTotalPmDTO> processRunTotalPms = new HashSet<ProcessRunTotalPmDTO>(

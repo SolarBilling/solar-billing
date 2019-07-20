@@ -37,7 +37,11 @@ import java.util.ArrayList;
  * The original object is created by the list tag when called to setup.
  */
 public class PagedList extends PagedListDTO {
-    private Hashtable<?, ?> parameters = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Hashtable<?, ?> parameters = null;
     private List<?> pageFrom = null;
     private Boolean direction = null;
     // works as an index, starting with 0.

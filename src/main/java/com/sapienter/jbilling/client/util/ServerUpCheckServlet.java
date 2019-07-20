@@ -43,7 +43,11 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class ServerUpCheckServlet extends HttpServlet {
     
-    private static final Logger LOG = Logger.getLogger(ServerUpCheckServlet.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(ServerUpCheckServlet.class);
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doCheck(request,response);
     }

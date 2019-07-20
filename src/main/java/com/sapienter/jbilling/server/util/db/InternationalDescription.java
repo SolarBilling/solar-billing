@@ -36,7 +36,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class InternationalDescription  implements java.io.Serializable {
 
 
-     private InternationalDescriptionId id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private InternationalDescriptionId id;
      private String content;
      // OPTLOCK: it makes no sense in this entity. The optimistic locking id done at the
      // parent level (the entity that delegates the column to this one).

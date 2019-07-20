@@ -30,7 +30,11 @@ import java.math.BigDecimal;
  */
 public class ValidatePurchaseWS implements Serializable {
 
-    private Boolean success;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Boolean success;
     private String[] message;
     private Boolean authorized;
     private String quantity;

@@ -50,7 +50,11 @@ import com.sapienter.jbilling.server.payment.db.PaymentDTO;
 @Table(name="partner_payout")
 public class PartnerPayout  implements java.io.Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private PaymentDTO payment;
     private Partner partner;
     private Date startingDate;

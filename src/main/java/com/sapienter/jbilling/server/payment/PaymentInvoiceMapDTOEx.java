@@ -28,7 +28,11 @@ import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDTO;
 
 
 public class PaymentInvoiceMapDTOEx extends PaymentInvoiceMapDTO {
-    private Integer paymentId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer paymentId;
     private Integer invoiceId;
     private Integer currencyId;
 

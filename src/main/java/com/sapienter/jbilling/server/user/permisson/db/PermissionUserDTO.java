@@ -39,7 +39,11 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 public class PermissionUserDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private UserDTO baseUser;
      private PermissionDTO permission;
      private short isGrant;

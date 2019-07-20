@@ -60,7 +60,11 @@ import java.util.ArrayList;
  */
 public class GenericListTag extends ListTagBase {
     
-    // these are parameters used for the setup
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// these are parameters used for the setup
     private Boolean setup = new Boolean(false);
     private String type = null;
     private String method = null;

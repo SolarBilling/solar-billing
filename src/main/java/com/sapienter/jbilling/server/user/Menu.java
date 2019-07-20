@@ -34,7 +34,11 @@ import com.sapienter.jbilling.common.SessionInternalError;
 import java.util.ArrayList;
 
 public class Menu implements Serializable {
-    private Hashtable<Integer,MenuOption> options;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Hashtable<Integer,MenuOption> options;
     private List<MenuOption> rootOptions; 
     private MenuOption selectedOption;
     private MenuOption selectedSubOption;

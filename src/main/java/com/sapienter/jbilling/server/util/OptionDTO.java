@@ -26,7 +26,11 @@ import java.io.Serializable;
  * @author Emil
  */
 public class OptionDTO implements Serializable {
-    private String code = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String code = null;
     private String description = null;
     
     /**

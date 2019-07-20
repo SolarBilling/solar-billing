@@ -44,7 +44,11 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 public class ContactTypeDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private CompanyDTO entity;
      private Integer isPrimary;
      private Set<ContactMapDTO> contactMaps = new HashSet<ContactMapDTO>(0);

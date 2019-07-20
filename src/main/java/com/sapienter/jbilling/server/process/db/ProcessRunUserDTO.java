@@ -38,7 +38,11 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProcessRunUserDTO implements java.io.Serializable {
 
-    public static final Integer STATUS_FAILED = 0;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static final Integer STATUS_FAILED = 0;
     public static final Integer STATUS_SUCCEEDED = 1;
 
     private int id;

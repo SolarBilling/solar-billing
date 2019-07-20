@@ -46,7 +46,11 @@ import javax.persistence.Version;
 public class PartnerRange  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private Partner partner;
      private Double percentageRate;
      private Double referralFee;

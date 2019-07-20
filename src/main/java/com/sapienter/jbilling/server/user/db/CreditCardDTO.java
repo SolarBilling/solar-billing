@@ -57,7 +57,12 @@ import org.apache.log4j.Logger;
 @Table(name = "credit_card")
 public class CreditCardDTO implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(CreditCardDTO.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = Logger.getLogger(CreditCardDTO.class);
 
     private static final String OBSCURED_NUMBER_FORMAT = "************"; // + last four digits
 

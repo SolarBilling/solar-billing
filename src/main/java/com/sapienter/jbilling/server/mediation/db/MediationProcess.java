@@ -52,7 +52,12 @@ import javax.persistence.Version;
 public class MediationProcess implements Serializable {
     //private static final Logger LOG = Logger.getLogger(MediationProcess.class);
    
-    @Id @GeneratedValue(strategy=GenerationType.TABLE, generator="mediation_process_GEN")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue(strategy=GenerationType.TABLE, generator="mediation_process_GEN")
     private Integer id;
    
     @Column(name = "start_datetime")

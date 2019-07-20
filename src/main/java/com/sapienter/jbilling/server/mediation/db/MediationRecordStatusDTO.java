@@ -32,7 +32,12 @@ import javax.persistence.Transient;
 public class MediationRecordStatusDTO extends AbstractGenericStatus implements java.io.Serializable {
 
 
-    public MediationRecordStatusDTO() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public MediationRecordStatusDTO() {
     }
 
 

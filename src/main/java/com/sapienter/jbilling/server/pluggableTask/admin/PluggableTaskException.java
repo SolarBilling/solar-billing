@@ -31,6 +31,11 @@ package com.sapienter.jbilling.server.pluggableTask.admin;
 public class PluggableTaskException extends Exception {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     public PluggableTaskException() {

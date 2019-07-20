@@ -41,6 +41,10 @@ import javax.persistence.Transient;
 @Table(name = "menu_option")
 public class MenuOptionDTO extends AbstractDescription implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private MenuOptionDTO menuOption;
 	private String link;

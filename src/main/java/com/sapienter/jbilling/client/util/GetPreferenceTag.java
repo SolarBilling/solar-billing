@@ -49,7 +49,11 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class GetPreferenceTag extends TagSupport {
     
-    private Integer preferenceId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer preferenceId = null;
     private String beanName = null;
     
     public int doStartTag() throws JspException {

@@ -44,7 +44,11 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 public class LanguageDTO  implements java.io.Serializable {
 
 
-     private int id;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
      private String code;
      private String description;
      private Set<NotificationMessageDTO> notificationMessages = new HashSet<NotificationMessageDTO>(0);

@@ -47,7 +47,11 @@ import javax.persistence.Version;
 @Table(name = "report_type")
 public class ReportTypeDTO implements Serializable {
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private short showable;
     private Set<ReportDTO> reports = new HashSet<ReportDTO>(0);
     private int versionNum;

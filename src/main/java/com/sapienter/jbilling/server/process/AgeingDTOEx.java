@@ -32,7 +32,11 @@ import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
  * @author Emil
  */
 public class AgeingDTOEx extends AgeingEntityStepDTO {
-    private Integer statusId = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer statusId = null;
     private String statusStr = null;
     private String welcomeMessage = null;
     private String failedLoginMessage = null;

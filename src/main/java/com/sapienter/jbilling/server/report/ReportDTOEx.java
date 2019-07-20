@@ -32,6 +32,11 @@ import java.util.ArrayList;
 
 public class ReportDTOEx extends ReportDTO {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger LOG = Logger.getLogger(ReportDTOEx.class);
 	
     /*

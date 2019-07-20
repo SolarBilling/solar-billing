@@ -25,7 +25,11 @@ import java.math.BigDecimal;
 
 public class ItemPriceDTOEx implements Serializable {
 
-    // ItemPriceDTO
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// ItemPriceDTO
     private Integer id;
     private BigDecimal price;
     private Integer currencyId;

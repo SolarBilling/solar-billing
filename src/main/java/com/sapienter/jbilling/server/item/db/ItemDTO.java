@@ -66,7 +66,11 @@ import java.util.ArrayList;
 public class ItemDTO extends AbstractDescription {
 
 
-    private int id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int id;
     private CompanyDTO entity;
     private String internalNumber;
     private BigDecimal percentage;

@@ -30,7 +30,11 @@ public class PaymentAuthorizationDTO
    extends java.lang.Object
    implements java.io.Serializable 
 {
-   private java.lang.Integer id;
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private java.lang.Integer id;
    private boolean idHasBeenSet = false;
    private Integer paymentId;
    private java.lang.String processor;

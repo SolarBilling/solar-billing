@@ -30,7 +30,11 @@ public class InvoiceLineDTO
    extends java.lang.Object
    implements java.io.Serializable 
 {
-   private java.lang.Integer id;
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private java.lang.Integer id;
    private boolean idHasBeenSet = false;
    private java.lang.String description;
    private boolean descriptionHasBeenSet = false;
