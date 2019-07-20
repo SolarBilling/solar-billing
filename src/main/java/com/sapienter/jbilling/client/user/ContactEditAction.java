@@ -22,7 +22,6 @@ package com.sapienter.jbilling.client.user;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletException;

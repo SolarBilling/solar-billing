@@ -29,6 +29,7 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import com.google.common.collect.ImmutableMap;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
@@ -52,20 +53,18 @@ public class BillingProcessDAS extends AbstractDAS<BillingProcessDTO> {
     }
 
     public BillingProcessDTO findReview(Integer entityId) {
-        Criteria criteria = getSession().createCriteria(BillingProcessDTO.class);
-        criteria.createAlias("entity", "ent").add(Restrictions.eq("ent.id", entityId));
-        criteria.add(Restrictions.eq("isReview", 1));
-
-        return (BillingProcessDTO) criteria.uniqueResult();
+		return uniqueResult(BillingProcessDTO.class, ImmutableMap.of(
+			"entity.id", entityId,
+			"isReview", 1
+			));
     }
 
     public BillingProcessDTO isPresent(Integer entityId, Integer isReview, Date billingDate) {
-        Criteria criteria = getSession().createCriteria(BillingProcessDTO.class);
-        criteria.createAlias("entity", "ent").add(Restrictions.eq("ent.id", entityId));
-        criteria.add(Restrictions.eq("isReview", isReview));
-        criteria.add(Restrictions.eq("billingDate", billingDate));
-
-        return (BillingProcessDTO) criteria.uniqueResult();
+    	return uniqueResult(BillingProcessDTO.class, ImmutableMap.of(
+    			"entity.id", entityId,
+    			"isReview", isReview,
+    			"billingDate", billingDate
+    			));
     }
 
     public ScrollableResults findUsersToProcess(int entityId) {

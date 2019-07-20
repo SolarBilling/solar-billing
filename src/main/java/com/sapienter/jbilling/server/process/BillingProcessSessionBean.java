@@ -409,7 +409,7 @@ public class BillingProcessSessionBean implements IBillingProcessSessionBean {
 
                 // get the invoices yet to be paid from this process
                 InvoiceBL invoiceBL = new InvoiceBL();
-                for (Iterator<InvoiceDTO> it = invoiceBL.getHome().findProccesableByProcess(
+                for (Iterator<InvoiceDTO> it = invoiceBL.getHome().findProcessableByProcess(
                         processId).iterator(); it.hasNext();) {
                     final InvoiceDTO invoice = it.next();
                     LOG.debug("Retrying invoice " + invoice.getId());

@@ -25,16 +25,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.ImmutableMap;
 import com.sapienter.jbilling.server.invoice.NewInvoiceDTO;
 import com.sapienter.jbilling.server.process.db.BillingProcessDAS;
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
@@ -50,6 +48,10 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 
 	// used for the web services call to get the latest X
 	public List<Integer> findIdsByUserLatestFirst(Integer userId, int maxResults) {
+		createQuery(Integer.class, ImmutableMap.of(
+				"deleted", 0,
+				"baseUser.id", userId
+				), "id", false); // TODO need to add projection
 		Criteria criteria = getSession().createCriteria(InvoiceDTO.class).add(
 				Restrictions.eq("deleted", 0)).createAlias("baseUser", "u")
 				.add(Restrictions.eq("u.id", userId)).setProjection(
@@ -59,9 +61,8 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 	}
 
     // used for the web services call to get the latest X that contain a particular item type
-    public List<Integer> findIdsByUserAndItemTypeLatestFirst(Integer userId, Integer itemTypeId, int maxResults) {
-        
-        String hql = "select distinct(invoice.id)" +
+    public List<Integer> findIdsByUserAndItemTypeLatestFirst(final Integer userId, final Integer itemTypeId, final int maxResults) {
+        final String hql = "select distinct(invoice.id)" +
                      "  from InvoiceDTO invoice" +
                      "  inner join invoice.invoiceLines line" +
                      "  inner join line.item.itemTypes itemType" +
@@ -69,19 +70,12 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
                      "    and invoice.deleted = 0" +
                      "    and itemType.id = :typeId" +
                      "  order by invoice.id desc";
-        List<Integer> data = getSession()
-                        .createQuery(hql, Integer.class)
-                        .setParameter("userId", userId)
-                        .setParameter("typeId", itemTypeId)
-                        .setMaxResults(maxResults)
-                        .list();
-        return data;
+        return selectHQL(hql, Integer.class, ImmutableMap.of("userId", userId, "typeId", itemTypeId), maxResults);
     }
 
     // used for checking if a user was subscribed to something at a given date
-    public List<Integer> findIdsByUserAndPeriodDate(Integer userId, Date date) {
-
-        String hql = "select pr.invoice.id" +
+    public List<Integer> findIdsByUserAndPeriodDate(final Integer userId, final Date date) {
+        final String hql = "select pr.invoice.id" +
                      "  from OrderProcessDTO pr " +
                      "  where pr.invoice.baseUser.id = :userId" +
                      "    and pr.invoice.deleted = 0" +
@@ -89,82 +83,68 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
                      "    and pr.periodEnd > :date" + // the period end is not included
                      "    and pr.isReview = 0";
 
-        List<Integer> data = getSession()
-                        .createQuery(hql)
-                        .setParameter("userId", userId)
-                        .setParameter("date", date)
-                        .setComment("InvoiceDAS.findIdsByUserAndPeriodDate " + userId + " - " + date)
-                        .list();
-        return data;
+//          .setComment("InvoiceDAS.findIdsByUserAndPeriodDate " + userId + " - " + date)
+        return selectHQL(hql, Integer.class, ImmutableMap.of("userId", userId, "date", date));
     }
 
 
-	public BigDecimal findTotalForPeriod(Integer userId, Date start, Date end) {
+    protected Criteria getCriteria(final Integer userId, final Date start, final Date end) {
 		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
 		addUserCriteria(criteria, userId);
 		addPeriodCriteria(criteria, start, end);
-		criteria.setProjection(Projections.sum("total"));
-		return (BigDecimal) criteria.uniqueResult();
+		return criteria;
+    }
+    
+    protected Object getUniqueResultForItem( final Integer userId, final Integer itemId, final Date start, final Date end,
+    		final Projection projection) {
+		final Criteria criteria = getCriteria(userId, start, end);
+		if (itemId != null) {
+			addItemCriteria(criteria, itemId);			
+		}
+		criteria.setProjection(projection);
+		return criteria.uniqueResult();
+    }
+    
+    protected Object getUniqueResultForItemCategory( final Integer userId, final Date start, final Date end,
+    		final Integer itemCategoryId, final Projection projection) {
+		final Criteria criteria = getCriteria(userId, start, end);
+		addItemCategoryCriteria(criteria, itemCategoryId);
+		criteria.setProjection(projection);
+		return criteria.uniqueResult();
+    }
+    
+	public BigDecimal findTotalForPeriod(Integer userId, Date start, Date end) {
+		return (BigDecimal)getUniqueResultForItem(userId, null, start, end, Projections.sum("total"));
 	}
 
 	public BigDecimal findAmountForPeriodByItem(Integer userId, Integer itemId,
 			Date start, Date end) {
-		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-		addUserCriteria(criteria, userId);
-		addPeriodCriteria(criteria, start, end);
-		addItemCriteria(criteria, itemId);
-		criteria.setProjection(Projections.sum("invoiceLines.amount"));
-		return (BigDecimal) criteria.uniqueResult();
+		return (BigDecimal)getUniqueResultForItem(userId, itemId, start, end, Projections.sum("invoiceLines.amount"));
 	}
 
 	public BigDecimal findQuantityForPeriodByItem(Integer userId, Integer itemId,
 			Date start, Date end) {
-		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-		addUserCriteria(criteria, userId);
-		addPeriodCriteria(criteria, start, end);
-		addItemCriteria(criteria, itemId);
-		criteria.setProjection(Projections.sum("invoiceLines.quantity"));
-		return (BigDecimal) criteria.uniqueResult();
+		return (BigDecimal)getUniqueResultForItem(userId, itemId, start, end, Projections.sum("invoiceLines.quantity"));
 	}
 
 	public Integer findLinesForPeriodByItem(Integer userId, Integer itemId,
 			Date start, Date end) {
-		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-		addUserCriteria(criteria, userId);
-		addPeriodCriteria(criteria, start, end);
-		addItemCriteria(criteria, itemId);
-		criteria.setProjection(Projections.count("id"));
-		return (Integer) criteria.uniqueResult();
+		return (Integer)getUniqueResultForItem(userId, itemId, start, end, Projections.count("id"));
 	}
 
 	public BigDecimal findAmountForPeriodByItemCategory(Integer userId,
 			Integer categoryId, Date start, Date end) {
-		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-		addUserCriteria(criteria, userId);
-		addPeriodCriteria(criteria, start, end);
-		addItemCategoryCriteria(criteria, categoryId);
-		criteria.setProjection(Projections.sum("invoiceLines.amount"));
-		return (BigDecimal) criteria.uniqueResult();
+		return (BigDecimal)getUniqueResultForItemCategory(userId, start, end, categoryId, Projections.sum("invoiceLines.amount"));
 	}
 
 	public BigDecimal findQuantityForPeriodByItemCategory(Integer userId,
 			Integer categoryId, Date start, Date end) {
-		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-		addUserCriteria(criteria, userId);
-		addPeriodCriteria(criteria, start, end);
-		addItemCategoryCriteria(criteria, categoryId);
-		criteria.setProjection(Projections.sum("invoiceLines.quantity"));
-		return (BigDecimal) criteria.uniqueResult();
+		return (BigDecimal)getUniqueResultForItemCategory(userId, start, end, categoryId, Projections.sum("invoiceLines.quantity"));
 	}
 
 	public Integer findLinesForPeriodByItemCategory(Integer userId,
 			Integer categoryId, Date start, Date end) {
-		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-		addUserCriteria(criteria, userId);
-		addPeriodCriteria(criteria, start, end);
-		addItemCategoryCriteria(criteria, categoryId);
-		criteria.setProjection(Projections.count("id"));
-		return (Integer) criteria.uniqueResult();
+		return (Integer)getUniqueResultForItemCategory(userId, start, end, categoryId, Projections.count("id"));
 	}
     
     
@@ -230,13 +210,12 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 	 * @param processId
 	 * @return
 	 */
-	public Collection<InvoiceDTO> findProccesableByProcess(Integer processId) {
-
+	public Collection<InvoiceDTO> findProcessableByProcess(Integer processId) {
 		final BillingProcessDTO process = new BillingProcessDAS().find(processId);
+		/*
 		final CriteriaBuilder criteriaBuilder = getSession().getCriteriaBuilder();
 		final CriteriaQuery<InvoiceDTO> criteriaQuery = criteriaBuilder.createQuery(InvoiceDTO.class);
 		final Root<InvoiceDTO> root = criteriaQuery.from(InvoiceDTO.class);
-		/*
 		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
 		criteria.add(Restrictions.eq("billingProcess", process));
                 criteria.createAlias("invoiceStatus", "s")
@@ -245,7 +224,6 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 		criteria.add(Restrictions.eq("inProcessPayment", 1));
 		criteria.add(Restrictions.eq("deleted", 0));
 		return criteria.list();
-		*/
 		
 		criteriaQuery.select(root).where(
 				criteriaBuilder.equal(root.get("billingProcess"), process),
@@ -254,10 +232,18 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 				criteriaBuilder.equal(root.get("inProcessPayment"), 1),
 				criteriaBuilder.equal(root.get("deleted"), 0)
 		);
-		org.hibernate.query.Query<InvoiceDTO> query = getSession().createQuery(criteriaQuery);
+		Query<InvoiceDTO> query = getSession().createQuery(criteriaQuery);
 		return query.list();
+		*/
+		return selectAll(InvoiceDTO.class, ImmutableMap.of(
+				"billingProcess", process,
+				"invoiceStatus.id", Constants.INVOICE_STATUS_UNPAID,
+				"isReview", 0,
+				"inProcessPayment", 1,
+				"deleted", 0
+				));
 	}
-
+	
 	public InvoiceDTO create(Integer userId, NewInvoiceDTO invoice,
 			BillingProcessDTO process) {
 
@@ -295,7 +281,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 			InvoiceDTO saved = save(entity);
 			// The next line is theoretically necessary. However, it will slow down the billing
             // process to a crawl. Since the column for the association is in the invoice table,
-            // the DB is updated correctly wihout this line.
+            // the DB is updated correctly without this line.
             // process.getInvoices().add(saved);
 			return saved;
 		} 
@@ -347,23 +333,17 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
  *                       AND a.deleted = 0"
  *             result-type-mapping="Local"
 	 */
-    public Collection<InvoiceDTO> findProccesableByUser(UserDTO user) {
-
-        Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-        criteria.add(Restrictions.eq("baseUser", user));
-        criteria.createAlias("invoiceStatus", "s").add(Restrictions.eq("s.id", Constants.INVOICE_STATUS_UNPAID));
-        criteria.add(Restrictions.eq("isReview", 0));
-        criteria.add(Restrictions.eq("deleted", 0));
-
-        return criteria.list();
+    public Collection<InvoiceDTO> findProccesableByUser(final UserDTO user) {
+        return selectAll(InvoiceDTO.class, ImmutableMap.of(
+        		"baseUser", user,
+        		"invoiceStatus.id", Constants.INVOICE_STATUS_UNPAID,
+        		"isReview", 0,
+        		"deleted", 0
+        		));
     }
 
     public Collection<InvoiceDTO> findByProcess(BillingProcessDTO process) {
-
-        Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
-        criteria.add(Restrictions.eq("billingProcess", process));
-
-        return criteria.list();
+        return selectAll(InvoiceDTO.class, ImmutableMap.of("billingProcess", process));
     }
 
     public List<Integer> findIdsByUserAndDate(Integer userId, Date since, 

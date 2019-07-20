@@ -22,9 +22,7 @@ package com.sapienter.jbilling.server.process.db;
 
 import java.util.Date;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-
+import com.google.common.collect.ImmutableMap;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 
@@ -46,9 +44,7 @@ public class BillingProcessConfigurationDAS extends AbstractDAS<BillingProcessCo
 	}
 
 	public BillingProcessConfigurationDTO findByEntity(CompanyDTO entity) {
-		Criteria criteria = getSession().createCriteria(BillingProcessConfigurationDTO.class);
-		criteria.add(Restrictions.eq("entity", entity));
-		return (BillingProcessConfigurationDTO) criteria.uniqueResult();
+		return uniqueResult(BillingProcessConfigurationDTO.class, ImmutableMap.of("entity", entity));
 	}
 
 }

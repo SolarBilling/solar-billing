@@ -69,7 +69,7 @@ public class ConfigurationAction extends CrudAction {
         try {
             myForm.set("configurations",configurationSession.updateAllConfiguration(
                     executorId, (List<MediationConfiguration>) dtoHolder));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if (e.getCause().getClass().equals(OptimisticLockException.class)) {
                 setup();
                 throw new OptimisticLockException();

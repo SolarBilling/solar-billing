@@ -22,15 +22,25 @@ package com.sapienter.jbilling.server.util.db;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
+import org.hibernate.query.Query;
 
+import com.google.common.collect.ImmutableMap;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
@@ -59,8 +69,121 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
         setSessionFactory((SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION));
     }
 
+    protected <K,V> ImmutableMap<K,V> immutableMapOf( K k1, V v1, K k2, V v2)
+    {
+    	return immutableMapOf(k1, v1, k2, v2, null, null);
+    }
     
-    /**
+    protected <K,V> ImmutableMap<K,V> immutableMapOf( K k1, V v1, K k2, V v2, K k3, V v3)
+    {
+    	return immutableMapOf(k1, v1, k2, v2, k3, v3, null, null, null, null);
+    }
+    
+    protected <K,V> ImmutableMap<K,V> immutableMapOf( K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4)
+    {
+    	return immutableMapOf(k1, v1, k2, v2, k3, v3, k4, v4, null, null);
+    }
+    
+    // the same as ImmutableMap.of, except that we discard the key,value pair if either the key or the value is null
+    protected <K,V> ImmutableMap<K,V> immutableMapOf( K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5)
+    {
+    	ImmutableMap.Builder<K, V> builder = ImmutableMap.builder();
+    	if ((k1 != null) && (v1 != null)) {
+    		builder.put(k1, v1);
+    	}
+    	if ((k2 != null) && (v2 != null)) {
+    		builder.put(k2, v2);
+    	}
+    	if ((k3 != null) && (v3 != null)) {
+    		builder.put(k3, v3);
+    	}
+    	if ((k4 != null) && (v4 != null)) {
+    		builder.put(k4, v4);
+    	}
+    	if ((k5 != null) && (v5 != null)) {
+    		builder.put(k5, v5);
+    	}
+    	return builder.build();
+    }
+    
+	@SuppressWarnings("hiding")
+	protected <T> List<T> selectAll(final Class<T> theClass, final ImmutableMap<String, ?> values) {
+		return createQuery(theClass, values).list();
+	}
+
+	@SuppressWarnings("hiding")
+	protected <T> T uniqueResult(final Class<T> theClass, final ImmutableMap<String, ?> values) {
+		return createQuery(theClass, values).uniqueResult();
+	}
+
+	@SuppressWarnings("hiding")
+    protected <T> List<T> selectHQL(final String hql, Class<T> theClass, final ImmutableMap<String, ?> parameters, final int maxResults) {
+    	return createHQLQuery(hql, theClass, parameters, maxResults).list();
+    }
+
+    protected int executeUpdate(final String hql, final ImmutableMap<String, ?> parameters) {
+    	return createHQLQuery(hql, Object.class, parameters).executeUpdate();
+    }
+    
+	@SuppressWarnings("hiding")
+    protected <T> T uniqueResultHQL(final String hql, Class<T> theClass, final ImmutableMap<String, ?> parameters) {
+    	return createHQLQuery(hql, theClass, parameters).uniqueResult();
+    }
+	
+	@SuppressWarnings("hiding")
+    protected <T> List<T> selectHQL(final String hql, Class<T> theClass, final ImmutableMap<String, ?> parameters) {
+    	return createHQLQuery(hql, theClass, parameters).list();
+    }
+	
+	@SuppressWarnings("hiding")
+    protected <T> Query<T> createHQLQuery(final String hql, Class<T> theClass, final ImmutableMap<String, ?> parameters) {
+    	return createHQLQuery(hql, theClass, parameters, -1);
+    }
+    
+	@SuppressWarnings("hiding")
+    protected <T> Query<T> createHQLQuery(final String hql, Class<T> theClass, final ImmutableMap<String, ?> parameters, final int maxResults) {
+    	final Query<T> query = getSession().createQuery(hql, theClass);
+    	for (Map.Entry<String, ?> parameter : parameters.entrySet()) {
+    		query.setParameter( parameter.getKey(), parameter.getValue());
+    	}
+    	if (maxResults > 0)
+    	{
+    		query.setMaxResults(maxResults);
+    	}
+    	return query;
+    	
+    }
+    
+	@SuppressWarnings("hiding")
+	protected <T> Query<T> createQuery(final Class<T> theClass, final ImmutableMap<String, ?> values) {
+		return createQuery(theClass, values, null, false);
+	}
+	
+	@SuppressWarnings("hiding")
+	protected <T> Query<T> createQuery(final Class<T> theClass, final ImmutableMap<String, ?> values, String orderValue, boolean ascending) {
+		final Session session = getSession();
+		final CriteriaBuilder criteriaBuilder = getSession().getCriteriaBuilder();
+		final CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(theClass);
+		final List<Predicate> predicates = new ArrayList<>();
+		final Root<T> root = criteriaQuery.from(theClass);
+		for (Map.Entry<String, ?> mapEntry : values.entrySet()) {
+			predicates.add(criteriaBuilder.equal(root.get(mapEntry.getKey()), mapEntry.getValue()));
+		}
+		if (orderValue != null) {
+			final Expression<?> expression = root.get(orderValue);
+			final Order order;
+			if (ascending) {
+				order = criteriaBuilder.asc(expression);
+			} else {
+				order = criteriaBuilder.desc(expression);
+			}
+			criteriaQuery.orderBy(order);
+		}
+		criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
+		return session.createQuery(criteriaQuery);
+	}
+
+   /**
      * Merges the entity, creating or updating as necessary
      * @param newEntity
      * @return

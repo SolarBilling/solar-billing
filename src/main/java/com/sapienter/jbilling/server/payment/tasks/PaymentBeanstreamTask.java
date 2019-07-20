@@ -30,6 +30,7 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.ImmutableList;
 import com.sapienter.jbilling.server.payment.PaymentAuthorizationBL;
 import com.sapienter.jbilling.server.payment.PaymentDTOEx;
 import com.sapienter.jbilling.server.payment.db.PaymentAuthorizationDTO;
@@ -330,7 +331,7 @@ public class PaymentBeanstreamTask extends PaymentTaskWithTimeout implements
 	}
 
 	class BeanstreamResponseDTO {
-
+		
 		private String trnApproved;
 
 		private String trnId;
@@ -404,6 +405,14 @@ public class PaymentBeanstreamTask extends PaymentTaskWithTimeout implements
 		private String ref4;
 
 		private String ref5;
+
+		@Override public String toString()
+		{
+			return ImmutableList.of(trnApproved, messageId, messageText, trnOrderNumber, authCode, hCode, errorType, errorFields, 
+					responseType, trnAmount, trnDate, avsProcessed, avsId, avsResult, avsAddrMatch, avsPostalMatch, avsMessage,
+					rspCodeCav, rspCodeAdd2, rspCodeCredit1, rspCodeCredit2, rspCodeCredit3, rspCodeCredit4,
+					rspCodeAddr1, rspCodeAddr2, rspCodeAddr3, rspCodeAddr4, rspCodeDob, rspCustomerDec, trnType, paymentMethod, ref1, ref2, ref3, ref4, ref5).toString();
+		}
 
 		public BeanstreamResponseDTO() {
 		}

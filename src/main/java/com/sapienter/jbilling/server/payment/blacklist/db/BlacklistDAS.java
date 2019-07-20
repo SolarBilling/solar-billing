@@ -20,144 +20,106 @@
 package com.sapienter.jbilling.server.payment.blacklist.db;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.query.Query;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
-
+import com.google.common.collect.ImmutableMap;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 
 public class BlacklistDAS extends AbstractDAS<BlacklistDTO> {
     
     public List<BlacklistDTO> findByEntity(Integer entityId) {
         // I need to access an association, so I can't use the parent helper class
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, ImmutableMap.of("company.id", entityId));
     }
 
     public List<BlacklistDTO> findByEntityType(Integer entityId, Integer type) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("type", type));
-
-        return criteria.list();    
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"company.id", entityId,
+        		"type", type
+        		));
     }
 
     public List<BlacklistDTO> findByEntitySource(Integer entityId, Integer source) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("source", source));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"company.id", entityId,
+        		"source", source
+        		));
     }
 
     public List<BlacklistDTO> findByUser(Integer userId) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("user", "u")
-                    .add(Restrictions.eq("u.id", userId));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, ImmutableMap.of(
+        		"user.id", userId
+        		));
     }
 
     public List<BlacklistDTO> findByUserType(Integer userId, Integer type) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("user", "u")
-                    .add(Restrictions.eq("u.id", userId))
-                .add(Restrictions.eq("type", type));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"user.id", userId,
+        		"type", type
+        		));
     }
 
     // blacklist filter specific queries
 
-    public List<BlacklistDTO> filterByName(Integer entityId, String firstName,
-            String lastName) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("type", BlacklistDTO.TYPE_NAME))
-                .createAlias("contact", "ct")
-                    .add(equals("ct.firstName", firstName))
-                    .add(equals("ct.lastName", lastName));
-
-        return criteria.list();
+    public List<BlacklistDTO> filterByName(final Integer entityId, final String firstName, final String lastName) {
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"company.id", entityId,
+        		"type", BlacklistDTO.TYPE_NAME,
+        		"contact.firstName", firstName,
+        		"contact.lastName", lastName
+        		));
     }
 
     public List<BlacklistDTO> filterByAddress(Integer entityId, String address1,
             String address2, String city, String stateProvince, 
             String postalCode, String countryCode) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("type", BlacklistDTO.TYPE_ADDRESS))
-                .createAlias("contact", "ct")
-                    .add(equals("ct.address1", address1))
-                    .add(equals("ct.address2", address2))
-                    .add(equals("ct.city", city))
-                    .add(equals("ct.stateProvince", stateProvince))
-                    .add(equals("ct.postalCode", postalCode))
-                    .add(equals("ct.countryCode", countryCode));
-
-        return criteria.list();
+    	final Map<String, Object> parameters = new HashMap<>(immutableMapOf(
+        		"company.id", entityId,
+        		"type", BlacklistDTO.TYPE_ADDRESS,
+        		"ct.address1", address1,
+        		"ct.address2", address2,
+        		"ct.city", city
+    			));
+    	parameters.putAll(immutableMapOf(
+        		"ct.stateProvince", stateProvince,
+        		"ct.postalCode", postalCode,
+        		"ct.countryCode", countryCode
+    			));
+    	return selectAll(BlacklistDTO.class, ImmutableMap.copyOf(parameters));
     }
 
     public List<BlacklistDTO> filterByPhone(Integer entityId, 
             Integer phoneCountryCode, Integer phoneAreaCode, String phoneNumber) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("type", BlacklistDTO.TYPE_PHONE_NUMBER))
-                .createAlias("contact", "ct")
-                    .add(equals("ct.phoneCountryCode", phoneCountryCode))
-                    .add(equals("ct.phoneAreaCode", phoneAreaCode))
-                    .add(equals("ct.phoneNumber", phoneNumber));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"company.id", entityId,
+        		"type", BlacklistDTO.TYPE_PHONE_NUMBER,
+        		"contact.phoneCountryCode", phoneCountryCode,
+        		"contact.phoneAreaCode", phoneAreaCode,
+        		"contact.phoneNumber", phoneNumber
+        		));
     }
 
     public List<BlacklistDTO> filterByCcNumbers(Integer entityId, 
             Collection<String> rawNumbers) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("type", BlacklistDTO.TYPE_CC_NUMBER))
-                .createAlias("creditCard", "cc")
-                    .add(Restrictions.in("cc.rawNumber", rawNumbers));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"company.id", entityId,
+        		"type", BlacklistDTO.TYPE_CC_NUMBER,
+        		"creditCard.rawNumber", rawNumbers
+        		));
     }
 
     public List<BlacklistDTO> filterByIpAddress(Integer entityId, 
             String ipAddress, Integer ccfId) {
-        Criteria criteria = getSession().createCriteria(BlacklistDTO.class)
-                .createAlias("company", "c")
-                    .add(Restrictions.eq("c.id", entityId))
-                .add(Restrictions.eq("type", BlacklistDTO.TYPE_IP_ADDRESS))
-                .createAlias("contact.fields.type", "cfType")
-                    .add(Restrictions.eq("cfType.id", ccfId))
-                .createAlias("contact.fields", "cf")
-                    .add(Restrictions.eq("cf.content", ipAddress));
-
-        return criteria.list();
+        return selectAll(BlacklistDTO.class, immutableMapOf(
+        		"company.id", entityId,
+        		"type", BlacklistDTO.TYPE_IP_ADDRESS,
+        		"contact.fields.type", ccfId,
+        		"contact.fields.content", ipAddress
+        		));
     }
 
-    /**
-     * Considers comparing nulls as equal. Useful for some filters,
-     * such as address, where not all fields may have a value.
-     */
-    private Criterion equals(String propertyName, Object value) {
-        if (value != null) {
-            return Restrictions.eq(propertyName, value);
-        }
-        return Restrictions.isNull(propertyName);
-    }
 
     public int deleteSource(Integer entityId, Integer source) {
         /*
@@ -171,37 +133,20 @@ public class BlacklistDAS extends AbstractDAS<BlacklistDTO> {
         */
 
         // should be faster than above, but hql doesn't do cascading deletes :(
-        String hql = "DELETE FROM CreditCardDTO WHERE id IN (" +
+    	final ImmutableMap<String, ?> parameters = ImmutableMap.of( "company", entityId, "source", source);
+        executeUpdate("DELETE FROM CreditCardDTO WHERE id IN (" +
                 "SELECT creditCard.id FROM BlacklistDTO " + 
-                "WHERE company.id = :company AND source = :source)";
-        Query query = getSession().createQuery(hql);
-        query.setParameter("company", entityId);
-        query.setParameter("source", source);
-        query.executeUpdate();
+                "WHERE company.id = :company AND source = :source)", parameters);
 
-        hql = "DELETE FROM ContactFieldDTO WHERE contact.id IN (" +
+        executeUpdate("DELETE FROM ContactFieldDTO WHERE contact.id IN (" +
                 "SELECT contact.id FROM BlacklistDTO " + 
-                "WHERE company.id = :company AND source = :source)";
-        query = getSession().createQuery(hql);
-        query.setParameter("company", entityId);
-        query.setParameter("source", source);
-        query.executeUpdate();
+                "WHERE company.id = :company AND source = :source)", parameters);
 
-        hql = "DELETE FROM ContactDTO WHERE id IN (" +
+        executeUpdate("DELETE FROM ContactDTO WHERE id IN (" +
                 "SELECT contact.id FROM BlacklistDTO " + 
-                "WHERE company.id = :company AND source = :source)";
-        query = getSession().createQuery(hql);
-        query.setParameter("company", entityId);
-        query.setParameter("source", source);
-        query.executeUpdate();
+                "WHERE company.id = :company AND source = :source)", parameters);
 
-        hql = "DELETE FROM BlacklistDTO " +
-                "WHERE company.id = :company AND source = :source";
-        query = getSession().createQuery(hql);
-        query.setParameter("company", entityId);
-        query.setParameter("source", source);
-        int result = query.executeUpdate();
-
-        return result;
+        return executeUpdate("DELETE FROM BlacklistDTO " +
+                "WHERE company.id = :company AND source = :source", parameters);
     }
 }
