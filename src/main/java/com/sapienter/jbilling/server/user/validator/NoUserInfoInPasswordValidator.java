@@ -50,7 +50,7 @@ public class NoUserInfoInPasswordValidator {
 	 * @return <code>true</code> if the password passes the verification,
 	 * otherwise returns <code>false</code>.
 	 */
-	public static boolean basicValidation(Object dto, String password) {
+	public static boolean basicValidation(ContactDTOEx dto, String password) {
 		boolean retVal = true;
 		try {
 			if (dto == null) {
@@ -58,7 +58,7 @@ public class NoUserInfoInPasswordValidator {
 			}
 			else {
 				// Check all the fields against the password by using reflection.
-				Class cl = dto.getClass();
+				Class<? extends ContactDTOEx> cl = dto.getClass();
 				Method m[] = cl.getMethods();
 				for (int i = 0; i < m.length && retVal == true; i++) {
 					// We're interested only in the getter methods

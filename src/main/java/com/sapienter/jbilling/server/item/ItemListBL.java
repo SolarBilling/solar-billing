@@ -133,7 +133,7 @@ public final class ItemListBL extends ResultList
         // These lines look kinda tricky. This is an 'anonymous class'
         // I prefer this than creating a new comparator class that will
         // be used only once
-       Collections.sort(result.getLines(), new Comparator() {
+       Collections.sort(result.getLines(), new Comparator<Object>() {
            public int compare(Object o1, Object o2) {
                return ((String)(((Object []) o1)[1])).compareTo(
                        (String)(((Object []) o2)[1]));

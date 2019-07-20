@@ -133,7 +133,7 @@ public class ItemBL {
     private void updateTypes(ItemDTO dto) 
             {
         // update the types relationship        
-        Collection types = item.getItemTypes();
+        Collection<ItemTypeDTO> types = item.getItemTypes();
         types.clear();
         ItemTypeBL typeBl = new ItemTypeBL();
         // TODO verify that all the categories belong to the same
@@ -247,9 +247,9 @@ public class ItemBL {
         BigDecimal aPrice = null;
         Integer aCurrency = null;
         // may be the item has a price in this currency
-        for (Iterator it = item.getItemPrices().iterator(); it.hasNext(); ) {
+        for (Iterator<ItemPriceDTO> it = item.getItemPrices().iterator(); it.hasNext(); ) {
             prices++;
-            ItemPriceDTO price = (ItemPriceDTO) it.next();
+            final ItemPriceDTO price = it.next();
             if (price.getCurrencyId().equals(currencyId)) {
                 // it is there!
                 retValue = price.getPrice();
@@ -370,9 +370,9 @@ public class ItemBL {
         // set the types
         Integer types[] = new Integer[item.getItemTypes().size()];
         int index = 0;
-        for (Iterator it = item.getItemTypes().iterator(); it.hasNext(); 
+        for (Iterator<ItemTypeDTO> it = item.getItemTypes().iterator(); it.hasNext(); 
                 index++) {
-            ItemTypeDTO type = (ItemTypeDTO) it.next();
+            final ItemTypeDTO type = it.next();
         
             types[index] = type.getId();
             
@@ -472,8 +472,8 @@ public class ItemBL {
      * will do.
      * @return
      */
-    private List findPrices(Integer entityId, Integer languageId) {
-        List retValue = new ArrayList();
+    private List<ItemPriceDTO> findPrices(Integer entityId, Integer languageId) {
+        List<ItemPriceDTO> retValue = new ArrayList<>();
 
         // go over all the curencies of this entity
         for (CurrencyDTO currency: item.getEntity().getCurrencies()) {
@@ -509,12 +509,12 @@ public class ItemBL {
     public ItemDTOEx[] getAllItems(Integer entityId) {
         EntityBL entityBL = new EntityBL(entityId);
         CompanyDTO entity = entityBL.getEntity();
-        Collection itemEntities = entity.getItems();
+        Collection<ItemDTO> itemEntities = entity.getItems();
         ItemDTOEx[] items = new ItemDTOEx[itemEntities.size()];
 
         // iterate through returned item entities, converting them into a DTO
         int index = 0;
-        for (ItemDTO item: entity.getItems()) {
+        for (ItemDTO item: itemEntities) {
             set(item.getId());
             items[index++] = getWS(getDTO(entity.getLanguageId(),
                     null, entityId, entity.getCurrencyId()));

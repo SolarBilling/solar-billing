@@ -78,7 +78,7 @@ public class ProcessRunUserDAS extends AbstractDAS<ProcessRunUserDTO> {
     public void removeProcessRunUsersForProcessRun(Integer processRunId) {
         String hql = "DELETE FROM " + ProcessRunUserDTO.class.getSimpleName() +
                 " WHERE processRun.id = :processRunId";
-        Query query = getSession().createQuery(hql);
+        Query<?> query = getSession().createQuery(hql);
         query.setParameter("processRunId", processRunId);
         query.executeUpdate();
     }

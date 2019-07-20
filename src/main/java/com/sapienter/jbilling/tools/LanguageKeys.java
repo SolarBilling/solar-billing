@@ -26,6 +26,7 @@
 package com.sapienter.jbilling.tools;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -35,14 +36,13 @@ import java.util.Properties;
  */
 public class LanguageKeys {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("Usage: LanguageKeys language_code");
         }
         
         String language = args[0];
         
-        try {
             // open the default properties page
             Properties globalProperties = new Properties();
             FileInputStream propFile = new FileInputStream(
@@ -55,18 +55,13 @@ public class LanguageKeys {
                     "ApplicationResources_" + language + ".properties");
             languageProperties.load(propFile);
             
-            // no go through all the keys
-            for (Iterator it = globalProperties.keySet().iterator(); 
-                    it.hasNext(); ) {
-                String key = (String) it.next();
+            // now go through all the keys
+            for (Object key : globalProperties.keySet()) {
                 if (!languageProperties.containsKey(key)) {
                     System.out.println(key + "=" + 
-                            globalProperties.getProperty(key));
+                            globalProperties.get(key));
                 }
             }
             
-        } catch (Exception e) {
-            e.printStackTrace();
-        } 
     }
 }

@@ -37,8 +37,8 @@ import java.util.ArrayList;
  * The original object is created by the list tag when called to setup.
  */
 public class PagedList extends PagedListDTO {
-    private Hashtable parameters = null;
-    private List pageFrom = null;
+    private Hashtable<?, ?> parameters = null;
+    private List<?> pageFrom = null;
     private Boolean direction = null;
     // works as an index, starting with 0.
     // It is always displayed + 1.
@@ -61,7 +61,7 @@ public class PagedList extends PagedListDTO {
     }
     public PagedList(PagedListDTO dto) {
         super(dto);
-        pageFrom = new ArrayList();
+        pageFrom = new ArrayList<Object>();
         direction = new Boolean(false);
         currentPage = new Integer(0);
     }

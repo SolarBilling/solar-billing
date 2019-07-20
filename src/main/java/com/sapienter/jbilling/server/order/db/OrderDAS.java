@@ -178,14 +178,14 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
                 "o.orderPeriod.id != :periodVal and " +
                 "o.deleted = 0 and " +
                 "l.deleted = 0";
-        List qRes = getSession()
+        final List<Integer> qRes = getSession()
                 .createQuery(hql)
                 .setInteger("userId", userId)
                 .setInteger("catId", categoryId)
                 .setInteger("periodVal", Constants.ORDER_PERIOD_ONCE)
                 .list();
         if (qRes != null && qRes.size() > 0) {
-            result = (Integer[])qRes.toArray(new Integer[0]);
+            result = qRes.toArray(new Integer[0]);
         }
         return result;
 	}

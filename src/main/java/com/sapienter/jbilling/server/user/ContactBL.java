@@ -385,15 +385,15 @@ public class ContactBL {
         updateCreateFields(dto.getFieldsTable(), true);
     }
     
-    private void updateCreateFields(Hashtable fields, boolean isUpdate) {
+    private void updateCreateFields(Hashtable<String, ContactFieldDTO> fields, boolean isUpdate) {
         if (fields == null) {
             // if the fields are not there, do nothing
             return;
         }
         // now the per-entity fields
-        for (Iterator it = fields.keySet().iterator(); it.hasNext();) {
-            String type = (String) it.next();
-            ContactFieldDTO field = (ContactFieldDTO) fields.get(type);
+        for (Iterator<String> it = fields.keySet().iterator(); it.hasNext();) {
+            String type = it.next();
+            ContactFieldDTO field = fields.get(type);
             // we can't create or update custom fields with null value
             if (field.getContent() == null) {
                 continue;

@@ -67,7 +67,7 @@ public class ListBL {
     private ListDAS listDas = null;
     private ListDTO list = null;
     private static final Logger LOG = Logger.getLogger(ListBL.class);;
-    private Hashtable parameters = null;
+    private Hashtable<String, Integer> parameters = null;
     @Autowired RowSetFactory rowsetFactory = getRowSetFactory();
     
     static public RowSetFactory getRowSetFactory() {
@@ -120,7 +120,7 @@ public class ListBL {
     public void updateStatistics() throws SessionInternalError {
         // for the statistics, the only relevant parameters is the entityId
         // still they have to be there for thw sql to run
-        parameters = new Hashtable();
+        parameters = new Hashtable<String, Integer>();
         parameters.put("userType", new Integer(2)); // run them all as root
         parameters.put("userId", new Integer(3)); // just a root user
         parameters.put("languageId", new Integer(1)); // english will do
@@ -130,13 +130,13 @@ public class ListBL {
             // make the counting
             Connection conn = EJBFactory.lookUpDataSource().getConnection();
 
-            for (Iterator listsIt = listDas.findAll().iterator(); listsIt
+            for (Iterator<ListDTO> listsIt = listDas.findAll().iterator(); listsIt
                     .hasNext();) {
                 list = (ListDTO) listsIt.next();
                 // now for each entity
-                for (Iterator entityIt = new CompanyDAS().findEntities()
+                for (Iterator<CompanyDTO> entityIt = new CompanyDAS().findEntities()
                         .iterator(); entityIt.hasNext();) {
-                    CompanyDTO anEntity = (CompanyDTO) entityIt.next();
+                    final CompanyDTO anEntity = entityIt.next();
 
                     parameters.put("entityId", anEntity.getId());
                     PreparedStatement stmt = conn
@@ -160,9 +160,9 @@ public class ListBL {
 
                     // now update each of the fields
                     int column = 2; // skip the count
-                    for (Iterator fieldIt = list.getListFields().iterator(); fieldIt
+                    for (Iterator<ListFieldDTO> fieldIt = list.getListFields().iterator(); fieldIt
                             .hasNext();) {
-                        ListFieldDTO field = (ListFieldDTO) fieldIt.next();
+                        final ListFieldDTO field = fieldIt.next();
                         if (field.getOrdenable().intValue() == 1) {
                             Integer min = null, max = null;
                             String minStr = null, maxStr = null;
@@ -331,8 +331,8 @@ public class ListBL {
         header.append("select count(*) ");
 
         // now go through each field
-        for (Iterator it = list.getListFields().iterator(); it.hasNext();) {
-            ListFieldDTO field = (ListFieldDTO) it.next();
+        for (Iterator<ListFieldDTO> it = list.getListFields().iterator(); it.hasNext();) {
+            final ListFieldDTO field = it.next();
             if (field.getOrdenable().intValue() == 1) {
                 header.append(", min(" + field.getColumnName() + ")");
                 header.append(", max(" + field.getColumnName() + ")");
@@ -356,7 +356,7 @@ public class ListBL {
 
     public CachedRowSet getPage(Integer start, Integer end, int size,
             Integer listId, Integer entityId, boolean direction,
-            Integer fieldId, Hashtable parameters) throws SQLException,
+            Integer fieldId, Hashtable<String, Integer> parameters) throws SQLException,
             NamingException, SessionInternalError {
         this.parameters = parameters;
         // start by getting a connection to the db
@@ -528,7 +528,7 @@ public class ListBL {
     }
 
     public CachedRowSet search(String start, String end, Integer fieldId,
-            Integer listId, Integer entityId, Hashtable parameters)
+            Integer listId, Integer entityId, Hashtable<String, Integer> parameters)
             throws SQLException, NamingException {
         this.parameters = parameters;
         StringBuffer sql = new StringBuffer();

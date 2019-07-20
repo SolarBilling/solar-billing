@@ -68,10 +68,10 @@ public class ListTag extends TagSupport {
             // this might be a recall, so lets see if the list is already cached
             // recalls have to be addressed with this cache, because for each click
             // to add an item there's a recall ...
-            Collection queryResults = null;
+            Collection<?> queryResults = null;
             
             if (mode.equals("entity")) {
-                queryResults = (Collection) session.getAttribute(
+                queryResults = (Collection<?>) session.getAttribute(
                     Constants.SESSION_REPORT_LIST);
             } else if (mode.equals("user")) {
                 // do not cache the list of user's reports

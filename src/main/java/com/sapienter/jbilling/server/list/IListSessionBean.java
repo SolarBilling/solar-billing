@@ -26,6 +26,7 @@ import java.util.Hashtable;
 import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
+import com.sapienter.jbilling.server.util.OptionDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 
 /**
@@ -36,10 +37,10 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
  **/
 public interface IListSessionBean {
 
-    public CachedRowSet getList(String type, Hashtable parameters)
+    public CachedRowSet getList(String type, Hashtable<String, Integer> parameters)
             throws SessionInternalError;
 
-    public ListDTO getDtoList(String type, Hashtable parameters)
+    public ListDTO getDtoList(String type, Hashtable<String, Integer> parameters)
             throws SessionInternalError;
 
     /**
@@ -47,7 +48,7 @@ public interface IListSessionBean {
      * remote interface, so might as well put it here. All the real code it in
      * GetSelectableOptions.java
      */
-    public Collection getOptions(String type, Integer languageId,
+    public Collection<OptionDTO> getOptions(String type, Integer languageId,
             Integer entityId, Integer executorType) throws SessionInternalError;
 
     /**
@@ -68,10 +69,10 @@ public interface IListSessionBean {
 
     public CachedRowSet getPage(Integer start, Integer end, Integer size,
             Integer listId, Integer entityId, Boolean direction,
-            Integer fieldId, Hashtable parameters) throws SessionInternalError;
+            Integer fieldId, Hashtable<String, Integer> parameters) throws SessionInternalError;
 
     public CachedRowSet search(String start, String end, Integer fieldId,
-            Integer listId, Integer entityId, Hashtable parameters)
+            Integer listId, Integer entityId, Hashtable<String, Integer> parameters)
             throws SessionInternalError;
 
     public PagedListDTO getPagedListDTO(Integer listId, String legacyName,

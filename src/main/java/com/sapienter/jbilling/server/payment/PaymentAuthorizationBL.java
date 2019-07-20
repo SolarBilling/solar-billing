@@ -114,11 +114,11 @@ public class PaymentAuthorizationBL {
         try {
             PaymentDAS paymentHome = new PaymentDAS();
 
-            Collection payments = paymentHome.findPreauth(userId);
+            Collection<PaymentDTO> payments = paymentHome.findPreauth(userId);
             // at the time, use the very first one
             if (!payments.isEmpty()) {
                 PaymentDTO payment = (PaymentDTO) payments.toArray()[0];
-                Collection auths = payment.getPaymentAuthorizations();
+                Collection<PaymentAuthorizationDTO> auths = payment.getPaymentAuthorizations();
                 if (!auths.isEmpty()) {
                     paymentAuthorization = 
                             (PaymentAuthorizationDTO) auths.toArray()[0];
@@ -127,7 +127,7 @@ public class PaymentAuthorizationBL {
                     LOG.warn("Auth payment found, but without auth record?");
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOG.warn("Exceptions finding a pre authorization", e);
         }
         LOG.debug("Looking for preauth for " + userId + " result " + auth);

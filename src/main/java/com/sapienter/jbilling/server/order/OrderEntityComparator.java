@@ -31,12 +31,12 @@ import com.sapienter.jbilling.server.order.db.OrderDTO;
 /**
  * @author Emil
  */
-public class OrderEntityComparator implements Comparator {
+public class OrderEntityComparator implements Comparator<OrderDTO> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(Object o1, Object o2) {
+    public int compare(OrderDTO o1, OrderDTO o2) {
         OrderDTO parA = (OrderDTO) o1;
         OrderDTO parB = (OrderDTO) o2;
         

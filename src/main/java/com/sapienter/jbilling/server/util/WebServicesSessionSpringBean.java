@@ -105,7 +105,6 @@ import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.UserTransitionResponseWS;
 import com.sapienter.jbilling.server.user.UserWS;
 import com.sapienter.jbilling.server.user.ValidatePurchaseWS;
-import com.sapienter.jbilling.server.user.db.AchDAS;
 import com.sapienter.jbilling.server.user.db.AchDTO;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.CreditCardDAS;
@@ -405,10 +404,10 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
             throws SessionInternalError {
         ContactWS[] dtos = null;
         ContactBL contact = new ContactBL();
-        List result = contact.getAll(userId);
+        final List<ContactDTOEx> result = contact.getAll(userId);
         dtos = new ContactWS[result.size()];
         for (int f = 0; f < result.size(); f++) {
-            dtos[f] = new ContactWS((ContactDTOEx) result.get(f));
+            dtos[f] = new ContactWS(result.get(f));
         }
 
         return dtos;
@@ -969,7 +968,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
                 MediationResult result = new MediationResult("WS", true);
                 result.setUserId(userId);
                 result.setEventDate(date);
-                ArrayList results = new ArrayList(1);
+                ArrayList<MediationResult> results = new ArrayList<MediationResult>(1);
                 results.add(result);
                 processTask.process(records, results, "WS");
                 diffLines = result.getDiffLines();
@@ -1782,7 +1781,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
         if (fields != null) {
             fieldsList = new ArrayList<List<PricingField>>(fields.length);
             for (int i = 0; i < fields.length; i++) {
-                fieldsList.add(new ArrayList(Arrays.asList(
+                fieldsList.add(new ArrayList<PricingField>(Arrays.asList(
                         PricingField.getPricingFieldsValue(fields[i]))));
             }
         }
@@ -1792,7 +1791,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
         List<ItemDTO> items = new ArrayList<ItemDTO>();
 
         if (itemIds != null) {
-            itemIdsList = new ArrayList(Arrays.asList(itemIds));
+            itemIdsList = new ArrayList<Integer>(Arrays.asList(itemIds));
         } else if (fields != null) {
             itemIdsList = new LinkedList<Integer>();
 
@@ -1819,7 +1818,7 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
                     MediationResult result = new MediationResult("WS", false);
                     result.setUserId(userId);
                     result.setEventDate(new Date());
-                    ArrayList results = new ArrayList(1);
+                    ArrayList<MediationResult> results = new ArrayList<MediationResult>(1);
                     results.add(result);
                     processTask.process(records, results, "WS");
 

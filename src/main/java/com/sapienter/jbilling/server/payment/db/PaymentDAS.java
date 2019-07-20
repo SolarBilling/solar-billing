@@ -77,7 +77,7 @@ public class PaymentDAS extends AbstractDAS<PaymentDTO> {
 	 * @param userId
 	 * @return
 	 */
-	public Collection findWithBalance(Integer userId) {
+	public Collection<PaymentDTO> findWithBalance(Integer userId) {
 
 		UserDTO user = new UserDAS().find(userId);
 

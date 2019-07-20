@@ -49,18 +49,18 @@ public interface IReportSessionBean {
     
     public CachedRowSet execute(ReportDTOEx report) throws SessionInternalError;
 
-    public Collection getList(Integer entityId) throws SessionInternalError;
+    public Collection<?> getList(Integer entityId) throws SessionInternalError;
 
     /**
      * Returns a vector of ReportDTOEx that belong
      * to the given report type
      */
-    public Collection getListByType(Integer typeId) throws SessionInternalError;
+    public Collection<ReportDTOEx> getListByType(Integer typeId) throws SessionInternalError;
 
     public void save(ReportDTOEx report, Integer user, String title) 
             throws SessionInternalError;
 
-    public Collection getUserList(Integer report, Integer userId) 
+    public Collection<?> getUserList(Integer report, Integer userId) 
             throws SessionInternalError;
 
     public void delete(Integer userReportId) throws SessionInternalError;

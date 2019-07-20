@@ -63,7 +63,7 @@ public class InternalEventProcessor {
      */
     public boolean isProcessable(IInternalEventsTask task, Event event) {
         if (task.getSubscribedEvents() != null) {
-            for (Class subscribedEvent : task.getSubscribedEvents()) {
+            for (Class<?> subscribedEvent : task.getSubscribedEvents()) {
                 if (CatchAllEvent.class.equals(subscribedEvent)) {
                     // subscribed to the CatchAllEvent, process any/all incoming events
                     return true;

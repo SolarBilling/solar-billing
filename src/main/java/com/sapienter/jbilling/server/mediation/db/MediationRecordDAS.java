@@ -35,7 +35,7 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
 
     @SuppressWarnings("unchecked")
     public MediationRecordDTO findNewestByKey(String key) {
-        Query query = getSession().createQuery(findByKeyHQL);
+        Query<MediationRecordDTO> query = getSession().createQuery(findByKeyHQL);
         query.setParameter("key", key);
 
         List<MediationRecordDTO> results = query.list();
@@ -76,10 +76,10 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
                     " and mediationRecord.recordStatus = :status";
 
     public Long countMediationRecordsByEntityIdAndStatus(Integer entityId, MediationRecordStatusDTO status) {
-        Query query = getSession().createQuery(countMediationRecordsByEntityAndStatusHQL);
+        Query<MediationRecordDTO> query = getSession().createQuery(countMediationRecordsByEntityAndStatusHQL);
         query.setParameter("entity", entityId);
         query.setParameter("status", status);
-        return (Long) query.list().get(0);
+        return Long.valueOf(query.list().size());
     }
 
     private static final String findByMediationProcessHQL =
@@ -88,7 +88,7 @@ public class MediationRecordDAS extends AbstractDAS<MediationRecordDTO> {
                     " WHERE mediationRecord.process.id = :processId";
 
     public List<MediationRecordDTO> findByProcess(Integer mediationProcessId) {
-        Query query = getSession().createQuery(findByMediationProcessHQL);
+        Query<MediationRecordDTO> query = getSession().createQuery(findByMediationProcessHQL);
         query.setParameter("processId", mediationProcessId);
         return query.list();
     }

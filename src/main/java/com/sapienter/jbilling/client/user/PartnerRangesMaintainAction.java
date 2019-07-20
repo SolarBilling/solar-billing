@@ -153,7 +153,7 @@ public class PartnerRangesMaintainAction extends CrudActionBase<PartnerRangedMai
 		String[] allPercentages = new String[MAX_RANGES];
 		String[] allReferralFees = new String[MAX_RANGES];
 
-        ArrayList<PartnerRange> ranges = new ArrayList(partner.getRanges());
+        ArrayList<PartnerRange> ranges = new ArrayList<PartnerRange>(partner.getRanges());
         Collections.sort(ranges, new PartnerRangeComparator());
         int numOfRanges = Math.min(MAX_RANGES, partner.getRanges().size());
 

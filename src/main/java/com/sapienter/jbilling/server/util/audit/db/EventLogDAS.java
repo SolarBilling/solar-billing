@@ -42,7 +42,7 @@ public class EventLogDAS extends AbstractDAS<EventLogDTO> {
         " AND company.id = :entity";
 
     public Integer getLastTransitionEvent(Integer entityId) {
-        Query query = getSession().createQuery(findLastTransition);
+        Query<?> query = getSession().createQuery(findLastTransition);
         query.setParameter("entity", entityId);
         Integer id = (Integer) query.uniqueResult();
         if (id == null) {

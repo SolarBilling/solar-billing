@@ -123,7 +123,7 @@ public class PaperInvoiceBatchBL {
             entityId + "-";
     	// now go through each of the invoices
         // first - sort them
-        List invoices = new ArrayList(batch.getInvoices());
+        List<InvoiceDTO> invoices = new ArrayList<>(batch.getInvoices());
         Collections.sort(invoices, new InvoiceEntityComparator());
         Integer[] invoicesIds = new Integer[invoices.size()];
 
@@ -157,7 +157,7 @@ public class PaperInvoiceBatchBL {
 
         
         int pageOffset = 0;
-        ArrayList master = new ArrayList();
+        ArrayList master = new ArrayList<Object>();
         Document document = null;
         PdfCopy  writer = null;
         for(int f = 0; f < invoices.length ; f++) {
@@ -241,7 +241,7 @@ public class PaperInvoiceBatchBL {
             SessionInternalError, DocumentException,
             IOException {
         NotificationBL notif = new NotificationBL();
-        List invoices = new ArrayList();
+        List<Integer> invoices = new ArrayList<>();
 
         int generated = 0;
         while (cachedRowSet.next()) {

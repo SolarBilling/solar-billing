@@ -162,11 +162,11 @@ public class BasicEmailNotificationTask extends PluggableTask
         try {
             msg = new MimeMessageHelper(mimeMsg, doHTML || message.getAttachmentFile() != null);
             ContactBL contact = new ContactBL();
-            List contacts = contact.getAll(user.getUserId());
-            List addresses = new ArrayList<InternetAddress>();
+            final List<ContactDTOEx> contacts = contact.getAll(user.getUserId());
+            List<InternetAddress> addresses = new ArrayList<InternetAddress>();
             boolean atLeastOne = false;
             for (int f = 0; f < contacts.size(); f++) {
-                ContactDTOEx record = (ContactDTOEx) contacts.get(f);
+                final ContactDTOEx record = contacts.get(f);
                 String address = record.getEmail();
                 if (record.getInclude() != null &&
                         record.getInclude().intValue() == 1 &&

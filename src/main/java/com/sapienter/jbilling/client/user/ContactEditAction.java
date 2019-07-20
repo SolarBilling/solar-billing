@@ -23,6 +23,7 @@ package com.sapienter.jbilling.client.user;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +46,7 @@ import org.apache.struts.validator.DynaValidatorForm;
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.server.user.ContactDTOEx;
 import com.sapienter.jbilling.server.user.IUserSessionBean;
+import com.sapienter.jbilling.server.user.contact.db.ContactFieldDTO;
 import com.sapienter.jbilling.server.util.Context;
 
 public class ContactEditAction extends Action {
@@ -128,7 +130,7 @@ public class ContactEditAction extends Action {
                 contact.setFaxAreaCode((Integer) contactForm.get("faxAreaCode"));
                 contact.setFaxNumber(cleanField("faxNumber"));
                 contact.setEmail(cleanField("email"));
-                contact.setFieldsTable((Hashtable) contactForm.get("fieldsTable"));
+                contact.setFieldsTable((Hashtable<String, ContactFieldDTO>) contactForm.get("fieldsTable"));
                 contact.setInclude(new Integer(((Boolean) contactForm.get("chbx_include")).
                         booleanValue() ? 1 : 0));
                 
@@ -152,13 +154,11 @@ public class ContactEditAction extends Action {
         }
         
         LOG.debug("After contact: action = " + action);
-        LOG.debug("Fields number:" + ((Hashtable) contactForm.get(
-                "fieldsTable")).size());
-        for (Iterator it = ((Hashtable) contactForm.get(
-                "fieldsTable")).keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
-            LOG.debug("field " + key + " is " + ((Hashtable) contactForm.get(
-                "fieldsTable")).get(key));
+        final Map fieldsTable = (Map) contactForm.get("fieldsTable");
+        LOG.debug("Fields number:" + fieldsTable.size());
+        for (Iterator<String> it = fieldsTable.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
+            LOG.debug("field " + key + " is " + fieldsTable.get(key));
         }
         return mapping.findForward(forward);
     }

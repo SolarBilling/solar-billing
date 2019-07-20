@@ -214,10 +214,8 @@ public class DTOFactory {
 		EntityBL entity = new EntityBL(entityId);
 		ReportDTOEx dto = getReportDTOEx(new ReportDAS().find(reportId), entity
 				.getLocale());
-		Collection fields = report.getReportFields();
 
-		for (Iterator it = fields.iterator(); it.hasNext();) {
-			ReportFieldDTO field = (ReportFieldDTO) it.next();
+		for (ReportFieldDTO field : report.getReportFields()) {
 			Field fieldDto = getFieldDTO(field);
 			fieldDto.setWhereValue(field.getWhereValue());
 
@@ -284,7 +282,7 @@ public class DTOFactory {
 		return dtos;
 	}
 
-	public static Collection reportEJB2DTO(Collection<ReportDTO> reports) {
+	public static Collection<ReportDTOEx> reportEJB2DTO(Collection<ReportDTO> reports) {
 		List<ReportDTOEx> dtos = new ArrayList<ReportDTOEx>();
 
 		for (ReportDTO report : reports) {

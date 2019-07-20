@@ -41,7 +41,7 @@ public class MediationProcessDAS extends AbstractDAS<MediationProcess> {
      */
     @SuppressWarnings("unchecked")
     public List<MediationProcess> findAllByEntity(Integer entityId) {
-        Query query = getSession().createQuery(FIND_ALL_BY_ENTITY_HQL);
+        Query<MediationProcess> query = getSession().createQuery(FIND_ALL_BY_ENTITY_HQL);
         query.setParameter("entity", entityId);
         return query.list();
     }
@@ -60,7 +60,7 @@ public class MediationProcessDAS extends AbstractDAS<MediationProcess> {
      * @return true if process running, false if not
      */
     public boolean isProcessing(Integer entityId) {
-        Query query = getSession().createQuery(IS_PROCESS_RUNNING_HQL);
+        Query<MediationProcess> query = getSession().createQuery(IS_PROCESS_RUNNING_HQL);
         query.setParameter("entityId", entityId);
 
         return !query.list().isEmpty();

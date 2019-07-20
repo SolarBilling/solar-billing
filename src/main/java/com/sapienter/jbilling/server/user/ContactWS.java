@@ -36,8 +36,8 @@ import com.sapienter.jbilling.server.user.contact.db.ContactFieldDTO;
  * @author Emil
  */
 public class ContactWS implements Serializable {
-
-    private int id;
+	private static final long serialVersionUID = 1L;
+	private int id;
     private String organizationName;
     private String address1;
     private String address2;
@@ -195,9 +195,9 @@ public class ContactWS implements Serializable {
         fieldNames = new String[other.getFieldsTable().size()];
         fieldValues = new String[other.getFieldsTable().size()];
         int index = 0;
-        for (Iterator it = other.getFieldsTable().keySet().iterator();
+        for (Iterator<String> it = other.getFieldsTable().keySet().iterator();
                 it.hasNext();) {
-            fieldNames[index] = (String) it.next();
+            fieldNames[index] = it.next();
             ContactFieldDTO fieldDto = (ContactFieldDTO) other.
                 getFieldsTable().get(fieldNames[index]);
             fieldValues[index] = fieldDto.getContent();

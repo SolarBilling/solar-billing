@@ -150,7 +150,7 @@ public class CurrencyBL {
         Connection conn = jndi.lookUpDataSource().getConnection();
         PreparedStatement stmt = conn.prepareStatement("select id, symbol, code from currency");
         ResultSet result = stmt.executeQuery();
-        Vector results = new Vector();
+        Vector<CurrencyDTO> results = new Vector<CurrencyDTO>();
         while (result.next()) {
             int currencyId = result.getInt(1);
             // ensure that the vector will have space for this currency
@@ -209,8 +209,8 @@ public class CurrencyBL {
 
         // start by wiping out the existing data for this entity
         entity.getEntity().getCurrencies().clear();
-        for (Iterator it = exchangeDas.findByEntity(entityId).iterator(); it.hasNext(); ) {
-            CurrencyExchangeDTO exchange = (CurrencyExchangeDTO) it.next();
+        for (Iterator<CurrencyExchangeDTO> it = exchangeDas.findByEntity(entityId).iterator(); it.hasNext(); ) {
+            CurrencyExchangeDTO exchange = it.next();
             exchangeDas.delete(exchange);
         }
 

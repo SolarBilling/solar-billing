@@ -108,7 +108,7 @@ public class NewInvoiceDTO extends InvoiceDTO {
         invoices.add(line);
     }
 
-    public List getOrders() {
+    public List<OrderDTO> getOrders() {
         return orders;
     }
 
@@ -116,7 +116,7 @@ public class NewInvoiceDTO extends InvoiceDTO {
         return invoices;
     }
 
-    public List getResultLines() {
+    public List<InvoiceLineDTO> getResultLines() {
         return resultLines;
     }
 
@@ -170,7 +170,7 @@ public class NewInvoiceDTO extends InvoiceDTO {
     }
 
     public void calculateTotal() {
-        Iterator lines = resultLines.iterator();
+        Iterator<InvoiceLineDTO> lines = resultLines.iterator();
         BigDecimal total = new BigDecimal(0);
         while (lines.hasNext()) {
             InvoiceLineDTO line = (InvoiceLineDTO) lines.next();

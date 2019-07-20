@@ -45,8 +45,8 @@ import com.sapienter.jbilling.server.util.Context;
  *          body-content="empty"
  */
 public class GetOptionsTag extends TagSupport {
-
-    // these are the different types of data to fetch    
+	private static final long serialVersionUID = 1L;
+	// these are the different types of data to fetch    
     private Boolean countries = new Boolean(false);
     private Boolean userType = new Boolean(false);
     private Boolean language = new Boolean(false);
@@ -87,7 +87,7 @@ public class GetOptionsTag extends TagSupport {
         if (user!= null) {
             executorType = user.getMainRoleId();
         }
-        Collection retValue = null;
+        Collection<OptionDTO> retValue = null;
         String attributeKey = null;
         String type = null;
 
@@ -158,7 +158,7 @@ public class GetOptionsTag extends TagSupport {
             // see if this call is just to map an id to a string, instead
             // of using it for a select
             if (map != null) {
-                for (Iterator it = retValue.iterator(); it.hasNext(); ) {
+                for (Iterator<?> it = retValue.iterator(); it.hasNext(); ) {
                     OptionDTO option = (OptionDTO) it.next();
                     if (option.getCode().equals(map)) {
                         pageContext.setAttribute("mapped_option",

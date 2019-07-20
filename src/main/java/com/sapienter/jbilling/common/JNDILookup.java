@@ -54,7 +54,7 @@ public class JNDILookup {
     private JNDILookup(boolean test) throws NamingException {
         log = Logger.getLogger(JNDILookup.class);
         if (test) {
-            Hashtable env = new Hashtable();
+            Hashtable<String, String> env = new Hashtable<String, String>();
             env.put(
                 Context.INITIAL_CONTEXT_FACTORY,
                 "org.jnp.interfaces.NamingContextFactory");

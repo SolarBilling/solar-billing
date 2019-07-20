@@ -163,23 +163,23 @@ public class AgeingBL {
             // all the current orders have to be suspended
             OrderDAS orderDas = new OrderDAS();
             OrderBL order = new OrderBL();
-            for (Iterator it = orderDas.findByUser_Status(userId, 
+            for (Iterator<OrderDTO> it = orderDas.findByUser_Status(userId, 
                     Constants.ORDER_STATUS_ACTIVE).iterator(); 
                     it.hasNext();) {
-                OrderDTO orderRow = (OrderDTO) it.next();
+                final OrderDTO orderRow = it.next();
                 order.set(orderRow);
                 order.setStatus(executorId, 
                         Constants.ORDER_STATUS_SUSPENDED_AGEING);
             }               
         } else if (!couldLogin && status.getCanLogin() == 1) {
-            // the oposite, it is getting out of the ageing process
+            // the opossite, it is getting out of the ageing process
             // all the suspended orders have to be reactivated
             OrderDAS orderDas = new OrderDAS();
             OrderBL order = new OrderBL();
-            for (Iterator it = orderDas.findByUser_Status(userId, 
+            for (Iterator<OrderDTO> it = orderDas.findByUser_Status(userId, 
                     Constants.ORDER_STATUS_SUSPENDED_AGEING).iterator(); 
                     it.hasNext();) {
-                OrderDTO orderRow = (OrderDTO) it.next();
+                final OrderDTO orderRow = it.next();
                 order.set(orderRow);
                 order.setStatus(executorId, Constants.ORDER_STATUS_ACTIVE);
             }               
@@ -380,9 +380,9 @@ public class AgeingBL {
             LOG.debug("Reviewing invoices of user:" + userRow.getUserId() +
                     " grace: " + gracePeriod);
             // now go over this user's pending invoices
-            for (Iterator it2 = invoiceBL.getHome().findProccesableByUser(
+            for (Iterator<InvoiceDTO> it2 = invoiceBL.getHome().findProccesableByUser(
                     userRow).iterator(); it2.hasNext(); ) {
-                InvoiceDTO invoice = (InvoiceDTO) it2.next();
+                final InvoiceDTO invoice = it2.next();
                 GregorianCalendar cal = new GregorianCalendar();
                 cal.setTime(invoice.getDueDate());
                 if (gracePeriod > 0) {

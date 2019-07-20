@@ -66,7 +66,7 @@ public abstract class PluggableTask {
         return task.getId();
     }
 
-    public void initializeParamters(PluggableTaskDTO task)
+    public void initializeParameters(PluggableTaskDTO task)
             throws PluggableTaskException {
         Collection<PluggableTaskParameterDTO> DBparameters = task.getParameters();
         parameters = new HashMap<String, Object>();
@@ -126,7 +126,7 @@ public abstract class PluggableTask {
         knowledgeBasesCache.remove(taskId);
     }
 
-    protected void executeStatefulRules(StatefulKnowledgeSession session, List context) {
+    protected void executeStatefulRules(StatefulKnowledgeSession session, List<?> context) {
         handlers = new Hashtable<Object, FactHandle>();
         for (Object o : context) {
             if (o != null) {

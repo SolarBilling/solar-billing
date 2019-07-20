@@ -354,7 +354,7 @@ public class PaymentAuthorizeNetTask extends PluggableTask
 
     private NameValuePair[] addAVSFields(Integer userId, NameValuePair[] fields) {
         try {
-            List result = new ArrayList();
+            List<NameValuePair> result = new ArrayList<NameValuePair>();
             for (int f = 0; f < fields.length; f++) {
                 result.add(fields[f]);
             }
@@ -383,7 +383,7 @@ public class PaymentAuthorizeNetTask extends PluggableTask
         }
     }
     
-    private void considerField(List fields, String dbField, 
+    private void considerField(List<NameValuePair> fields, String dbField, 
             String aNetField) {
         if (dbField != null && dbField.length() > 0) {
             NameValuePair field = new NameValuePair(aNetField, dbField);

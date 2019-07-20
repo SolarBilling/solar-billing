@@ -137,6 +137,8 @@ public class PluggableTaskBL<T> {
         PluggableTask.invalidateRuleCache(dto.getTask().getId());
     }
     
+    // TODO this method should probably be moved out of this class into a class that extends this one as
+    // most instances of PluggableTaskBL don't use it
     public T instantiateTask()
             throws PluggableTaskException {
 
@@ -144,12 +146,12 @@ public class PluggableTaskBL<T> {
         String fqn = localTask.getType().getClassName();
         T result;
         try {
-            Class taskClazz = Class.forName(fqn);
+            Class<? extends T> taskClazz = (Class<? extends T>) Class.forName(fqn);
                     //.asSubclass(result.getClass());
             result = (T) taskClazz.newInstance();
         } catch (ClassCastException e) {
             throw new PluggableTaskException("Task id: " + pluggableTask.getId()
-                    + ": implementation class does not implements PaymentTask:"
+                    + ": implementation class does not implement expected class: "
                     + fqn, e);
         } catch (InstantiationException e) {
             throw new PluggableTaskException("Task id: " + pluggableTask.getId()
@@ -164,7 +166,7 @@ public class PluggableTaskBL<T> {
 
         if (result instanceof PluggableTask) {
             PluggableTask pluggable = (PluggableTask) result;
-            pluggable.initializeParamters(localTask);
+            pluggable.initializeParameters(localTask);
         } else {
             throw new PluggableTaskException("Plug-in has to extend PluggableTask " + 
                     pluggableTask.getId());

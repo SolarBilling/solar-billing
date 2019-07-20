@@ -32,15 +32,12 @@ import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
 /**
  * @author Emil
  */
-public class OrderProcessIdComparator implements Comparator {
+public class OrderProcessIdComparator implements Comparator<OrderProcessDTO> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(Object arg0, Object arg1) {
-        OrderProcessDTO perA = (OrderProcessDTO) arg0;
-        OrderProcessDTO perB = (OrderProcessDTO) arg1;
-        
+    public int compare(final OrderProcessDTO perA, final OrderProcessDTO perB) {
         if (perA.getId() == perB.getId()) return 0;
         if (perA.getId() < perB.getId()) return -1;
         else return 1;

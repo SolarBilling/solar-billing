@@ -273,7 +273,7 @@ public class PaymentSessionBean implements IPaymentSessionBean {
         try {
             if (dto.getIsRefund() == 0 && invoiceId != null) {
                 InvoiceBL bl = new InvoiceBL(invoiceId);
-                List inv = new ArrayList();
+                List<Integer> inv = new ArrayList<Integer>();
                 inv.add(invoiceId);
                 dto.setInvoiceIds(inv);
                 return processAndUpdateInvoice(dto, bl.getEntity());

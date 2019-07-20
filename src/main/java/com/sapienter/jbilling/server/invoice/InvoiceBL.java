@@ -251,18 +251,18 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
     }
 
     public void createLines(NewInvoiceDTO newInvoice) {
-        Collection invoiceLines = invoice.getInvoiceLines();
+        Collection<InvoiceLineDTO> invoiceLines = invoice.getInvoiceLines();
 
         // Now create all the invoice lines, from the lines in the DTO
         // put there by the invoice composition pluggable tasks
         InvoiceLineDAS invoiceLineDas = new InvoiceLineDAS();
 
         // get the result DTO lines
-        Iterator dueInvoiceLines = newInvoice.getResultLines().iterator();
+        Iterator<InvoiceLineDTO> dueInvoiceLines = newInvoice.getResultLines().iterator();
         // go over the DTO lines, creating one invoice line for each
 
         while (dueInvoiceLines.hasNext()) {
-            InvoiceLineDTO lineToAdd = (InvoiceLineDTO) dueInvoiceLines.next();
+            final InvoiceLineDTO lineToAdd = dueInvoiceLines.next();
             // define if the line is a percentage or not
             lineToAdd.setIsPercentage(new Integer(0));
             if (lineToAdd.getItem() != null) {
@@ -384,8 +384,8 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
 
     private BigDecimal calculateTotal() {
         BigDecimal total = new BigDecimal(0);
-        for (Iterator it = invoice.getInvoiceLines().iterator(); it.hasNext();) {
-            InvoiceLineDTO line = (InvoiceLineDTO) it.next();
+        for (Iterator<InvoiceLineDTO> it = invoice.getInvoiceLines().iterator(); it.hasNext();) {
+            final InvoiceLineDTO line = it.next();
             total = total.add(line.getAmount());
         }
         return total;
@@ -504,7 +504,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         cachedResults = getInvoicesByCreateDate(entityId, since, until);
 
         // get ids for return
-        List ids = new ArrayList();
+        List<Integer> ids = new ArrayList<>();
         while (cachedResults.next()) {
             ids.add(new Integer(cachedResults.getInt(1)));
         }
@@ -654,10 +654,10 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
     }
 
 
-    public InvoiceWS[] DTOtoWS(List dtos) {
+    public InvoiceWS[] DTOtoWS(List<InvoiceDTO> dtos) {
         InvoiceWS retValue[] = new InvoiceWS[dtos.size()];
         for (int f = 0; f < retValue.length; f++) {
-            retValue[f] = InvoiceBL.getWS((InvoiceDTO) dtos.get(f));
+            retValue[f] = InvoiceBL.getWS(dtos.get(f));
         }
         LOG.debug("converstion " + retValue.length);
 
@@ -670,8 +670,8 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
             SessionInternalError {
         GregorianCalendar cal = new GregorianCalendar();
 
-        for (Iterator it = new CompanyDAS().findEntities().iterator(); it.hasNext();) {
-            CompanyDTO thisEntity = (CompanyDTO) it.next();
+        for (Iterator<CompanyDTO> it = new CompanyDAS().findEntities().iterator(); it.hasNext();) {
+            final CompanyDTO thisEntity = it.next();
             Integer entityId = thisEntity.getId();
             PreferenceBL pref = new PreferenceBL();
             try {

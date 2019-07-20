@@ -31,7 +31,7 @@ public class ContactFieldDAS extends AbstractDAS<ContactFieldDTO> {
         "   AND a.type.id = :typeId ";
                
     public ContactFieldDTO findByType(Integer typeId, Integer contactId) {
-        Query query = getSession().createQuery(findByTypeSQL);
+        Query<?> query = getSession().createQuery(findByTypeSQL);
         query.setParameter("contactId", contactId);
         query.setParameter("typeId", typeId);
         return (ContactFieldDTO) query.uniqueResult();

@@ -46,7 +46,7 @@ public class ContactDAS extends AbstractDAS<ContactDTO> {
     }
     
     public ContactDTO findContact(Integer userId, Integer typeId) {
-        Query query = getSession().createQuery(findContactSQL);
+        Query<?> query = getSession().createQuery(findContactSQL);
         query.setParameter("typeId", typeId);
         query.setParameter("userId", userId);
         query.setParameter("tableName", Constants.TABLE_BASE_USER);
@@ -54,7 +54,7 @@ public class ContactDAS extends AbstractDAS<ContactDTO> {
     }
 
     public ContactDTO findEntityContact(Integer entityId) {
-        Query query = getSession().createQuery(findSimpleContactSQL);
+        Query<?> query = getSession().createQuery(findSimpleContactSQL);
         query.setParameter("id", entityId);
         query.setParameter("tableName", Constants.TABLE_ENTITY);
         query.setCacheable(true);
@@ -62,7 +62,7 @@ public class ContactDAS extends AbstractDAS<ContactDTO> {
     }
 
     public ContactDTO findInvoiceContact(Integer invoiceId) {
-        Query query = getSession().createQuery(findSimpleContactSQL);
+        Query<?> query = getSession().createQuery(findSimpleContactSQL);
         query.setParameter("id", invoiceId);
         query.setParameter("tableName", Constants.TABLE_INVOICE);
         return (ContactDTO) query.uniqueResult();

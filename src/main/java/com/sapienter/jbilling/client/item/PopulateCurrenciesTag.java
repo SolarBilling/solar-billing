@@ -49,20 +49,21 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
  *          body-content="empty"
  */
 public class PopulateCurrenciesTag extends TagSupport {
+	private static final long serialVersionUID = 1L;
 
-    public int doStartTag() throws JspException {
+	public int doStartTag() throws JspException {
         HttpSession session = pageContext.getSession();
         // put the price in the form
         DynaValidatorForm form = (DynaValidatorForm) session.getAttribute(
                 "item");
 
-        List prices = (List) form.get("prices");
+        List<ItemPriceDTO> prices = (List<ItemPriceDTO>) form.get("prices");
         if (prices.size() > 0) {
             // it's been done already
             return SKIP_BODY;
         } 
         
-        for (Iterator it = ((Collection) pageContext.getAttribute(
+        for (Iterator<OptionDTO> it = ((Collection<OptionDTO>) pageContext.getAttribute(
                 Constants.PAGE_CURRENCIES)).iterator(); it.hasNext(); ) {
             OptionDTO option = (OptionDTO) it.next();
             ItemPriceDTO price = new ItemPriceDTO(null, null, null,

@@ -35,7 +35,7 @@ public class MediationRecordLineDAS extends AbstractDAS<MediationRecordLineDTO> 
             "  order by a.orderLine.id, a.id";
     
     public List<MediationRecordLineDTO> getByOrder(Integer orderId) {
-        Query query = getSession().createQuery(findByOrder);
+        Query<MediationRecordLineDTO> query = getSession().createQuery(findByOrder);
         query.setParameter("orderId", orderId);
         return query.list();
     }

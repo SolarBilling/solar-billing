@@ -19,9 +19,7 @@
 */
 package com.sapienter.jbilling.server.order.db;
 
-import com.sapienter.jbilling.server.customer.CustomerBL;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.db.CustomerDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import org.apache.log4j.Logger;
@@ -30,9 +28,7 @@ import org.hibernate.Query;
 import com.sapienter.jbilling.server.util.db.AbstractDAS;
 import org.joda.time.DateMidnight;
 
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
@@ -46,7 +42,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         " where ol.deleted = 0 " +
                         "   and ol.item.id= :item and (ol.quantity - cast(ol.quantity as integer)) <> 0";
 
-        Query query = getSession().createQuery(hql);
+        Query<Long> query = getSession().createQuery(hql);
         query.setParameter("item", itemId);
 
         return (Long) query.uniqueResult();
@@ -61,7 +57,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         "   and ol.item.id = :item " +
                         "   and ol.purchaseOrder.baseUserByUserId.id = :user";
 
-        Query query = getSession().createQuery(hql);
+        Query<OrderLineDTO> query = getSession().createQuery(hql);
         query.setParameter("item", itemId);
         query.setParameter("user", userId);
 
@@ -79,7 +75,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         + "  and line.purchaseOrder.orderStatus.id = :status "
                         + "  and line.purchaseOrder.deleted = 0 ";
 
-        Query query = getSession().createQuery(hql);
+        Query<OrderLineDTO> query = getSession().createQuery(hql);
         query.setParameter("itemId", itemId);
         query.setParameter("userId", userId);
         query.setParameter("period", Constants.ORDER_PERIOD_ONCE);
@@ -100,7 +96,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         + "  and line.purchaseOrder.orderStatus.id = :status "
                         + "  and line.purchaseOrder.deleted = 0 ";
 
-        Query query = getSession().createQuery(hql);
+        Query<OrderLineDTO> query = getSession().createQuery(hql);
         query.setParameter("itemId", itemId);
         query.setParameter("userId", userId);
         query.setParameter("period", Constants.ORDER_PERIOD_ONCE);
@@ -132,7 +128,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         + "  and line.purchaseOrder.deleted = 0 "
                         + "  and line.purchaseOrder.createDate > :startdate";
 
-        Query query = getSession().createQuery(hql);
+        Query<OrderLineDTO> query = getSession().createQuery(hql);
         query.setParameter("itemId", itemId);
         query.setParameter("userId", userId);
         query.setParameter("period", Constants.ORDER_PERIOD_ONCE);
@@ -175,7 +171,7 @@ public class OrderLineDAS extends AbstractDAS<OrderLineDTO> {
                         + "  and line.purchaseOrder.deleted = 0 "
                         + "  and line.purchaseOrder.createDate > :startdate ";
 
-        Query query = getSession().createQuery(hql);
+        Query<OrderLineDTO> query = getSession().createQuery(hql);
         query.setParameter("itemId", itemId);
         query.setParameter("parentId", parent.getCustomer().getId());
         query.setParameter("period", Constants.ORDER_PERIOD_ONCE);

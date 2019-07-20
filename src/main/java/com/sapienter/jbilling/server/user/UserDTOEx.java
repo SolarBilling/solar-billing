@@ -110,7 +110,7 @@ public final class UserDTOEx extends UserDTO {
         // the entity id
         setEntityId(entityId);
         // the permissions are defaulted to nothing
-        allPermissions = new ArrayList();
+        allPermissions = new ArrayList<PermissionDTO>();
         roles = new ArrayList<Integer>();
         if (roleId != null) {
             // we ask for at least one role for this user

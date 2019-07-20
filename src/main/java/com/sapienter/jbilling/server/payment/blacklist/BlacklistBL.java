@@ -186,7 +186,7 @@ public class BlacklistBL {
                 Context.Name.PLUGGABLE_TASK_DAS)).find(blacklistPluginId);
         PaymentFilterTask blacklist = new PaymentFilterTask();
         try {
-            blacklist.initializeParamters(blacklistPluginInfo);
+            blacklist.initializeParameters(blacklistPluginInfo);
         } catch (PluggableTaskException pte) {
             throw new SessionInternalError("Error initilizing blacklist parameters",
                     BlacklistBL.class, pte);

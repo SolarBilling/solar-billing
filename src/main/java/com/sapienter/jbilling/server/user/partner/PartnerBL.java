@@ -546,7 +546,7 @@ public class PartnerBL extends ResultList implements PartnerSQL {
         int totalCustomers = getCustomersCount();
         // if there were more than just 20 rows, this would have to
         // be done all with plain sql instead of ejbs
-        List<PartnerRange> rates = new ArrayList(partner.getRanges());
+        List<PartnerRange> rates = new ArrayList<>(partner.getRanges());
         Collections.sort(rates, new PartnerRangeComparator());
         partnerRange = null; // to get an exception if there are no ranges
         
@@ -632,8 +632,8 @@ public class PartnerBL extends ResultList implements PartnerSQL {
                 EventLogger.MODULE_USER_MAINTENANCE, 
                 EventLogger.ROW_UPDATED, null, null, null);
         // remove existing ranges (a clear will only set the partner_id = null)
-        for (Iterator it = partner.getRanges().iterator(); it.hasNext();) {
-            partnerRange = (PartnerRange) it.next();
+        for (Iterator<PartnerRange> it = partner.getRanges().iterator(); it.hasNext();) {
+            partnerRange = it.next();
             it.remove();
             new PartnerRangeDAS().delete(partnerRange);
         }

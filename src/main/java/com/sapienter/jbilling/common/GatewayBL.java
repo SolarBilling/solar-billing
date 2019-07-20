@@ -211,7 +211,7 @@ public class GatewayBL {
 
     private String text; // 3
 
-    private List resultFields = null;
+    private List<RetValue> resultFields = null;
 
     private JNDILookup EJBFactory = null;
 
@@ -231,7 +231,7 @@ public class GatewayBL {
 
         log = Logger.getLogger(GatewayBL.class);
         InputStream[] ins = new InputStream[2];
-        resultFields = new ArrayList();
+        resultFields = new ArrayList<>();
 
         try {
             // first add the description of all the validators, in common with
@@ -382,7 +382,7 @@ public class GatewayBL {
             }
 
             // now add all the orders
-            List orderLines = new ArrayList();
+            List<OrderLineWS> orderLines = new ArrayList<>();
             int lineNumber = 1;
             while (true) {
                 String prefix = "s_line_" + lineNumber + "_";
@@ -843,7 +843,7 @@ public class GatewayBL {
 
         // add all the result fields
         for (int f = 0; f < resultFields.size(); f++) {
-            RetValue pair = (RetValue) resultFields.get(f);
+            RetValue pair = resultFields.get(f);
             result += separator + pair.name + "=" + pair.value;
         }
 
@@ -903,9 +903,9 @@ public class GatewayBL {
         results = validator.validate();
         Form form = resources.getForm(Locale.getDefault(), name);
         // Iterate over each of the properties of the Bean which had messages.
-        Iterator propertyNames = results.getPropertyNames().iterator();
+        Iterator<String> propertyNames = results.getPropertyNames().iterator();
         while (propertyNames.hasNext()) {
-            String propertyName = (String) propertyNames.next();
+            String propertyName = propertyNames.next();
             // log.debug("name " + propertyName);
 
             // Get the Field associated with that property in the Form
@@ -920,8 +920,8 @@ public class GatewayBL {
 
             // Get all the actions run against the property, and iterate over
             // their names.
-            Map actionMap = result.getActionMap();
-            Iterator keys = actionMap.keySet().iterator();
+            Map<String, ?> actionMap = result.getActionMap();
+            Iterator<String> keys = actionMap.keySet().iterator();
             while (keys.hasNext()) {
                 String actName = (String) keys.next();
 

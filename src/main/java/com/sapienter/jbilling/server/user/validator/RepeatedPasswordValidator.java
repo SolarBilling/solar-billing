@@ -86,7 +86,7 @@ public class RepeatedPasswordValidator {
     	if (!result.isEmpty()) {
     		passw = new String[result.size()];
     		int index = 0;
-    		for (Iterator i = result.iterator(); i.hasNext(); ) {
+    		for (Iterator<String> i = result.iterator(); i.hasNext(); ) {
     			passw[index] = (String)i.next();
     			index++;
     		}

@@ -92,7 +92,7 @@ public class ReviewOrderAction extends Action {
                             Constants.SESSION_ENTITY_ID_KEY));
                 // initializing the wraping form to allow displaying and
                 // updating the dto
-                Hashtable hashlines = new Hashtable();
+                Hashtable<Integer, OrderLineDTO> hashlines = new Hashtable<Integer, OrderLineDTO>();
                 ((NewOrderDTOForm) form).setOrderLines(hashlines);
                 // the price has to be formated i18n
                 for(OrderLineDTO line : newOrder.getLines()) {
@@ -181,9 +181,9 @@ public class ReviewOrderAction extends Action {
                 OrderDTO orderDto = putOrderInSession(orderId, request);
                 
                 NewOrderDTOForm dto = new NewOrderDTOForm();
-                for (Iterator it = orderDto.getLines().iterator();
+                for (Iterator<OrderLineDTO> it = orderDto.getLines().iterator();
                         it.hasNext();) {
-                    OrderLineDTO line = (OrderLineDTO) it.next();
+                    final OrderLineDTO line = it.next();
                     // gst and other 'automatic' lines dont have item id ...
                     if (line.getItemId() != null && line.getDeleted() == 0) {
                         dto.setOrderLine(line.getItemId().toString(), line); 

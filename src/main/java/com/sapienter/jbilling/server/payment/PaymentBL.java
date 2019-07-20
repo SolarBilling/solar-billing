@@ -30,7 +30,6 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
-import com.sapienter.jbilling.server.user.db.UserDTO;
 import org.apache.log4j.Logger;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -38,7 +37,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.invoice.InvoiceBL;
 import com.sapienter.jbilling.server.invoice.InvoiceIdComparator;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
@@ -65,11 +63,9 @@ import com.sapienter.jbilling.server.pluggableTask.PaymentTask;
 import com.sapienter.jbilling.server.pluggableTask.TaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
-import com.sapienter.jbilling.server.process.ConfigurationBL;
 import com.sapienter.jbilling.server.system.event.EventManager;
 import com.sapienter.jbilling.server.user.AchBL;
 import com.sapienter.jbilling.server.user.CreditCardBL;
-import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.CreditCardDAS;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
@@ -294,7 +290,7 @@ public class PaymentBL extends ResultList implements PaymentSQL {
             throws SessionInternalError {
         Integer retValue = null;
         try {
-            PluggableTaskManager taskManager = new PluggableTaskManager(
+            PluggableTaskManager taskManager = new PluggableTaskManager<Object>(
                     entityId, Constants.PLUGGABLE_TASK_PAYMENT);
             PaymentTask task = (PaymentTask) taskManager.getNextClass();
 
@@ -382,9 +378,9 @@ public class PaymentBL extends ResultList implements PaymentSQL {
         PaymentDTOEx dto = new PaymentDTOEx(getDTO());
         dto.setUserId(payment.getBaseUser().getUserId());
         // now add all the invoices that were paid by this payment
-        Iterator it = payment.getInvoicesMap().iterator();
+        final Iterator<PaymentInvoiceMapDTO> it = payment.getInvoicesMap().iterator();
         while (it.hasNext()) {
-            PaymentInvoiceMapDTO map = (PaymentInvoiceMapDTO) it.next();
+            final PaymentInvoiceMapDTO map = it.next();
             dto.getInvoiceIds().add(map.getInvoiceEntity().getId());
 
             dto.addPaymentMap(getMapDTO(map.getId()));
@@ -636,8 +632,8 @@ public class PaymentBL extends ResultList implements PaymentSQL {
 
         PaymentMethodDTO method = methodDas.find(paymentMethodId);
 
-        for (Iterator it = method.getEntities().iterator(); it.hasNext();) {
-            if (((CompanyDTO) it.next()).getId() == entityId) {
+        for (Iterator<CompanyDTO> it = method.getEntities().iterator(); it.hasNext();) {
+            if ((it.next()).getId() == entityId) {
                 retValue = true;
                 break;
             }
@@ -649,7 +645,7 @@ public class PaymentBL extends ResultList implements PaymentSQL {
             Integer userId) throws PluggableTaskException,
             SessionInternalError, TaskException {
 
-        PluggableTaskManager taskManager = new PluggableTaskManager(entityId,
+        PluggableTaskManager taskManager = new PluggableTaskManager<Object>(entityId,
                 Constants.PLUGGABLE_TASK_PAYMENT_INFO);
         PaymentInfoTask task = (PaymentInfoTask) taskManager.getNextClass();
 
@@ -724,7 +720,7 @@ public class PaymentBL extends ResultList implements PaymentSQL {
     private List<PaymentDTO> getPaymentsWithBalance(Integer userId) {
         // this will usually return 0 or 1 records, rearly a few more
         List<PaymentDTO> paymentsList = null;
-        Collection payments = paymentDas.findWithBalance(userId);
+        Collection<PaymentDTO> payments = paymentDas.findWithBalance(userId);
 
         if (payments != null) {
             paymentsList = new ArrayList<PaymentDTO>(payments); // needed for the
@@ -744,10 +740,10 @@ public class PaymentBL extends ResultList implements PaymentSQL {
      */
     public void automaticPaymentApplication(InvoiceDTO invoice)
             throws SQLException {
-        List payments = getPaymentsWithBalance(invoice.getBaseUser().getUserId());
+        List<PaymentDTO> payments = getPaymentsWithBalance(invoice.getBaseUser().getUserId());
 
         for (int f = 0; f < payments.size() && invoice.getBalance().compareTo(BigDecimal.ZERO) > 0; f++) {
-            payment = (PaymentDTO) payments.get(f);
+            payment = payments.get(f);
             if (new Integer(payment.getPaymentResult().getId()).equals(Constants.RESULT_FAIL) || new Integer(payment.getPaymentResult().getId()).equals(Constants.RESULT_UNAVAILABLE)) {
                 continue;
             }

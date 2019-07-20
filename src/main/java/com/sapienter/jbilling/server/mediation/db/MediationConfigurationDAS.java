@@ -36,7 +36,7 @@ public class MediationConfigurationDAS extends AbstractDAS<MediationConfiguratio
         " ORDER BY orderValue";
 
     public List<MediationConfiguration> findAllByEntity(Integer entityId) {
-        Query query = getSession().createQuery(findAllByEntitySQL);
+        Query<MediationConfiguration> query = getSession().createQuery(findAllByEntitySQL);
         query.setParameter("entity", entityId);
         //return query.getResultList();
         return query.list();

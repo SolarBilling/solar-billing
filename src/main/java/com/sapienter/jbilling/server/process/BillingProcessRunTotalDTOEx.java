@@ -34,27 +34,28 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 /**
  * @author Emil
  */
-public class BillingProcessRunTotalDTOEx extends ProcessRunTotalDTO {
+public class BillingProcessRunTotalDTOEx<T extends Number> extends ProcessRunTotalDTO {
 
-    private Hashtable pmTotals = null;
+	private static final long serialVersionUID = 1L;
+	private Hashtable<String, T> pmTotals = null;
     private String currencyName = null;
     
     public BillingProcessRunTotalDTOEx() {
         super();
-        pmTotals = new Hashtable();
+        pmTotals = new Hashtable<String, T>();
     }
 
     public BillingProcessRunTotalDTOEx(Integer id, CurrencyDTO currency, BigDecimal totalInvoiced,
                                        BigDecimal totalPaid, BigDecimal totalNotPaid) {
         super((id == null ?  0 : id), null, currency, totalInvoiced, totalPaid, totalNotPaid);
-        pmTotals = new Hashtable();
+        pmTotals = new Hashtable<String, T>();
     }
 
-    public Hashtable getPmTotals() {
+    public Hashtable<String, T> getPmTotals() {
         return pmTotals;
     }
 
-    public void setPmTotals(Hashtable pmTotals) {
+    public void setPmTotals(Hashtable<String, T> pmTotals) {
         this.pmTotals = pmTotals;
     }
 

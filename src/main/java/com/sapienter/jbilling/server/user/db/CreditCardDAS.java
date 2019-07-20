@@ -42,18 +42,19 @@ public class CreditCardDAS extends AbstractDAS<CreditCardDTO> {
 	        " 	and cc.id = p.creditCard.id " +
 	        " 	and p.baseUser.id = bu.id";
 
+    // returns a list of user IDs
     public List<Integer> findByLastDigits(Integer entityId, String plain) {
-        Query query = getSession().createQuery(findByLastDigits);
+        Query<?> query = getSession().createQuery(findByLastDigits);
         query.setParameter("entity", entityId);
         query.setParameter("plain", plain);
         query.setComment("CreditCardDAS.findByLastDigits " + entityId + " " + plain);
-        return query.list();
+        return (List<Integer>)query.list();
     }
 
     public List<String> findByNumber(String number){
-    	Query query = getSession().createQuery(findByCreditCard);
+    	Query<?> query = getSession().createQuery(findByCreditCard);
     	query.setParameter("number", number);
         query.setComment("CreditCardDAS.findByCreditCard " + number);
-        return query.list();
+        return (List<String>)query.list();
     }
 }

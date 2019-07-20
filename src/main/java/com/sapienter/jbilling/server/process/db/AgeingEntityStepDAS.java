@@ -34,7 +34,7 @@ public class AgeingEntityStepDAS extends AbstractDAS<AgeingEntityStepDTO> {
             "   AND a.userStatus.id = :status ";
 
     public AgeingEntityStepDTO findStep(Integer entityId, Integer stepId) {
-        Query query = getSession().createQuery(findStepSQL);
+        Query<?> query = getSession().createQuery(findStepSQL);
         query.setParameter("entity", entityId);
         query.setParameter("status", stepId);
         return (AgeingEntityStepDTO) query.uniqueResult();

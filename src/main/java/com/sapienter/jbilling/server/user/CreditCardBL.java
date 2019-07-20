@@ -350,14 +350,14 @@ public class CreditCardBL extends ResultList
         payment.create(paymentDto); // this updates the id
 
         // use the payment processor configured 
-        PluggableTaskManager taskManager = new PluggableTaskManager(entityId, Constants.PLUGGABLE_TASK_PAYMENT);
-        PaymentTask task = (PaymentTask) taskManager.getNextClass();
+        PluggableTaskManager<PaymentTask> taskManager = new PluggableTaskManager<PaymentTask>(entityId, Constants.PLUGGABLE_TASK_PAYMENT);
+        PaymentTask task = taskManager.getNextClass();
 
         boolean processNext = true;
         while (task != null && processNext) {
             processNext = task.preAuth(paymentDto);
             // get the next task
-            task = (PaymentTask) taskManager.getNextClass();
+            task = taskManager.getNextClass();
 
             // at the time, a pre-auth acts just like a normal payment for events
             AbstractPaymentEvent event = AbstractPaymentEvent.forPaymentResult(entityId, paymentDto);
@@ -411,10 +411,10 @@ public class CreditCardBL extends ResultList
 
         UserDTO user = UserBL.getUserEntity(userId);
 
-        Iterator iter = user.getCreditCards().iterator();
+        final Iterator<CreditCardDTO> iter = user.getCreditCards().iterator();
         // delete existing cc records
         while (iter.hasNext()) {
-            set(((CreditCardDTO) iter.next()).getId());
+            set((iter.next()).getId());
             delete(executorId);
             iter.remove();
         }

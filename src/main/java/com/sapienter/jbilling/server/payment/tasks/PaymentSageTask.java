@@ -188,9 +188,9 @@ public class PaymentSageTask extends PaymentTaskWithTimeout implements
 	 * You could initialize plugin parameters here
 	 */
 	@Override
-	public void initializeParamters(PluggableTaskDTO task)
+	public void initializeParameters(PluggableTaskDTO task)
 			throws PluggableTaskException {
-		super.initializeParamters(task);
+		super.initializeParameters(task);
 		merchantId = ensureGetParameter(Params.MERCHANT_ID);
 		merchantKey = ensureGetParameter(Params.MERCHANT_KEY);
 	}

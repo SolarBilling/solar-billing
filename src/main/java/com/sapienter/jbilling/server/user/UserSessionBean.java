@@ -422,36 +422,34 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
         return dto;
     }
     
-    public Boolean isParentCustomer(Integer userId) 
-            throws SessionInternalError {
+    @Override public boolean isParentCustomer(final Integer userId) { 
         try {
             UserBL user = new UserBL(userId);
             Integer isParent = user.getEntity().getCustomer().getIsParent();
             if (isParent == null || isParent.intValue() == 0) {
-                return new Boolean(false);
+                return false;
             } else {
-                return new Boolean(true);
+                return true;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
 
 	// Check if there is any Active Children under this client
-    public Boolean hasSubAccounts(Integer userId) 
-            throws SessionInternalError {
+    @Override public boolean hasSubAccounts(final Integer userId) { 
         try {
             boolean hasSubAccounts = false;
             UserBL user = new UserBL(userId);
-            Iterator childs = user.getEntity().getCustomer().getChildren().iterator();
+            final Iterator<CustomerDTO> childs = user.getEntity().getCustomer().getChildren().iterator();
             while( !hasSubAccounts && childs.hasNext() ){
-                CustomerDTO child = (CustomerDTO)childs.next();
+                CustomerDTO child = childs.next();
                 if( child.getBaseUser().getDeleted() == 0 ){
                     hasSubAccounts = true;
                 }
             }
             return hasSubAccounts;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -739,9 +737,9 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * @return
      * The paramteres in "id - value" pairs. The value is of type String
      */    
-    public HashMap getEntityParameters(Integer entityId, Integer[] ids) 
+    public HashMap<Integer, String> getEntityParameters(Integer entityId, Integer[] ids) 
             throws SessionInternalError {
-        HashMap retValue = new HashMap();
+        HashMap<Integer, String> retValue = new HashMap<Integer, String>();
         
         try {
             PreferenceBL preference = new PreferenceBL();
@@ -766,12 +764,12 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * @param params
      * @throws SessionInternalError
      */
-    public void setEntityParameters(Integer entityId, HashMap params) 
+    public void setEntityParameters(Integer entityId, HashMap<Integer, ?> params) 
             throws SessionInternalError {
         try {
             PreferenceBL preference = new PreferenceBL();
-            for (Iterator it = params.keySet().iterator(); it.hasNext();) {
-                Integer preferenceId = (Integer) it.next();
+            for (Iterator<Integer> it = params.keySet().iterator(); it.hasNext();) {
+                final Integer preferenceId = it.next();
                 
                 Object value = params.get(preferenceId);
                 if (value != null) {
@@ -834,18 +832,17 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * Marks as deleted all the credit cards associated with this user
      * and removes the relationship
      */
-    public void deleteCreditCard(Integer executorId, Integer userId) 
-            throws SessionInternalError {
+    public void deleteCreditCard(final Integer executorId, final Integer userId) { 
         try {
             // find this user and get the first cc
             UserBL userBL = new UserBL(userId);
-            Iterator it = userBL.getEntity().getCreditCards().iterator();
+            Iterator<CreditCardDTO> it = userBL.getEntity().getCreditCards().iterator();
             while (it.hasNext()) {
-                CreditCardBL bl = new CreditCardBL(((CreditCardDTO)
+                CreditCardBL bl = new CreditCardBL((
                         it.next()).getId());
                 bl.delete(executorId);
             } 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }

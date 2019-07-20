@@ -31,7 +31,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.sql.RowSet;
 import javax.sql.rowset.CachedRowSet;
 
 import java.util.List;
@@ -338,17 +337,17 @@ public class BillingProcessBL extends ResultList
         // any of the new invoices being created could hold the overdue invoices
         NewInvoiceDTO holder = newInvoices.isEmpty() ? null : (NewInvoiceDTO) newInvoices.elements().nextElement();
 
-        Collection dueInvoices =
+        Collection<InvoiceDTO> dueInvoices =
                 invoiceDas.findWithBalanceByUser(user);
         LOG.debug("Processing invoices for user " + user.getUserId());
         // go through each of them, and update the DTO if it applies
-        for (Iterator it = dueInvoices.iterator(); it.hasNext();) {
-            InvoiceDTO invoice = (InvoiceDTO) it.next();
+        for (Iterator<InvoiceDTO> it = dueInvoices.iterator(); it.hasNext();) {
+            final InvoiceDTO invoice = it.next();
             LOG.debug("Processing invoice " + invoice.getId());
             // apply any invoice processing filter pluggable task
             try {
-                PluggableTaskManager taskManager =
-                        new PluggableTaskManager(entityId,
+                PluggableTaskManager<?> taskManager =
+                        new PluggableTaskManager<Object>(entityId,
                         Constants.PLUGGABLE_TASK_INVOICE_FILTER);
                 InvoiceFilterTask task = (InvoiceFilterTask) taskManager.getNextClass();
                 boolean isProcessable = true;
@@ -437,7 +436,7 @@ public class BillingProcessBL extends ResultList
         try {
             retValue = new InvoiceDTO[newInvoices.size()];
             int index = 0;
-            for (Iterator it = newInvoices.values().iterator();
+            for (Iterator<NewInvoiceDTO> it = newInvoices.values().iterator();
                     it.hasNext();) {
                 NewInvoiceDTO invoice = (NewInvoiceDTO) it.next();
                 /*
@@ -507,7 +506,7 @@ public class BillingProcessBL extends ResultList
         LOG.debug("Processing orders for user " + userId);
 
         // initialize the subaccounts iterator if this user is a parent
-        Iterator subAccountsIt = null;
+        Iterator<CustomerDTO> subAccountsIt = null;
         if (user.getCustomer().getIsParent() != null &&
                 user.getCustomer().getIsParent().intValue() == 1) {
             UserBL parent = new UserBL(userId);
@@ -525,7 +524,7 @@ public class BillingProcessBL extends ResultList
             LOG.debug("Processing order :" + order.getId());
             // apply any order processing filter pluggable task
             try {
-                PluggableTaskManager taskManager = new PluggableTaskManager(
+                PluggableTaskManager<?> taskManager = new PluggableTaskManager<Object>(
                         entityId,
                         Constants.PLUGGABLE_TASK_ORDER_FILTER);
                 OrderFilterTask task = (OrderFilterTask) taskManager.getNextClass();
@@ -619,7 +618,7 @@ public class BillingProcessBL extends ResultList
         while (subAccountsIt != null) {  // until there are no more subaccounts (subAccountsIt != null) {
             CustomerDTO customer = null;
             while (subAccountsIt.hasNext()) {
-                customer = (CustomerDTO) subAccountsIt.next();
+                customer = subAccountsIt.next();
                 if (customer.getInvoiceChild() == null ||
                         customer.getInvoiceChild().intValue() == 0) {
                     break;
@@ -741,8 +740,8 @@ public class BillingProcessBL extends ResultList
             NewInvoiceDTO newInvoice)
             throws PluggableTaskException, TaskException, SessionInternalError {
         newInvoice.setEntityId(entityId);
-        PluggableTaskManager taskManager =
-                new PluggableTaskManager(entityId,
+        PluggableTaskManager<?> taskManager =
+                new PluggableTaskManager<Object>(entityId,
                 Constants.PLUGGABLE_TASK_INVOICE_COMPOSITION);
         InvoiceCompositionTask task =
                 (InvoiceCompositionTask) taskManager.getNextClass();
@@ -765,7 +764,7 @@ public class BillingProcessBL extends ResultList
             throws SessionInternalError, TaskException,
             PluggableTaskException {
         // require the calculation of the period dates
-        PluggableTaskManager taskManager = new PluggableTaskManager(
+        PluggableTaskManager<?> taskManager = new PluggableTaskManager<Object>(
                 entityId, Constants.PLUGGABLE_TASK_ORDER_PERIODS);
         OrderPeriodTask optask = (OrderPeriodTask) taskManager.getNextClass();
 
@@ -889,10 +888,10 @@ public class BillingProcessBL extends ResultList
         int totalInvoices = 0;
         int runsCounter = 0;
         List<BillingProcessRunDTOEx> runs = new ArrayList<BillingProcessRunDTOEx>();
-        // go throuhg every run
-        for (Iterator it = billingProcess.getProcessRuns().iterator();
+        // go through every run
+        for (Iterator<ProcessRunDTO> it = billingProcess.getProcessRuns().iterator();
                 it.hasNext();) {
-            ProcessRunDTO run = (ProcessRunDTO) it.next();
+            ProcessRunDTO run = it.next();
             BillingProcessRunBL runBL = new BillingProcessRunBL(run);
             BillingProcessRunDTOEx runDto = runBL.getDTO(language);
             runs.add(runDto);
@@ -906,10 +905,9 @@ public class BillingProcessBL extends ResultList
             LOG.debug("Run:" + run.getId() + " has " + run.getProcessRunTotals().size() +
                     " total records");
             // go over the totals, since there's one per currency
-            for (Iterator it2 = runDto.getTotals().iterator(); it2.hasNext();) {
+            for (Iterator<BillingProcessRunTotalDTOEx<BigDecimal>> it2 = runDto.getTotals().iterator(); it2.hasNext();) {
                 // the total to process 
-                BillingProcessRunTotalDTOEx totalDto =
-                        (BillingProcessRunTotalDTOEx) it2.next();
+                final BillingProcessRunTotalDTOEx totalDto = it2.next();
 
                 BillingProcessRunTotalDTOEx sum = getTotal(totalDto.getCurrency(), grandTotal.getTotals());
 
@@ -932,19 +930,19 @@ public class BillingProcessBL extends ResultList
                             language));
                 }
                 // add the payment method totals
-                for (Enumeration en = totalDto.getPmTotals().keys();
+                for (Enumeration<String> en = totalDto.getPmTotals().keys();
                         en.hasMoreElements();) {
-                    String method = (String) en.nextElement();
+                    String method = en.nextElement();
                     BigDecimal methodTotal = new BigDecimal(totalDto.getPmTotals().get(method).toString());
 
                     if (sum.getPmTotals().containsKey(method)) {
                         if (sum.getPmTotals().get(method) != null) {
-                            methodTotal = methodTotal.add(new BigDecimal(((Float) sum.getPmTotals().
+                            methodTotal = methodTotal.add(new BigDecimal((sum.getPmTotals().
                                     get(method)).toString()));
 
                         }
                     }
-                    sum.getPmTotals().put(method, new Float(methodTotal.floatValue()));
+                    sum.getPmTotals().put(method, new BigDecimal(methodTotal.floatValue()));
                 }
 
                 LOG.debug("Added total to run dto. PMs in total:" + sum.getPmTotals().size() + " now grandTotal totals:" + grandTotal.getTotals().size());
@@ -964,11 +962,11 @@ public class BillingProcessBL extends ResultList
     }
 
     private void addRuntimeStatistic(Integer billingProcessId, Integer language,  BillingProcessRunDTOEx runDto) {
-        for (Iterator iter = new BillingProcessDAS().getCountAndSum(billingProcessId); iter.hasNext();) {
-            Object[] row = (Object[]) iter.next();
+        for (Iterator<Object[]> iter = new BillingProcessDAS().getCountAndSum(billingProcessId); iter.hasNext();) {
+            Object[] row = iter.next();
 
-            BillingProcessRunTotalDTOEx totalRowDto =
-                    new BillingProcessRunTotalDTOEx();
+            BillingProcessRunTotalDTOEx<BigDecimal> totalRowDto =
+                    new BillingProcessRunTotalDTOEx<BigDecimal>();
             totalRowDto.setProcessRun(runDto);
             totalRowDto.setCurrency(new CurrencyDAS().find((Integer) row[2]));
             totalRowDto.setCurrencyName(totalRowDto.getCurrency().getDescription(language));
@@ -978,9 +976,9 @@ public class BillingProcessBL extends ResultList
             totalRowDto.setTotalPaid(BigDecimal.ZERO);
 
             // now go over the totals by payment method
-            Hashtable totals = new Hashtable();
-            for (Iterator itt = new BillingProcessDAS().getSuccessfulProcessCurrencyMethodAndSum(billingProcessId); itt.hasNext();) {
-                Object[] payedRow = (Object[]) itt.next();
+            Hashtable<String, BigDecimal> totals = new Hashtable<String, BigDecimal>();
+            for (Iterator<Object[]> itt = new BillingProcessDAS().getSuccessfulProcessCurrencyMethodAndSum(billingProcessId); itt.hasNext();) {
+                Object[] payedRow = itt.next();
                 if (payedRow[0].equals(totalRowDto.getCurrency().getId())) {
                     PaymentMethodDTO paymentMethod = new PaymentMethodDAS().find((Integer) payedRow[1]);
                     BigDecimal payed = (BigDecimal) payedRow[2];
@@ -989,8 +987,8 @@ public class BillingProcessBL extends ResultList
                 }
             }
             totalRowDto.setPmTotals(totals);
-            for (Iterator itt = new BillingProcessDAS().getFailedProcessCurrencyAndSum(billingProcessId); itt.hasNext();) {
-                Object[] unpayedRow = (Object[]) itt.next();
+            for (Iterator<Object[]> itt = new BillingProcessDAS().getFailedProcessCurrencyAndSum(billingProcessId); itt.hasNext();) {
+                Object[] unpayedRow = itt.next();
                 if (unpayedRow[0].equals(totalRowDto.getCurrency().getId())) {
                     totalRowDto.setTotalNotPaid(totalRowDto.getTotalNotPaid().add((BigDecimal) unpayedRow[1]));
                 }
@@ -1067,10 +1065,10 @@ public class BillingProcessBL extends ResultList
         }
     }
 
-    public BillingProcessRunTotalDTOEx getTotal(CurrencyDTO currency, List totals) {
-        BillingProcessRunTotalDTOEx retValue = null;
+    public BillingProcessRunTotalDTOEx<BigDecimal> getTotal(CurrencyDTO currency, List<BillingProcessRunTotalDTOEx<BigDecimal>> totals) {
+        BillingProcessRunTotalDTOEx<BigDecimal> retValue = null;
         for (int f = 0; f < totals.size(); f++) {
-            BillingProcessRunTotalDTOEx total = (BillingProcessRunTotalDTOEx) totals.get(f);
+            BillingProcessRunTotalDTOEx<BigDecimal> total = (BillingProcessRunTotalDTOEx<BigDecimal>) totals.get(f);
             if (total.getCurrency().equals(currency)) {
                 retValue = total;
                 break;
@@ -1081,7 +1079,7 @@ public class BillingProcessBL extends ResultList
         if (retValue == null) {
             CurrencyDAS curDas = new CurrencyDAS();
             CurrencyDTO curDto = curDas.find(currency.getId());
-            retValue = new BillingProcessRunTotalDTOEx(null, curDto, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+            retValue = new BillingProcessRunTotalDTOEx<BigDecimal>(null, curDto, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
             totals.add(retValue);
         }
 

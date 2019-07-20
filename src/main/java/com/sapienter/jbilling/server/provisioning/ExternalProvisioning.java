@@ -221,9 +221,9 @@ public class ExternalProvisioning {
                 MapMessage replyMessage = session.createMapMessage();
 
                 // add the original properties (names prefixed with 'in_')
-                Enumeration originalPropNames = message.getPropertyNames();
+                final Enumeration<String> originalPropNames = message.getPropertyNames();
                 while (originalPropNames.hasMoreElements()) {
-                    String propName = (String) originalPropNames.nextElement();
+                    final String propName = originalPropNames.nextElement();
                     Object propValue = message.getObjectProperty(propName);
                     replyMessage.setObjectProperty("in_" + propName, propValue);
                 }

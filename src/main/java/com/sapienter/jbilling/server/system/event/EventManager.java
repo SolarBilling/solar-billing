@@ -88,16 +88,15 @@ public final class EventManager {
         // always call the general event processor
         new InternalEventProcessor().process(event);
 
-        Class processors[] = (Class[]) subscriptions.get(event.getClass());
+        Class<? extends EventProcessor> processors[] = (Class[]) subscriptions.get(event.getClass());
         if (processors == null) {
             LOG.info("No processors for class " + event.getClass());
             return;
         }
         for (int f = 0; f < processors.length; f++) {
-            // create a new processor
-            EventProcessor processor;
             try {
-                processor = (EventProcessor) processors[f].newInstance();
+                // create a new processor
+            	EventProcessor processor = processors[f].newInstance();
                 LOG.debug("Now processing with " + processor);
                 processor.process(event);
             } catch (Exception e) {

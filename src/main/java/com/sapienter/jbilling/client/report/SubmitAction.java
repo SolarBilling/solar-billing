@@ -194,7 +194,7 @@ public class SubmitAction extends Action {
         return mapping.findForward("error");
     }
     
-    private Collection getListByType(Integer type) 
+    private Collection<ReportDTOEx> getListByType(Integer type) 
             throws SessionInternalError {
         IReportSessionBean myRemoteSession = (IReportSessionBean) 
                 Context.getBean(Context.Name.REPORT_SESSION);

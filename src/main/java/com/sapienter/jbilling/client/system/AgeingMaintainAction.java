@@ -79,7 +79,7 @@ public class AgeingMaintainAction extends Action {
                 Integer[] preferenceIds = new Integer[2];
                 preferenceIds[0] = Constants.PREFERENCE_GRACE_PERIOD;
                 preferenceIds[1] = Constants.PREFERENCE_URL_CALLBACK;
-                HashMap result = ((IUserSessionBean) userSession).
+                HashMap<Integer, String> result = ((IUserSessionBean) userSession).
                         getEntityParameters(entityId, preferenceIds);
             
                 String gracePeriod = (String) result.get(

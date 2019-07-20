@@ -38,10 +38,10 @@ public abstract class EventProcessor<TaskType> {
 
     protected TaskType getPluggableTask(Integer entityId, Integer taskCategoryId) {
         try {
-            PluggableTaskManager taskManager =
-                new PluggableTaskManager(entityId,
+            final PluggableTaskManager<TaskType> taskManager =
+                new PluggableTaskManager<TaskType>(entityId,
                 taskCategoryId);
-            return  (TaskType) taskManager.getNextClass();
+            return taskManager.getNextClass();
         } catch (PluggableTaskException e) {
             throw new SessionInternalError(e);
         }

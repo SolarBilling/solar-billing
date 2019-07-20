@@ -75,7 +75,7 @@ public final class DownloadAction extends Action {
 
         Integer operationType = (Integer) downloadForm.get("operationType");
 		if (operationType != null && errors.isEmpty()) {
-			Map map = new HashMap();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("operationType", operationType);
 			map.put("entityId", request.getSession().getAttribute(
                                             com.sapienter.jbilling.client.util.Constants.SESSION_ENTITY_ID_KEY));

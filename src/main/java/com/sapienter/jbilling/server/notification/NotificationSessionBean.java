@@ -139,7 +139,7 @@ public class NotificationSessionBean implements INotificationSessionBean {
             }
             // now do the delivery with the pluggable tasks
             PluggableTaskManager taskManager =
-                new PluggableTaskManager(
+                new PluggableTaskManager<Object>(
                     user.getEntity().getId(),
                     Constants.PLUGGABLE_TASK_NOTIFICATION);
             NotificationTask task =

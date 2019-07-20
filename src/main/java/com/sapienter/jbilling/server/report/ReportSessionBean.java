@@ -20,14 +20,17 @@
 
 package com.sapienter.jbilling.server.report;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.NamingException;
 import javax.sql.rowset.CachedRowSet;
 
 import com.sapienter.jbilling.common.SessionInternalError;
+import com.sapienter.jbilling.server.report.db.ReportUserDTO;
 
 /**
  *
@@ -56,35 +59,31 @@ public class ReportSessionBean implements IReportSessionBean {
     }
     
     /**
-     * This retrives a user saved report
+     * This retrieves a user saved report
      */
-    public ReportDTOEx getReportDTO(Integer userReportId) 
-            throws SessionInternalError {
-    
+    public ReportDTOEx getReportDTO(final Integer userReportId) { 
         try {
             ReportBL bl = new ReportBL();
             return bl.getReport(userReportId);
-        } catch (Exception e) {
+        } catch (NamingException | RuntimeException e) {
             throw new SessionInternalError(e);
         }        
     }    
     
-    public CachedRowSet execute(ReportDTOEx report) 
-            throws SessionInternalError {
+    public CachedRowSet execute(final ReportDTOEx report) { 
         try {
-            ReportBL logic = new ReportBL();
+            final ReportBL logic = new ReportBL();
             return logic.execute(report);
         } catch (Exception e) {
             throw new SessionInternalError(e);
         }
     }
 
-    public Collection getList(Integer entityId) 
-            throws SessionInternalError {
+    public Collection<ReportDTOEx> getList(final Integer entityId) { 
         try {
-            ReportBL logic = new ReportBL();
+            final ReportBL logic = new ReportBL();
             return logic.getList(entityId);
-        } catch (Exception e) {
+        } catch (NamingException | SQLException | RuntimeException e) {
             throw new SessionInternalError(e);
         }
         
@@ -94,7 +93,7 @@ public class ReportSessionBean implements IReportSessionBean {
      * Returns a vector of ReportDTOEx that belong
      * to the given report type
      */
-    public Collection getListByType(Integer typeId) 
+    public Collection<ReportDTOEx> getListByType(Integer typeId) 
             throws SessionInternalError {
         try {
             ReportBL logic = new ReportBL();
@@ -116,12 +115,11 @@ public class ReportSessionBean implements IReportSessionBean {
         
     }
 
-    public Collection getUserList(Integer report, Integer userId) 
-            throws SessionInternalError {
+    public Collection<ReportUserDTO> getUserList(final Integer report, final Integer userId) {
         try {
             ReportBL logic = new ReportBL();
             return logic.getUserList(report, userId);
-        } catch (Exception e) {
+        } catch (NamingException | RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }

@@ -49,6 +49,7 @@ import com.sapienter.jbilling.server.process.BillingProcessRunBL;
 import com.sapienter.jbilling.server.user.partner.PartnerBL;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.GetSelectableOptions;
+import com.sapienter.jbilling.server.util.OptionDTO;
 import com.sapienter.jbilling.server.util.PreferenceBL;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class ListSessionBean implements IListSessionBean {
 
     private static final Logger LOG = Logger.getLogger(ListSessionBean.class);
 
-    public CachedRowSet getList(String type, Hashtable parameters)
+    public CachedRowSet getList(String type, Hashtable<String, Integer> parameters)
             throws SessionInternalError {
 
         CachedRowSet retValue = null;
@@ -202,7 +203,7 @@ public class ListSessionBean implements IListSessionBean {
         return retValue;
     }
 
-    public ListDTO getDtoList(String type, Hashtable parameters)
+    public ListDTO getDtoList(String type, Hashtable<String, Integer> parameters)
             throws SessionInternalError {
         ListDTO retValue;
 
@@ -230,7 +231,7 @@ public class ListSessionBean implements IListSessionBean {
      * remote interface, so might as well put it here. All the real code it in
      * GetSelectableOptions.java
      */
-    public Collection getOptions(String type, Integer languageId,
+    public Collection<OptionDTO> getOptions(String type, Integer languageId,
             Integer entityId, Integer executorType) throws SessionInternalError {
         LOG.debug("getting option " + type);
         return GetSelectableOptions.getOptions(type, languageId, entityId,
@@ -272,7 +273,7 @@ public class ListSessionBean implements IListSessionBean {
 
     public CachedRowSet getPage(Integer start, Integer end, Integer size,
             Integer listId, Integer entityId, Boolean direction,
-            Integer fieldId, Hashtable parameters) throws SessionInternalError {
+            Integer fieldId, Hashtable<String, Integer> parameters) throws SessionInternalError {
         try {
             ListBL list = new ListBL();
             return list.getPage(start, end, size.intValue(), listId, entityId,
@@ -283,7 +284,7 @@ public class ListSessionBean implements IListSessionBean {
     }
 
     public CachedRowSet search(String start, String end, Integer fieldId,
-            Integer listId, Integer entityId, Hashtable parameters)
+            Integer listId, Integer entityId, Hashtable<String, Integer> parameters)
             throws SessionInternalError {
         try {
             ListBL list = new ListBL();
@@ -311,9 +312,9 @@ public class ListSessionBean implements IListSessionBean {
                 retValue.setListId(listId);
             }
             // find the searcheable fields
-            List fields = new ArrayList();
+            List<ListFieldDTO> fields = new ArrayList<>();
             // find the key id, it is now the only one ordenable
-            for (Iterator it = bl.getEntity().getListFields().iterator(); it
+            for (Iterator<ListFieldDTO> it = bl.getEntity().getListFields().iterator(); it
                     .hasNext();) {
                 ListFieldDTO field = (ListFieldDTO) it.next();
                 if (field.getOrdenable().intValue() == 1) {

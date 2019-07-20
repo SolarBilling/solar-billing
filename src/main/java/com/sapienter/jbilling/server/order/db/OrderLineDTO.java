@@ -21,7 +21,6 @@ package com.sapienter.jbilling.server.order.db;
 
 
 import java.io.Serializable;
-import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -66,9 +65,10 @@ import java.util.ArrayList;
         )
 @Table(name="order_line")
 //No cache, mutable and critical
-public class OrderLineDTO implements Serializable, Comparable {
+public class OrderLineDTO implements Serializable, Comparable<OrderLineDTO> {
+	private static final long serialVersionUID = 1L;
 
-    private static final Logger LOG =  Logger.getLogger(OrderLineDTO.class); 
+	private static final Logger LOG =  Logger.getLogger(OrderLineDTO.class); 
 
     private int id;
     private OrderLineTypeDTO orderLineTypeDTO;
@@ -404,8 +404,7 @@ public class OrderLineDTO implements Serializable, Comparable {
     }
     
     // this helps to add lines to the treeSet
-    public int compareTo(Object o) {
-    	OrderLineDTO other = (OrderLineDTO) o;
+    public int compareTo(final OrderLineDTO other) {
     	if (other.getItem() == null || this.getItem() == null) {
     		return -1;
     	}

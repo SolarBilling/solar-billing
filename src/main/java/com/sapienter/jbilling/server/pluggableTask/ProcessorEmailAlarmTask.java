@@ -55,8 +55,8 @@ public class ProcessorEmailAlarmTask extends PluggableTask
     private Logger log = Logger.getLogger(ProcessorEmailAlarmTask.class);
     
     @Override
-    public void initializeParamters(PluggableTaskDTO task) throws PluggableTaskException {
-    	super.initializeParamters(task);
+    public void initializeParameters(PluggableTaskDTO task) throws PluggableTaskException {
+    	super.initializeParameters(task);
     	failedLimit = parseInt(parameters.get(PARAMETER_FAILED_LIMIT));
     	failedTime = parseInt(parameters.get(PARAMETER_FAILED_TIME));
     	failedTime = parseInt(parameters.get(PARAMETER_TIME_BETWEEN_ALARMS));

@@ -29,8 +29,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.naming.NamingException;
-
 import org.apache.log4j.Logger;
 
 import org.springframework.transaction.PlatformTransactionManager;
@@ -38,7 +36,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.InvoiceBL;
 import com.sapienter.jbilling.server.item.ItemDTOEx;
 import com.sapienter.jbilling.server.item.db.ItemDAS;
@@ -61,122 +58,62 @@ public class WSMethodSecurityProxy extends WSMethodBaseSecurityProxy {
 
     private static final Logger LOG = Logger.getLogger(WSMethodSecurityProxy.class);    
     private static final ArrayList<Method> methods = new ArrayList<Method>();
-    private static final Class target = IWebServicesSessionBean.class;
+    private static final Class<IWebServicesSessionBean> target = IWebServicesSessionBean.class;
 
     static {
-       // getInvoiceWS
-       Class params[] = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getInvoiceWS",params);
+    	final Class<?>[] singleInteger = new Class[] {Integer.class}; 
+    	// getInvoiceWS
+       addMethod("getInvoiceWS", singleInteger);
        
        // getLatestInvoice
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getLatestInvoice",params);
+       addMethod("getLatestInvoice", singleInteger);
 
        // getLastInvoices
-       params = new Class[2];
-       params[0] = Integer.class;
-       params[1] = Integer.class;
-       addMethod("getLastInvoices",params);
+       final Class<?>[] twoIntegers = new Class[] {Integer.class, Integer.class};
+       addMethod("getLastInvoices", twoIntegers);
        
        // getUserWS
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getUserWS",params);
+       addMethod("getUserWS", singleInteger);
        
        // deleteUser
        // the parameters are the same
-       addMethod("deleteUser",params);
+       addMethod("deleteUser",singleInteger);
        
        // updateUser
-       params = new Class[1];
-       params[0] = UserWS.class;
-       addMethod("updateUser",params);
+       addMethod("updateUser", new Class[] { UserWS.class });
 
        // updateUserContact
-       params = new Class[3];
-       params[0] = Integer.class;
-       params[1] = Integer.class;
-       params[2] = ContactWS.class;
-       addMethod("updateUserContact",params);
+       addMethod("updateUserContact", new Class[] {Integer.class, Integer.class, ContactWS.class});
 
-       // createOrder
-       params = new Class[1];
-       params[0] = OrderWS.class;
-       addMethod("createOrder",params);
-
-       // createOrderPreAuthorize
-       params = new Class[1];
-       params[0] = OrderWS.class;
-       addMethod("createOrderPreAuthorize",params);
-
-       // updateOrder - takes same parameters as create
-       addMethod("updateOrder",params);
+       final Class<?>[] singleOrderWS = new Class[] {OrderWS.class}; 
+       addMethod("createOrder", singleOrderWS);
+       addMethod("createOrderPreAuthorize", singleOrderWS);
+       addMethod("updateOrder", singleOrderWS);
        
-       // getOrder
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getOrder",params);
+       addMethod("getOrder", singleInteger);
+       addMethod("deleteOrder", singleInteger);
+       addMethod("getLatestOrder", singleInteger);
+       addMethod("getLastOrders", twoIntegers);
        
-       // deleteOrder
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("deleteOrder",params);
+       addMethod("applyPayment", new Class[] { PaymentWS.class, Integer.class});
        
-       // getLatestOrder
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getLatestOrder",params);
+       addMethod("getPayment", singleInteger);
+       addMethod("getLatestPayment", singleInteger);
        
-       // getLastOrders
-       params = new Class[2];
-       params[0] = Integer.class;
-       params[1] = Integer.class;
-       addMethod("getLastOrders",params);
+       addMethod("getLastPayments", twoIntegers);
        
-       // applyPayment
-       params = new Class[2];
-       params[0] = PaymentWS.class;
-       params[1] = Integer.class;
-       addMethod("applyPayment",params);
-       
-       // getPayment
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getPayment",params);
-       
-       // getLatestPayment
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getLatestPayment",params);
-       
-       // getLastPayments
-       params = new Class[2];
-       params[0] = Integer.class;
-       params[1] = Integer.class;
-       addMethod("getLastPayments",params);
-       
-       // getOrderLine
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getOrderLine",params);
+       addMethod("getOrderLine", singleInteger);
        
        // updateOrderLine
-       params = new Class[1];
+       Class<?>[] params = new Class[1];
        params[0] = OrderLineWS.class;
        addMethod("updateOrderLine",params);
 
        // getOrderByPeriod
-       params = new Class[2];
-       params[0] = Integer.class;
-       params[1] = Integer.class;
-       addMethod("getOrderByPeriod",params);
+       addMethod("getOrderByPeriod", twoIntegers);
 
        // getUserContactsWS
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("getUserContactsWS",params);
+       addMethod("getUserContactsWS", singleInteger);
 
        // updateCreditCard
        params = new Class[2];
@@ -185,14 +122,10 @@ public class WSMethodSecurityProxy extends WSMethodBaseSecurityProxy {
        addMethod("updateCreditCard",params);
        
        //payInvoice
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("payInvoice", params);
+       addMethod("payInvoice", singleInteger);
 
        // deleteInvoice
-       params = new Class[1];
-       params[0] = Integer.class;
-       addMethod("deleteInvoice",params);
+       addMethod("deleteInvoice", singleInteger);
        
        // getItem
        params = new Class[3];
@@ -201,10 +134,7 @@ public class WSMethodSecurityProxy extends WSMethodBaseSecurityProxy {
        params[2] = String.class;
        addMethod("getItem", params);
        
-       // rateOrder
-       params = new Class[1];
-       params[0] = OrderWS.class;
-       addMethod("rateOrder", params);
+       addMethod("rateOrder", singleOrderWS);
        
        // updateItem
        params = new Class[1];
@@ -233,7 +163,7 @@ public class WSMethodSecurityProxy extends WSMethodBaseSecurityProxy {
        addMethod("updateCurrentOrder", params);
     }
 
-    private static void addMethod(String name, Class params[]) {
+    private static void addMethod(String name, Class<?> params[]) {
         try {
             methods.add(target.getDeclaredMethod(name, params));
         } catch(NoSuchMethodException e) {

@@ -31,12 +31,12 @@ import com.sapienter.jbilling.server.notification.db.NotificationMessageLineDTO;
 /**
  * @author Emil
  */
-public class NotificationLineEntityComparator implements Comparator {
+public class NotificationLineEntityComparator implements Comparator<NotificationMessageLineDTO> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(Object o1, Object o2) {
+    public int compare(NotificationMessageLineDTO o1, NotificationMessageLineDTO o2) {
         NotificationMessageLineDTO parA = (NotificationMessageLineDTO) o1;
         NotificationMessageLineDTO parB = (NotificationMessageLineDTO) o2;
         

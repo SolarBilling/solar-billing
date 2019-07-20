@@ -33,14 +33,8 @@ import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.server.item.CurrencyBL;
 import com.sapienter.jbilling.server.payment.db.PaymentMethodDAS;
 import com.sapienter.jbilling.server.process.db.*;
-import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.list.ResultList;
-import com.sapienter.jbilling.server.order.OrderSQL;
 import com.sapienter.jbilling.server.notification.NotificationBL;
-import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
-import com.sapienter.jbilling.server.notification.MessageDTO;
-import com.sapienter.jbilling.server.notification.INotificationSessionBean;
-import com.sapienter.jbilling.server.util.Context;
 import javax.sql.rowset.CachedRowSet;
 
 import javax.mail.MessagingException;
@@ -53,7 +47,7 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
     private ProcessRunDTO billingProcessRun = null;
     private static final Logger LOG = Logger.getLogger(BillingProcessRunBL.class);
 
-    public class DateComparator implements Comparator {
+    public class DateComparator implements Comparator<Object> {
 
         /* (non-Javadoc)
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
@@ -202,8 +196,8 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
      */
     public void updateTotals(Integer billingProcessId) {
 
-        for (Iterator it = new BillingProcessDAS().getCountAndSum(billingProcessId); it.hasNext();) {
-            Object[] row = (Object[]) it.next();
+        for (Iterator<Object[]> it = new BillingProcessDAS().getCountAndSum(billingProcessId); it.hasNext();) {
+            final Object[] row = it.next();
             // add the total to the total invoiced
             ProcessRunTotalDTO totalRow = findOrCreateTotal((Integer) row[2]);
 
@@ -282,10 +276,10 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
         dto.setUsersFailed(processRunUserDAS.findFailedUsersCount(billingProcessRun.getId()));        
         // now the totals
         if (!billingProcessRun.getProcessRunTotals().isEmpty()) {
-            for (Iterator tIt = billingProcessRun.getProcessRunTotals().iterator(); 
+            for (Iterator<ProcessRunTotalDTO> tIt = billingProcessRun.getProcessRunTotals().iterator(); 
                     tIt.hasNext();) {
                 ProcessRunTotalDTO totalRow = 
-                        (ProcessRunTotalDTO) tIt.next();
+                        tIt.next();
                 BillingProcessRunTotalDTOEx totalDto = getTotalDTO(totalRow,
                         language);
                 dto.getTotals().add(totalDto);
@@ -306,11 +300,10 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
         retValue.setTotalPaid(row.getTotalPaid());
         
         // now go over the totals by payment method
-        Hashtable totals = new Hashtable();
-        for (Iterator it = row.getTotalsPaymentMethod().iterator(); 
+        Hashtable<String, BigDecimal> totals = new Hashtable<String, BigDecimal>();
+        for (Iterator<ProcessRunTotalPmDTO> it = row.getTotalsPaymentMethod().iterator(); 
                 it.hasNext();) {
-            ProcessRunTotalPmDTO pmTotal =
-                    (ProcessRunTotalPmDTO) it.next();
+            final ProcessRunTotalPmDTO pmTotal = it.next();
             totals.put(pmTotal.getPaymentMethod().getDescription(languageId),
                     pmTotal.getTotal());
                     
@@ -327,13 +320,13 @@ public class BillingProcessRunBL  extends ResultList implements ProcessSQL {
 
     public void updatePaymentsStatistic(Integer runId) {
         BillingProcessRunBL run = new BillingProcessRunBL(runId);
-        for (Iterator it = new BillingProcessDAS().getSuccessfulProcessCurrencyMethodAndSum(run.getEntity().getBillingProcess().getId()); it.hasNext();) {
-            Object[] row = (Object[]) it.next();
+        for (Iterator<Object[]> it = new BillingProcessDAS().getSuccessfulProcessCurrencyMethodAndSum(run.getEntity().getBillingProcess().getId()); it.hasNext();) {
+            Object[] row = it.next();
             run.updateNewPayment((Integer) row[0], (Integer) row[1], (BigDecimal) row[2], true);
         }
 
-        for (Iterator it = new BillingProcessDAS().getFailedProcessCurrencyAndSum(run.getEntity().getBillingProcess().getId()); it.hasNext();) {
-            Object[] row = (Object[]) it.next();
+        for (Iterator<Object[]> it = new BillingProcessDAS().getFailedProcessCurrencyAndSum(run.getEntity().getBillingProcess().getId()); it.hasNext();) {
+            Object[] row = it.next();
             run.updateNewPayment((Integer) row[0], null, (BigDecimal) row[1], false);
         }
     }

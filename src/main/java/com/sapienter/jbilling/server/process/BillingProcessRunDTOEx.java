@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.sapienter.jbilling.server.process.db.ProcessRunDTO;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +37,7 @@ import java.util.ArrayList;
  */
 public class BillingProcessRunDTOEx extends ProcessRunDTO {
 
-    List<BillingProcessRunTotalDTOEx> totals = null;
+    List<BillingProcessRunTotalDTOEx<BigDecimal>> totals = null;
     String statusStr;
     Integer usersSucceeded;
     Integer usersFailed;
@@ -44,7 +46,7 @@ public class BillingProcessRunDTOEx extends ProcessRunDTO {
      */
     public BillingProcessRunDTOEx() {
         super();
-        totals = new ArrayList<BillingProcessRunTotalDTOEx>();
+        totals = new ArrayList<BillingProcessRunTotalDTOEx<BigDecimal>>();
         setInvoicesGenerated(0);
     }
 
@@ -67,14 +69,14 @@ public class BillingProcessRunDTOEx extends ProcessRunDTO {
         setPaymentFinished(paymentFinished);
         setInvoicesGenerated(invoiceGenerated);
         
-        totals = new ArrayList<BillingProcessRunTotalDTOEx>();
+        totals = new ArrayList<BillingProcessRunTotalDTOEx<BigDecimal>>();
     }
 
-    public List<BillingProcessRunTotalDTOEx> getTotals() {
+    public List<BillingProcessRunTotalDTOEx<BigDecimal>> getTotals() {
         return totals;
     }
 
-    public void setTotals(List<BillingProcessRunTotalDTOEx> totals) {
+    public void setTotals(List<BillingProcessRunTotalDTOEx<BigDecimal>> totals) {
         this.totals = totals;
     }
 

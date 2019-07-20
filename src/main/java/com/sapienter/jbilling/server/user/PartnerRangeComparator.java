@@ -32,12 +32,12 @@ import com.sapienter.jbilling.server.user.partner.db.PartnerRange;
  * @author Emil
  *
  */
-public class PartnerRangeComparator implements Comparator {
+public class PartnerRangeComparator implements Comparator<PartnerRange> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(Object arg0, Object arg1) {
+    public int compare(PartnerRange arg0, PartnerRange arg1) {
         PartnerRange perA = (PartnerRange) arg0;
         PartnerRange perB = (PartnerRange) arg1;
         

@@ -43,7 +43,7 @@ public class PaymentDTOEx extends PaymentDTO {
     private CreditCardDTO creditCard = null;
     private String method = null;
     private List<Integer> invoiceIds = null;
-    private List paymentMaps = null;
+    private List<PaymentInvoiceMapDTOEx> paymentMaps = null;
     private PaymentDTOEx payment = null; // for refunds
     private String resultStr = null;
     private Integer payoutId = null;
@@ -82,7 +82,7 @@ public class PaymentDTOEx extends PaymentDTO {
         setPaymentNotes(dto.getPaymentNotes());
         
         invoiceIds = new ArrayList<Integer>();
-        paymentMaps = new ArrayList();
+        paymentMaps = new ArrayList<PaymentInvoiceMapDTOEx>();
     }
 
     public PaymentDTOEx(PaymentWS dto) {
@@ -141,7 +141,7 @@ public class PaymentDTOEx extends PaymentDTO {
         }
 
         invoiceIds = new ArrayList<Integer>();
-        paymentMaps = new ArrayList();
+        paymentMaps = new ArrayList<PaymentInvoiceMapDTOEx>();
         
         if (dto.getInvoiceIds() != null) {
             for (int f = 0; f < dto.getInvoiceIds().length; f++) {
@@ -165,7 +165,7 @@ public class PaymentDTOEx extends PaymentDTO {
     public PaymentDTOEx() {
         super();
         invoiceIds = new ArrayList<Integer>();
-        paymentMaps = new ArrayList();
+        paymentMaps = new ArrayList<PaymentInvoiceMapDTOEx>();
     }
 
     /**
@@ -302,7 +302,7 @@ public class PaymentDTOEx extends PaymentDTO {
     /**
      * @param vector
      */
-    public void setInvoiceIds(List vector) {
+    public void setInvoiceIds(List<Integer> vector) {
         invoiceIds = vector;
     }
 
@@ -376,7 +376,7 @@ public class PaymentDTOEx extends PaymentDTO {
 	public void setAch(AchDTO ach) {
 		this.ach = ach;
 	}
-    public List getPaymentMaps() {
+    public List<PaymentInvoiceMapDTOEx> getPaymentMaps() {
         Logger.getLogger(PaymentDTOEx.class).debug("Returning " + 
                 paymentMaps.size() + " elements in the map");
         return paymentMaps;

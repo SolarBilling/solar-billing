@@ -109,7 +109,7 @@ public class MaintainAction extends Action {
                         Constants.SESSION_USER_ID);
                 IUserSessionBean remoteUser = (IUserSessionBean) 
                         Context.getBean(Context.Name.USER_SESSION);
-                if (remoteUser.isParentCustomer(userId).booleanValue()) {
+                if (remoteUser.isParentCustomer(userId)) {
                     return mapping.findForward("sub_accounts");
                 } else {
                     return newOrderEdit(mapping, form, request, response);

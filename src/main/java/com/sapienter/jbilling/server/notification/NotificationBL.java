@@ -81,6 +81,7 @@ import com.sapienter.jbilling.server.payment.PaymentDTOEx;
 import com.sapienter.jbilling.server.pluggableTask.NotificationTask;
 import com.sapienter.jbilling.server.pluggableTask.PaperInvoiceNotificationTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.user.ContactDTOEx;
@@ -542,18 +543,18 @@ public class NotificationBL extends ResultList implements NotificationSQL {
     private void setContent(MessageDTO newMessage) throws SessionInternalError {
 
         // go through the sections
-        Collection sections = messageRow.getNotificationMessageSections();
-        for (Iterator it = sections.iterator(); it.hasNext();) {
+        final Collection<NotificationMessageSectionDTO> sections = messageRow.getNotificationMessageSections();
+        for (Iterator<NotificationMessageSectionDTO> it = sections.iterator(); it.hasNext();) {
             NotificationMessageSectionDTO section = (NotificationMessageSectionDTO) it
                     .next();
             // then through the lines of this section
             StringBuffer completeLine = new StringBuffer();
-            Collection lines = section.getNotificationMessageLines();
+            Collection<NotificationMessageLineDTO> lines = section.getNotificationMessageLines();
             int checkOrder = 0; // there's nothing to assume that the lines
             // will be retrived in order, but the have to!
-            List vLines = new ArrayList<NotificationMessageSectionDTO>(lines);
+            List<NotificationMessageLineDTO> vLines = new ArrayList<NotificationMessageLineDTO>(lines);
             Collections.sort(vLines, new NotificationLineEntityComparator());
-            for (Iterator it2 = vLines.iterator(); it2.hasNext();) {
+            for (Iterator<NotificationMessageLineDTO> it2 = vLines.iterator(); it2.hasNext();) {
                 NotificationMessageLineDTO line = (NotificationMessageLineDTO) it2
                         .next();
                 if (line.getId() <= checkOrder) {
@@ -576,7 +577,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
         }
     }
 
-    static public String parseParameters(String content, HashMap parameters) {
+    static public String parseParameters(String content, HashMap<String, Object> parameters) {
         
         // get the engine from Spring
         VelocityEngine velocity = (VelocityEngine) Context.getBean(Context.Name.VELOCITY);
@@ -616,8 +617,8 @@ public class NotificationBL extends ResultList implements NotificationSQL {
 
                 task = (NotificationTask) taskManager.getNextClass();
             }
-        } catch (Exception e) {
-            throw new SessionInternalError("Finding number of sections for notificaitons", 
+        } catch (PluggableTaskException | RuntimeException e) {
+            throw new SessionInternalError("Finding number of sections for notifications", 
                     NotificationBL.class, e);
         }
         return higherSection;
@@ -785,16 +786,16 @@ public class NotificationBL extends ResultList implements NotificationSQL {
 
             // add all the custom contact fields
             // the from
-            for (Iterator it = from.getFieldsTable().values().iterator(); it
+            for (Iterator<ContactFieldDTO> it = from.getFieldsTable().values().iterator(); it
                     .hasNext();) {
-                ContactFieldDTO field = (ContactFieldDTO) it.next();
+                final ContactFieldDTO field = it.next();
                 String fieldName = field.getType().getPromptKey();
                 fieldName = fieldName.substring(fieldName.lastIndexOf('.') + 1);
                 parameters.put("from_custom_" + fieldName, field.getContent());
             }
-            for (Iterator it = to.getFieldsTable().values().iterator(); it
+            for (Iterator<ContactFieldDTO> it = to.getFieldsTable().values().iterator(); it
                     .hasNext();) {
-                ContactFieldDTO field = (ContactFieldDTO) it.next();
+                final ContactFieldDTO field = it.next();
                 String fieldName = field.getType().getPromptKey();
                 fieldName = fieldName.substring(fieldName.lastIndexOf('.') + 1);
                 parameters.put("to_custom_" + fieldName, field.getContent());
@@ -1076,9 +1077,9 @@ public class NotificationBL extends ResultList implements NotificationSQL {
             MessageDTO paperMsg = getInvoicePaperMessage(entityId, null,
                     invoice.getBaseUser().getLanguageIdField(), invoice);
             PaperInvoiceNotificationTask task = new PaperInvoiceNotificationTask();
-            PluggableTaskBL taskBL = new PluggableTaskBL();
+            PluggableTaskBL taskBL = new PluggableTaskBL<Object>();
             taskBL.set(entityId, Constants.PLUGGABLE_TASK_T_PAPER_INVOICE);
-            task.initializeParamters(taskBL.getDTO());
+            task.initializeParameters(taskBL.getDTO());
 
             String filename = task.getPDFFile(invoice.getBaseUser(), paperMsg);
 

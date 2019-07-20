@@ -50,21 +50,21 @@ import com.sapienter.jbilling.server.order.db.OrderLineDTO;
  * @author Emil
  */
 public class NewOrderDTOForm extends ActionForm {
-    private Hashtable orderLines = null;
+    private Hashtable<Integer, OrderLineDTO> orderLines = null;
     
     public NewOrderDTOForm() {
-        orderLines = new Hashtable();
+        orderLines = new Hashtable<Integer, OrderLineDTO>();
     }
 
     // called by the logic:iterate tag, to get the keys of
     // each line
-    public Hashtable getOrderLines() {
+    public Hashtable<Integer, OrderLineDTO> getOrderLines() {
         return orderLines;
     }
 
     // called by the action form, to set the lines from the
     // original DTO
-    public void setOrderLines(Hashtable newOL) {
+    public void setOrderLines(Hashtable<Integer, OrderLineDTO> newOL) {
         orderLines = newOL;
     }
 
@@ -75,7 +75,7 @@ public class NewOrderDTOForm extends ActionForm {
     }
 
     // apparently never called
-    public void setOrderLine(String itemId, Object line) {
+    public void setOrderLine(String itemId, OrderLineDTO line) {
         orderLines.put(Integer.valueOf(itemId), line);
     }
 
@@ -105,10 +105,10 @@ public class NewOrderDTOForm extends ActionForm {
             return null;
         }
 
-        Collection lines = orderLines.values();
+        Collection<OrderLineDTO> lines = orderLines.values();
         try {
             int lineNumber = 1;
-            for (Iterator i = lines.iterator(); i.hasNext(); lineNumber++) {
+            for (Iterator<OrderLineDTO> i = lines.iterator(); i.hasNext(); lineNumber++) {
                 OrderLineDTO line = (OrderLineDTO) i.next();
                 // only editable lines get validated
                 if (line.getEditable().booleanValue()) { 

@@ -53,13 +53,13 @@ public class MessageDTO implements Serializable {
     /*
      * The parameters to be used to get the replacements in the text
      */
-    private HashMap parameters = null;
+    private HashMap<String, Object> parameters = null;
     // this is the message itself, after being loaded from the DB
-    private List content = null;
+    private List<MessageSection> content = null;
     
     public MessageDTO() {
-        parameters = new HashMap();
-        content = new Vector();
+        parameters = new HashMap<String, Object>();
+        content = new Vector<MessageSection>();
         deliveryMethodId = Constants.D_METHOD_EMAIL;
     }
     /**
@@ -78,7 +78,7 @@ public class MessageDTO implements Serializable {
     /**
      * @return
      */
-    public HashMap getParameters() {
+    public HashMap<String, Object> getParameters() {
         return parameters;
     }
 
@@ -170,6 +170,6 @@ public class MessageDTO implements Serializable {
     }
     
     public void setContentSize(int i) {
-        ((Vector) content).setSize(i);
+        ((Vector<MessageSection>) content).setSize(i);
     }
 }

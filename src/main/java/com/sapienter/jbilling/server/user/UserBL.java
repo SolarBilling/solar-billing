@@ -663,7 +663,7 @@ public class UserBL extends ResultList
 
     public Integer getMainRole() {
         if (mainRole == null) {
-            List roleIds = new LinkedList();
+            List<Integer> roleIds = new LinkedList<Integer>();
             for (RoleDTO nextRoleObject : user.getRoles()){
         		roleIds.add(nextRoleObject.getId());
         	}
@@ -672,11 +672,11 @@ public class UserBL extends ResultList
         return mainRole;
     }
 
-    private static Integer selectMainRole(Collection allRoleIds){
+    private static Integer selectMainRole(Collection<Integer> allRoleIds){
         // the main role is the smallest of them, so they have to be ordered in the
         // db in ascending order (small = important);
     	Integer result = null;
-    	for (Iterator roleIds = allRoleIds.iterator(); roleIds.hasNext();){
+    	for (Iterator<Integer> roleIds = allRoleIds.iterator(); roleIds.hasNext();){
             Integer nextId = (Integer)roleIds.next();
             if (result == null || nextId.compareTo(result) < 0) {
                 result = nextId;
@@ -833,19 +833,18 @@ public class UserBL extends ResultList
         return retValue;
     }
 
-    public UserWS[] convertEntitiesToWS(Collection dtos)
-            throws SessionInternalError {
+    public UserWS[] convertEntitiesToWS(final Collection<UserDTO> dtos) {
         try {
             UserWS[] ret = new UserWS[dtos.size()];
             int index = 0;
-            for (Iterator it = dtos.iterator(); it.hasNext();) {
-                user = (UserDTO) it.next();
+            for (Iterator<UserDTO> it = dtos.iterator(); it.hasNext();) {
+                user = it.next();
                 ret[index] = entity2WS();
                 index++;
             }
 
             return ret;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -872,9 +871,9 @@ public class UserBL extends ResultList
         contact.set(retValue.getUserId());
         retValue.setContact(new ContactWS(contact.getDTO()));
         // the credit card
-        Collection ccs = user.getCreditCards();
+        Collection<CreditCardDTO> ccs = user.getCreditCards();
         if (ccs.size() > 0) {
-            retValue.setCreditCard(((CreditCardDTO) ccs.toArray()[0]).getOldDTO());
+            retValue.setCreditCard((ccs.iterator().next()).getOldDTO());
         }
         return retValue;
     }
@@ -924,7 +923,7 @@ public class UserBL extends ResultList
             }
 
             // Load the results into a linked list.
-            List tempList = new LinkedList();
+            List<UserTransitionResponseWS> tempList = new LinkedList<UserTransitionResponseWS>();
             UserTransitionResponseWS temp;
             do {
                 temp = new UserTransitionResponseWS();
@@ -939,7 +938,7 @@ public class UserBL extends ResultList
             // The list is now ready. Convert into an array and return.
             result = new UserTransitionResponseWS[tempList.size()];
             int count = 0;
-            for (Iterator i = tempList.iterator(); i.hasNext();) {
+            for (Iterator<UserTransitionResponseWS> i = tempList.iterator(); i.hasNext();) {
                 result[count] = (UserTransitionResponseWS) i.next();
                 count++;
             }
@@ -983,7 +982,7 @@ public class UserBL extends ResultList
             }
 
             // Load the results into a linked list.
-            List tempList = new LinkedList();
+            List<UserTransitionResponseWS> tempList = new LinkedList<UserTransitionResponseWS>();
             UserTransitionResponseWS temp;
             do {
                 temp = new UserTransitionResponseWS();
@@ -998,7 +997,7 @@ public class UserBL extends ResultList
             // The list is now ready. Convert into an array and return.
             result = new UserTransitionResponseWS[tempList.size()];
             int count = 0;
-            for (Iterator i = tempList.iterator(); i.hasNext();) {
+            for (Iterator<UserTransitionResponseWS> i = tempList.iterator(); i.hasNext();) {
                 result[count] = (UserTransitionResponseWS) i.next();
                 count++;
             }

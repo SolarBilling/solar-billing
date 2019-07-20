@@ -39,7 +39,7 @@ public class PluggableTaskManager<T> {
 
     private List<PluggableTaskDTO> classes = null;
 
-    private Iterator it = null;
+    private Iterator<PluggableTaskDTO> it = null;
 
     private int lastProcessingOrder;
 
@@ -56,7 +56,7 @@ public class PluggableTaskManager<T> {
             it = classes.iterator();
             LOG.debug("total classes = " + classes.size());
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new PluggableTaskException(e);
         }
     }
@@ -94,12 +94,12 @@ public class PluggableTaskManager<T> {
     public T getInstance(String className, String interfaceName, PluggableTaskDTO aRule)
             throws PluggableTaskException {
         try {
-            Class task = Class.forName(className);
-            Class taskInterface = Class.forName(interfaceName);
+            Class<?> task = Class.forName(className);
+            Class<?> taskInterface = Class.forName(interfaceName);
 
             if (taskInterface.isAssignableFrom(task)) {
                 T thisTask = (T) task.newInstance();
-                ((PluggableTask) thisTask).initializeParamters(aRule);
+                ((PluggableTask) thisTask).initializeParameters(aRule);
                 return thisTask;
 
             }

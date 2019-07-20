@@ -226,7 +226,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
 	 * @param processId
 	 * @return
 	 */
-	public Collection findProccesableByProcess(Integer processId) {
+	public Collection<InvoiceDTO> findProccesableByProcess(Integer processId) {
 
 		BillingProcessDTO process = new BillingProcessDAS().find(processId);
 		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
@@ -297,7 +297,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
  *                       AND a.deleted = 0"
  *             result-type-mapping="Local"
  */
-	public Collection findWithBalanceByUser(UserDTO user) {
+	public Collection<InvoiceDTO> findWithBalanceByUser(UserDTO user) {
 
 		Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
 		criteria.add(Restrictions.eq("baseUser", user));
@@ -330,7 +330,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
  *                       AND a.deleted = 0"
  *             result-type-mapping="Local"
 	 */
-    public Collection findProccesableByUser(UserDTO user) {
+    public Collection<InvoiceDTO> findProccesableByUser(UserDTO user) {
 
         Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
         criteria.add(Restrictions.eq("baseUser", user));

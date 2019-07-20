@@ -37,14 +37,14 @@ public class CurrencyExchangeDAS extends AbstractDAS<CurrencyExchangeDTO> {
         "  WHERE a.entityId = :entity";
 
     public CurrencyExchangeDTO findExchange(Integer entityId,Integer currencyId) {
-        Query query = getSession().createQuery(findExchangeSQL);
+        Query<CurrencyExchangeDTO> query = getSession().createQuery(findExchangeSQL);
         query.setParameter("entity", entityId);
         query.setParameter("currency", currencyId);
         return (CurrencyExchangeDTO) query.uniqueResult();
     }
     
     public List<CurrencyExchangeDTO> findByEntity(Integer entityId) {
-        Query query = getSession().createQuery(findByEntitySQL);
+        Query<CurrencyExchangeDTO> query = getSession().createQuery(findByEntitySQL);
         query.setParameter("entity", entityId);
         return query.list();
     }

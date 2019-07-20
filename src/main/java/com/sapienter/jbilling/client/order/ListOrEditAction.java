@@ -47,7 +47,7 @@ public class ListOrEditAction extends Action {
         Integer userId = (Integer) session.getAttribute(
                 Constants.SESSION_USER_ID);
         IUserSessionBean remoteUser = (IUserSessionBean) Context.getBean(Context.Name.USER_SESSION);
-        if (remoteUser.isParentCustomer(userId).booleanValue()) {
+        if (remoteUser.isParentCustomer(userId)) {
             // remove the list from the cache, otherwise it will be the same
             session.removeAttribute(Constants.SESSION_LIST_KEY +
                                 Constants.LIST_TYPE_SUB_ACCOUNTS);

@@ -383,7 +383,7 @@ public class GenericListAction extends Action {
     
     private void reset(PagedList dto) {
         dto.setCurrentPage(new Integer(0));
-        List starts = new ArrayList();
+        List<?> starts = new ArrayList();
         starts.add(null);
         dto.setPageFrom(starts);
         dto.setDoSearch(null);

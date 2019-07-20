@@ -33,12 +33,12 @@ import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 /**
  * @author Emil
  */
-public class InvoiceIdComparator implements Comparator {
+public class InvoiceIdComparator implements Comparator<InvoiceDTO> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(Object arg0, Object arg1) {
+    public int compare(InvoiceDTO arg0, InvoiceDTO arg1) {
         InvoiceDTO perA = (InvoiceDTO) arg0;
         InvoiceDTO perB = (InvoiceDTO) arg1;
         

@@ -169,7 +169,7 @@ public class OrderBL extends ResultList
         retValue.setBillingTypeStr(order.getOrderBillingType().getDescription(languageId));
 
         List<OrderLineWS> lines = new ArrayList<OrderLineWS>();
-        for (Iterator it = order.getLines().iterator(); it.hasNext();) {
+        for (Iterator<OrderLineDTO> it = order.getLines().iterator(); it.hasNext();) {
             OrderLineDTO line = (OrderLineDTO) it.next();
             if (line.getDeleted() == 0) {
                 lines.add(getOrderLineWS(line.getId()));
@@ -262,7 +262,7 @@ public class OrderBL extends ResultList
         order.setDefaults();
 
         try {
-            PluggableTaskManager taskManager = new PluggableTaskManager(
+            PluggableTaskManager taskManager = new PluggableTaskManager<Object>(
                     entityId, Constants.PLUGGABLE_TASK_PROCESSING_ORDERS);
             OrderProcessingTask task =
                     (OrderProcessingTask) taskManager.getNextClass();
@@ -386,8 +386,8 @@ public class OrderBL extends ResultList
         // NewQuantityEvent is generated when an order line and it's quantity 
         // has changed, including from >0 to 0 (deleted) and 0 to >0 (added).
         // First, copy and sort new and old order lines by order line id.
-        List<OrderLineDTO> oldOrderLines = new ArrayList(oldLines);
-        List<OrderLineDTO> newOrderLines = new ArrayList(newLines);
+        List<OrderLineDTO> oldOrderLines = new ArrayList<OrderLineDTO>(oldLines);
+        List<OrderLineDTO> newOrderLines = new ArrayList<OrderLineDTO>(newLines);
         Comparator<OrderLineDTO> sortByOrderLineId = new Comparator<OrderLineDTO>() {
 
             public int compare(OrderLineDTO ol1, OrderLineDTO ol2) {
@@ -536,7 +536,7 @@ public class OrderBL extends ResultList
             // This event needs to LOG the old item id and description, so
             // it can only happen when updating orders with only one line.
 
-            for (Iterator i = order.getLines().iterator(); i.hasNext();) {
+            for (Iterator<OrderLineDTO> i = order.getLines().iterator(); i.hasNext();) {
                 // Check which order is not deleted.
                 OrderLineDTO temp = (OrderLineDTO) i.next();
                 if (temp.getDeleted() == 0) {
@@ -559,8 +559,8 @@ public class OrderBL extends ResultList
 
         if (oldLine != null && nonDeletedLines == 1) {
             OrderLineDTO newLine = null;
-            for (Iterator i = order.getLines().iterator(); i.hasNext();) {
-                OrderLineDTO temp = (OrderLineDTO) i.next();
+            for (Iterator<OrderLineDTO> i = order.getLines().iterator(); i.hasNext();) {
+                final OrderLineDTO temp = i.next();
                 if (temp.getDeleted() == 0) {
                     newLine = temp;
                 }
@@ -1092,7 +1092,7 @@ public class OrderBL extends ResultList
             throws SessionInternalError {
         // find the order records first
         try {
-            List result = new ArrayList();
+            List<Integer> result = new ArrayList<Integer>();
             prepareStatement(OrderSQL.getByUserAndPeriod);
             cachedResults.setInt(1, userId.intValue());
             cachedResults.setInt(2, statusId.intValue());

@@ -42,7 +42,7 @@ public interface IBillingProcessSessionBean {
      * @return A collection of InvoiceDTO objects
      * @throws SessionInternalError
      */
-    public Collection getGeneratedInvoices(Integer processId);
+    public Collection<InvoiceDTO> getGeneratedInvoices(Integer processId);
     
     /**
      * @param entityId

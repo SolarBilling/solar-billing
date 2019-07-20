@@ -21,6 +21,8 @@ package com.sapienter.jbilling.server.util.db;
 
 import org.hibernate.Query;
 
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 
 public class LanguageDAS extends AbstractDAS<LanguageDTO> {
     private static final String findByCodeSQL = 
@@ -29,12 +31,12 @@ public class LanguageDAS extends AbstractDAS<LanguageDTO> {
         " WHERE a.code = :code ";
 
     public LanguageDTO findByCode(String code) {
-        Query query = getSession().createQuery(findByCodeSQL);
+        Query<?> query = getSession().createQuery(findByCodeSQL);
         query.setParameter("code", code);
         LanguageDTO language = (LanguageDTO) query.uniqueResult();
         if (language == null)
         {
-            LOG.error("no language found for code '" + code + "'");
+            LoggerFactory.getLogger(getClass()).error("no language found for code '" + code + "'");
             if (!"en".equals(code))
             {
                 language = findByCode("en");

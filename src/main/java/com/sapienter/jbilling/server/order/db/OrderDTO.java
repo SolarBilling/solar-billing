@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -45,7 +46,6 @@ import javax.persistence.Version;
 
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OrderBy;
@@ -423,7 +423,7 @@ public class OrderDTO implements java.io.Serializable {
      * There might potentially hundreds of process records, but they are not read by the app.
      * They are only taken for display, and then all are needed
      */
-    @CollectionOfElements
+    @ElementCollection
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="purchaseOrder")
     @Fetch ( FetchMode.SUBSELECT)
     @OrderBy (

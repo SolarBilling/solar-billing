@@ -2,17 +2,16 @@ package com.sapienter.jbilling.common;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
+@org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 public class SpringORMConfig // implements ApplicationContextAware
 {
@@ -64,7 +63,7 @@ public class SpringORMConfig // implements ApplicationContextAware
 
     @Bean
     public SessionFactory sessionFactory() {
-	SessionFactory sf = new AnnotationConfiguration().configure()
+	SessionFactory sf = new Configuration().configure()
 				.buildSessionFactory();
 	return sf;
     }

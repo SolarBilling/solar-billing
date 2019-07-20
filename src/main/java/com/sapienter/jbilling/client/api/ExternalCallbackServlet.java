@@ -49,7 +49,8 @@ import com.sapienter.jbilling.server.util.Context;
  *
  */
 public class ExternalCallbackServlet extends HttpServlet {
-    private static final Logger LOG = Logger.getLogger(ExternalCallbackServlet.class);
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(ExternalCallbackServlet.class);
     public void doPost(HttpServletRequest request, 
             HttpServletResponse response) 
             throws ServletException, IOException {
@@ -70,7 +71,7 @@ public class ExternalCallbackServlet extends HttpServlet {
             // go over the parameters, making my string for the validation
             // call to paypal
             String validationStr = "cmd=_notify-validate";
-            Enumeration parameters = request.getParameterNames();
+            Enumeration<String> parameters = request.getParameterNames();
             while (parameters.hasMoreElements()) {
                 String parameter = (String) parameters.nextElement();
                 String value = request.getParameter(parameter);

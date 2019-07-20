@@ -88,7 +88,7 @@ public class UploadData {
 		int active_until = -1;
 		int total = -1;
         // these are for entity-specific contact fields
-        Hashtable entitySpecificFeilds;
+        Hashtable<String, ContactFieldDTO> entitySpecificFeilds;
         int specific[];
         int specificType[];
 		
@@ -107,7 +107,7 @@ public class UploadData {
 			Boolean processOrders = Boolean.valueOf(
 					prop.getProperty("load_orders"));
             // initialize the entity specific data
-            entitySpecificFeilds = new Hashtable();
+            entitySpecificFeilds = new Hashtable<String, ContactFieldDTO>();
             int totalSpecificFields = Integer.valueOf(prop.getProperty(
                     "specific_fields", "0")).intValue();
             System.out.println("specific fields to load = " + totalSpecificFields);
@@ -438,7 +438,7 @@ public class UploadData {
             header = file.readLine();
             // the types file has only one field with the description
             Integer newType;
-            Hashtable types = new Hashtable();
+            Hashtable<String, Integer> types = new Hashtable<String, Integer>();
             totalRows = 0;
             record = readLine(file);
             while (record != null) {

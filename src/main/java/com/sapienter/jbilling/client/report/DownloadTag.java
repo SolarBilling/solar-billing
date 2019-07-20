@@ -88,10 +88,10 @@ public class DownloadTag extends TagSupport {
             String fieldSeparator = "";
             
             // print the column titles
-            List fields = report.getFields();
+            List<Field> fields = report.getFields();
             int f = (new Integer(report.getIdColumn()).intValue() == 1) ? 1 : 0;
             for ( ; f < fields.size(); f++) {
-                Field field = (Field) fields.get(f);
+                final Field field = fields.get(f);
                 
                 if (field.getIsShown().intValue() == 1) {
                     String columnTitle = Resources.getMessage(mess, 

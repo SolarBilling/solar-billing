@@ -28,10 +28,10 @@ public abstract class PaymentTaskWithTimeout extends PaymentTaskBase {
 	private int myTimeout;
 	
 	@Override
-	public void initializeParamters(PluggableTaskDTO task)
+	public void initializeParameters(PluggableTaskDTO task)
 			throws PluggableTaskException {
 		
-		super.initializeParamters(task);
+		super.initializeParameters(task);
 
 		String timeoutText = getOptionalParameter(PARAM_TIMEOUT_SECONDS, "10");
 		try {

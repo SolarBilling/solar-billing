@@ -33,10 +33,10 @@ import org.apache.log4j.Logger;
  * @author Lucas Pickstone
  */
 public class ProcessorEmailAlarm {
-    private static HashMap alarms = new HashMap();
+    private static HashMap<String, ProcessorEmailAlarm> alarms = new HashMap<String, ProcessorEmailAlarm>();
 
     private int failedCounter;
-    private Queue times;          // holds queue of failure times
+    private Queue<Long> times;          // holds queue of failure times
     private long lastEmailTime;   // last time email was sent
 
     private Logger log = Logger.getLogger(ProcessorEmailAlarm.class);
@@ -44,7 +44,7 @@ public class ProcessorEmailAlarm {
     // Constructor
     public ProcessorEmailAlarm() {
         failedCounter = 0;
-        times = new LinkedList();
+        times = new LinkedList<Long>();
         lastEmailTime = 0;
     }
 
@@ -101,7 +101,7 @@ public class ProcessorEmailAlarm {
     public void successful() {
         if (failedCounter != 0) {
             failedCounter = 0;
-            times = new LinkedList();
+            times = new LinkedList<Long>();
         }
     }
 

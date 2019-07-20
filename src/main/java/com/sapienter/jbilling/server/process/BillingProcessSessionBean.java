@@ -78,7 +78,7 @@ public class BillingProcessSessionBean implements IBillingProcessSessionBean {
      * @return A collection of InvoiceDTO objects
      * @throws SessionInternalError
      */
-    public Collection getGeneratedInvoices(Integer processId) {
+    public Collection<InvoiceDTO> getGeneratedInvoices(Integer processId) {
         // find the billing_process home interface
         BillingProcessDAS processHome = new BillingProcessDAS();
         Collection<InvoiceDTO> invoices =  new InvoiceDAS().findByProcess(processHome.find(processId));
@@ -228,7 +228,7 @@ public class BillingProcessSessionBean implements IBillingProcessSessionBean {
 
             BillingProcessDAS bpDas = new BillingProcessDAS();
             //Load the pluggable task for filtering the users
-            PluggableTaskManager taskManager = new PluggableTaskManager(
+            PluggableTaskManager<?> taskManager = new PluggableTaskManager<Object>(
                     entityId, 
                     Constants.PLUGGABLE_TASK_BILL_PROCESS_FILTER);
             IBillingProcessFilterTask task = (IBillingProcessFilterTask) taskManager
@@ -409,9 +409,9 @@ public class BillingProcessSessionBean implements IBillingProcessSessionBean {
 
                 // get the invoices yet to be paid from this process
                 InvoiceBL invoiceBL = new InvoiceBL();
-                for (Iterator it = invoiceBL.getHome().findProccesableByProcess(
+                for (Iterator<InvoiceDTO> it = invoiceBL.getHome().findProccesableByProcess(
                         processId).iterator(); it.hasNext();) {
-                    InvoiceDTO invoice = (InvoiceDTO) it.next();
+                    final InvoiceDTO invoice = it.next();
                     LOG.debug("Retrying invoice " + invoice.getId());
 
                     // post the need of a payment process, it'll be done asynchronusly

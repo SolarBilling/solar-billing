@@ -41,7 +41,7 @@ public class ReportUserDAS extends AbstractDAS<ReportUserDTO> {
         return save(rudto);
     }
 
-    public Collection findByTypeUser(Integer report, Integer userId) {
+    public Collection<ReportUserDTO> findByTypeUser(Integer report, Integer userId) {
         /*
          * query="SELECT OBJECT(a) FROM report_user a WHERE a.userId = ?2 AND
          * a.report.id = ?1 " result-type-mapping="Local"

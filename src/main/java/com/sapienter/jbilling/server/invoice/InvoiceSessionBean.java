@@ -20,16 +20,13 @@
 
 package com.sapienter.jbilling.server.invoice;
 
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDAS;
@@ -43,11 +40,7 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.process.BillingProcessBL;
 import com.sapienter.jbilling.server.user.UserBL;
-import com.sapienter.jbilling.server.user.db.CompanyDAS;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Constants;
-import com.sapienter.jbilling.server.util.Context;
-import com.sapienter.jbilling.server.util.PreferenceBL;
 import java.util.Set;
 
 /**
@@ -150,11 +143,11 @@ public class InvoiceSessionBean implements IInvoiceSessionBean {
                     getLanguageIdField(), invoiceBl.getEntity());
             PaperInvoiceNotificationTask task =
                     new PaperInvoiceNotificationTask();
-            PluggableTaskBL taskBL = new PluggableTaskBL();
+            PluggableTaskBL taskBL = new PluggableTaskBL<Object>();
             taskBL.set(entityId, Constants.PLUGGABLE_TASK_T_PAPER_INVOICE);
-            task.initializeParamters(taskBL.getDTO());
+            task.initializeParameters(taskBL.getDTO());
             return task.getPDF(invoiceBl.getEntity().getBaseUser(), message);
-        } catch (Exception e) {
+        } catch (PluggableTaskException | RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }

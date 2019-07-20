@@ -81,9 +81,9 @@ public class PaymentInfoNoValidateTask
 	            } else {
 	                // go around the provided cards and get one that is sendable
 	                // to the processor
-	                for (Iterator it = userBL.getEntity().getCreditCards().
+	                for (Iterator<CreditCardDTO> it = userBL.getEntity().getCreditCards().
 	                        iterator(); it.hasNext(); ) {
-                        ccBL.set(((CreditCardDTO) it.next()).getId());
+                        ccBL.set(( it.next()).getId());
 	                    // takes the first one, no validation
                         retValue = new PaymentDTOEx();
                         retValue.setCreditCard(ccBL.getDTO());

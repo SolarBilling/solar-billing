@@ -26,14 +26,16 @@ import java.io.StringWriter;
 import org.apache.log4j.Logger;
 
 public class SessionInternalError extends RuntimeException {
-    public SessionInternalError() {
+	private static final long serialVersionUID = 1L;
+
+	public SessionInternalError() {
     }
 
     public SessionInternalError(String s) {
         super(s);
     }
     
-    public SessionInternalError(String s, Class className, Exception e) {
+    public SessionInternalError(String s, Class<?> className, Exception e) {
         super(s);
         Logger log = Logger.getLogger(className);
         StringWriter sw = new StringWriter();

@@ -84,7 +84,7 @@ public class MaintainAction extends CrudActionBase<ItemDTO> {
         }
 
         // get the prices. At least one has to be present
-        dto.setPrices((List) myForm.get(FIELD_PRICES));
+        dto.setPrices((List<ItemPriceDTO>) myForm.get(FIELD_PRICES));
         boolean atLeastOnePriceFound = false;
         for (int f = 0; f < dto.getPrices().size(); f++) {
             ItemPriceDTO nextPrice = (ItemPriceDTO) dto.getPrices().get(f);

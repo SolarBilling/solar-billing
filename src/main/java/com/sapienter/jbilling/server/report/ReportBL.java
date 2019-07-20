@@ -322,18 +322,15 @@ public class ReportBL extends ResultList {
         reportDto.setUserReportId(userReportId);
 
         // find this user's saved fields
-        Collection fields = reportUser.getFields();
-
         // convert these entities to dtos
-        for (Iterator it = fields.iterator(); it.hasNext();) {
-            ReportFieldDTO field = (ReportFieldDTO) it.next();
+        for (ReportFieldDTO field : reportUser.getFields()) {
             reportDto.addField(DTOFactory.getFieldDTO(field));
         }
 
         return reportDto;
     }
 
-    public Collection getList(Integer entityId) throws SQLException, Exception {
+    public Collection<ReportDTOEx> getList(Integer entityId) throws SQLException {
 
         CompanyDTO entity = new CompanyDAS().find(entityId);
 
@@ -342,7 +339,7 @@ public class ReportBL extends ResultList {
 
     }
 
-    public Collection getListByType(Integer typeId) {
+    public Collection<ReportDTOEx> getListByType(Integer typeId) {
         return DTOFactory.reportEJB2DTOEx(new ReportTypeDAS().find(typeId)
                 .getReports(), false);
     }
@@ -383,8 +380,8 @@ public class ReportBL extends ResultList {
         }
     }
 
-    public Collection getUserList(Integer report, Integer userId) {
-        Collection reports = reportUserDas.findByTypeUser(report, userId);
+    public Collection<ReportUserDTO> getUserList(Integer report, Integer userId) {
+        Collection<ReportUserDTO> reports = reportUserDas.findByTypeUser(report, userId);
         return DTOFactory.reportUserEJB2DTO(reports);
     }
 

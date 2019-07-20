@@ -25,9 +25,9 @@ public class PaymentMethodRouterTask extends AbstractPaymentRouterTask {
 	private static final String ACH_DELEGATE = "ach_payment_task";
 	
 	@Override
-	public void initializeParamters(PluggableTaskDTO task)
+	public void initializeParameters(PluggableTaskDTO task)
 			throws PluggableTaskException {
-		super.initializeParamters(task);
+		super.initializeParameters(task);
 		LOG.debug("Delegate task for credit card payments: " + 
 				parameters.get(CREDIT_CARD_DELEGATE));
 		LOG.debug("Delegate task for ACH payments: " + 

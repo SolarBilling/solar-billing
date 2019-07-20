@@ -53,7 +53,7 @@ public class PluggableTaskSessionBean implements IPluggableTaskSessionBean {
             PluggableTaskBL bl = new PluggableTaskBL();
             bl.set(entityId, typeId);
             return bl.getDTO();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -77,21 +77,21 @@ public class PluggableTaskSessionBean implements IPluggableTaskSessionBean {
 
     public void create(Integer executorId, PluggableTaskDTO dto) {
             
-        PluggableTaskBL bl = new PluggableTaskBL();
+        PluggableTaskBL bl = new PluggableTaskBL<Object>();
         bl.create(dto);
         
     }
 
     public void createParameter(Integer executorId, Integer taskId, PluggableTaskParameterDTO dto) {
             
-        PluggableTaskBL bl = new PluggableTaskBL();
+        PluggableTaskBL bl = new PluggableTaskBL<Object>();
         bl.createParameter(taskId, dto);
     }
 
     @Transactional( propagation = Propagation.REQUIRES_NEW )
     public void update(Integer executorId, PluggableTaskDTO dto) {
             
-        PluggableTaskBL bl = new PluggableTaskBL();
+        PluggableTaskBL bl = new PluggableTaskBL<Object>();
         bl.update(executorId, dto);
         
     }
@@ -99,7 +99,7 @@ public class PluggableTaskSessionBean implements IPluggableTaskSessionBean {
     @Transactional( propagation = Propagation.REQUIRES_NEW )
     public PluggableTaskDTO[] updateAll(Integer executorId, PluggableTaskDTO dto[]) {
 
-        PluggableTaskBL bl = new PluggableTaskBL();
+        PluggableTaskBL bl = new PluggableTaskBL<Object>();
         for (int f = 0; f < dto.length; f++) {
             bl.update(executorId, dto[f]);
             dto[f] = bl.getDTO(); // replace with the new version
@@ -110,14 +110,14 @@ public class PluggableTaskSessionBean implements IPluggableTaskSessionBean {
 
     public void delete(Integer executorId, Integer id) {
 
-        PluggableTaskBL bl = new PluggableTaskBL(id);
+        PluggableTaskBL bl = new PluggableTaskBL<Object>(id);
         bl.delete(executorId);
         
     }
 
     public void deleteParameter(Integer executorId, Integer id) {
 
-        PluggableTaskBL bl = new PluggableTaskBL();
+        PluggableTaskBL bl = new PluggableTaskBL<Object>();
         bl.deleteParameter(executorId, id);
         
     }
@@ -126,7 +126,7 @@ public class PluggableTaskSessionBean implements IPluggableTaskSessionBean {
     public void updateParameters(Integer executorId, PluggableTaskDTO dto) 
             throws SessionInternalError {
 
-        PluggableTaskBL bl = new PluggableTaskBL();           
+        PluggableTaskBL<?> bl = new PluggableTaskBL<Object>();
         bl.updateParameters(dto);
     }
 }

@@ -113,7 +113,7 @@ public class EntityBL extends ResultList
     
     public Integer[] getAllIDs() 
             throws SQLException, NamingException {
-        List list = new ArrayList();
+        List<Integer> list = new ArrayList<>();
         
         prepareStatement(EntitySQL.listAll);
         execute();

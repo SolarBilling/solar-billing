@@ -37,9 +37,9 @@ import java.util.ArrayList;
  */
 public class GetSelectableOptions {
     
-    public static Collection getOptions(String type, Integer languageId, 
+    public static Collection<OptionDTO> getOptions(String type, Integer languageId, 
             Integer entityId, Integer executorType) throws SessionInternalError {
-        List retValue = new ArrayList();
+        List<OptionDTO> retValue = new ArrayList<>();
         try {
             String sql = null;
             JNDILookup jndi = JNDILookup.getFactory();

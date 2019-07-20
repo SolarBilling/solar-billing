@@ -126,25 +126,19 @@ public interface IUserSessionBean {
     public void setContact(ContactDTOEx dto, Integer userId, Integer 
             contactTypeId) throws SessionInternalError;
 
-    public boolean addContact(ContactDTOEx dto, String username,
-            Integer entityId) throws SessionInternalError;
+    boolean addContact(ContactDTOEx dto, String username, Integer entityId);
 
-    public UserDTOEx getUserDTOEx(Integer userId) 
-            throws SessionInternalError;
+    UserDTOEx getUserDTOEx(Integer userId); 
     
-    public Boolean isParentCustomer(Integer userId) 
-            throws SessionInternalError;
+    boolean isParentCustomer(Integer userId); 
     
-    public UserDTOEx getUserDTOEx(String userName, Integer entityId) 
-            throws SessionInternalError;
+    UserDTOEx getUserDTOEx(String userName, Integer entityId); 
     
-    public Boolean hasSubAccounts(Integer userId)
-            throws SessionInternalError;
+    boolean hasSubAccounts(Integer userId);
     
-    public CurrencyDTO getCurrency(Integer userId) throws SessionInternalError;
+    CurrencyDTO getCurrency(Integer userId);
 
-    public Integer createCreditCard(Integer userId, CreditCardDTO dto) 
-            throws SessionInternalError;
+    Integer createCreditCard(Integer userId, CreditCardDTO dto); 
 
     /**
      * This actually creates a credit card record for a user without it,
@@ -213,9 +207,9 @@ public interface IUserSessionBean {
      * An array of the parameter ids that will be looked up and returned in
      * the hashtable
      * @return
-     * The paramteres in "id - value" pairs. The value is of type String
+     * The parameters in "id - value" pairs. The value is of type String
      */    
-    public HashMap getEntityParameters(Integer entityId, Integer[] ids) 
+    public HashMap<Integer, String> getEntityParameters(Integer entityId, Integer[] ids) 
             throws SessionInternalError;
     
     /**
@@ -223,7 +217,7 @@ public interface IUserSessionBean {
      * @param params
      * @throws SessionInternalError
      */
-    public void setEntityParameters(Integer entityId, HashMap params) 
+    public void setEntityParameters(Integer entityId, HashMap<Integer, ?> params) 
             throws SessionInternalError;
 
     public void updatePreference(Integer userId, Integer typeId, 

@@ -45,7 +45,6 @@ import com.sapienter.jbilling.server.process.PeriodOfTime;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.PreferenceBL;
-import com.sapienter.jbilling.server.util.Util;
 
 /**
  * This task will copy all the lines on the orders and invoices
@@ -91,7 +90,7 @@ public class BasicCompositionTask extends PluggableTask
 
             // now go over the lines of this order, and generate the invoice
             // lines from them, excluding the tax ones.
-            Iterator orderLines = order.getLines().iterator();
+            Iterator<OrderLineDTO> orderLines = order.getLines().iterator();
             while (orderLines.hasNext()) {
                 OrderLineDTO orderLine =
                         (OrderLineDTO) orderLines.next();
@@ -172,9 +171,9 @@ public class BasicCompositionTask extends PluggableTask
         /*
          * now the invoices
          */
-        Iterator invoices = invoiceDTO.getInvoices().iterator();
+        final Iterator<InvoiceDTO> invoices = invoiceDTO.getInvoices().iterator();
         while (invoices.hasNext()) {
-            InvoiceDTO invoice = (InvoiceDTO) invoices.next();
+            final InvoiceDTO invoice = invoices.next();
             // the whole invoice will be added as a single line
             // this will probably will have a good deal of logic, to 
             // take the taxes out, etc ...
@@ -284,9 +283,9 @@ public class BasicCompositionTask extends PluggableTask
         return retValue.toString();
     }
 
-    private int taxLinePresent(List lines, String desc) {
+    private int taxLinePresent(final List<InvoiceLineDTO> lines, final String desc) {
         for (int f = 0; f < lines.size(); f++) {
-            InvoiceLineDTO line = (InvoiceLineDTO) lines.get(f);
+            final InvoiceLineDTO line = lines.get(f);
             if (line.getTypeId() == Constants.ORDER_LINE_TYPE_TAX) {
                 if (line.getDescription().equals(desc)) {
                     return f;
