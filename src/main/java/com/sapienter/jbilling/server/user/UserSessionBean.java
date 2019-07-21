@@ -192,7 +192,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
     }
 
     public Integer createEntity(ContactDTO contact, UserDTOEx user, 
-            Integer pack, Boolean config, String language,
+            Integer pack, Boolean todoRemoveThisUnusedParameter, String language,
             ContactDTO paymentContact)
             throws SessionInternalError {
         try {
@@ -552,9 +552,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
 
     }   
 
-    public void setAuthPaymentType(Integer userId, Integer newMethod, 
-    		Boolean use) 
-    		throws SessionInternalError {
+    public void setAuthPaymentType(final Integer userId, final Integer newMethod, final boolean use) { 
     	try {
     		UserBL user = new UserBL(userId);
             if (user.getEntity().getCustomer() == null) {
@@ -565,21 +563,19 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
         	Integer method = user.getEntity().getCustomer().
 					getAutoPaymentType();
         	// it wants to use this one now
-        	if (use.booleanValue()) {
+        	if (use) {
         		user.getEntity().getCustomer().setAutoPaymentType(newMethod);
         	}
         	// it has this method, and doesn't want to use it any more
-        	if (method != null && method.equals(newMethod) && 
-        			!use.booleanValue()) {
+        	if (method != null && method.equals(newMethod) && !use) {
         		user.getEntity().getCustomer().setAutoPaymentType(null);
         	}
-    	} catch (Exception e) {
+    	} catch (RuntimeException e) {
     		throw new SessionInternalError(e);
     	}
     }
     
-    public Integer getAuthPaymentType(Integer userId)
-    		throws SessionInternalError {
+    public Integer getAuthPaymentType(final Integer userId) {
     	try {
     		UserBL user = new UserBL(userId);
         	Integer method;
@@ -591,7 +587,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
                 method = new Integer(0); 
             }
         	return method;
-    	} catch (Exception e) {
+    	} catch (RuntimeException e) {
     		throw new SessionInternalError(e);
     	}
     }
@@ -1002,11 +998,11 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
     } 
 
     public void setUserBlacklisted(Integer executorId, Integer userId, 
-            Boolean isBlacklisted) throws SessionInternalError {
+            boolean isBlacklisted) throws SessionInternalError {
         try {
             UserBL bl = new UserBL(userId);
             bl.setUserBlacklisted(executorId, isBlacklisted);
-        } catch(Exception e) {
+        } catch(RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }

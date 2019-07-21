@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.sapienter.jbilling.common.InvalidArgumentException;
 import com.sapienter.jbilling.server.mediation.db.*;
 import com.sapienter.jbilling.server.mediation.task.IMediationProcess;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
@@ -51,9 +50,7 @@ public interface IMediationSessionBean {
 
     public void createConfiguration(MediationConfiguration cfg);
 
-    public List<?> updateAllConfiguration(Integer executorId,
-            List<MediationConfiguration> configurations)
-            throws InvalidArgumentException;
+    List<?> updateAllConfiguration(Integer executorId, List<MediationConfiguration> configurations);
 
     public void delete(Integer executorId, Integer cfgId);
 

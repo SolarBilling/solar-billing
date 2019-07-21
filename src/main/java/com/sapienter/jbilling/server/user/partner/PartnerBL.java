@@ -230,7 +230,7 @@ public class PartnerBL extends ResultList implements PartnerSQL {
      * @return
      */
     public Integer processPayout(Integer partnerId, Date start, Date end,
-            PaymentDTOEx payment, Boolean process) 
+            PaymentDTOEx payment, boolean process) 
             throws SessionInternalError, SQLException, NamingException {
         
         partner = partnerDAS.find(partnerId);
@@ -251,8 +251,7 @@ public class PartnerBL extends ResultList implements PartnerSQL {
         // finish the payment
         payment.setIsRefund(new Integer(1));
         payment.setAttempt(new Integer(1));
-        processPayment(payment, partner.getUser().getEntity().getId(), dto,
-                process.booleanValue());
+        processPayment(payment, partner.getUser().getEntity().getId(), dto, process);
         return payment.getPaymentResult().getId();
     }
     

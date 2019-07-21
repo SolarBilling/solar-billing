@@ -62,9 +62,7 @@ public class SpringORMConfig // implements ApplicationContextAware
 
     @Bean
     public SessionFactory sessionFactory() {
-	SessionFactory sf = new Configuration().configure()
-				.buildSessionFactory();
-	return sf;
+		return new Configuration().configure().buildSessionFactory();
     }
     
     @Bean

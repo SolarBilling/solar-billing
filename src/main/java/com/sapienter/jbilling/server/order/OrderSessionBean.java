@@ -191,12 +191,12 @@ public class OrderSessionBean implements IOrderSessionBean {
         }
     }
 
-    public Boolean deletePeriod(Integer periodId) 
+    @Override public boolean deletePeriod(Integer periodId) 
             throws SessionInternalError {
         try {
             // now get the order
             OrderBL bl = new OrderBL();
-            return new Boolean(bl.deletePeriod(periodId));
+            return bl.deletePeriod(periodId);
         } catch (Exception e) {
             throw new SessionInternalError(e);
         }

@@ -438,7 +438,7 @@ public final class UserDTOEx extends UserDTO {
         return userIdBlacklisted;
     }
 
-    public void setUserIdBlacklisted(Boolean userIdBlacklisted) {
+    public void setUserIdBlacklisted(boolean userIdBlacklisted) {
         this.userIdBlacklisted = userIdBlacklisted;
     }
 

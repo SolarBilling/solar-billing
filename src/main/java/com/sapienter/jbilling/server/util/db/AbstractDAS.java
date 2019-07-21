@@ -20,7 +20,6 @@
 package com.sapienter.jbilling.server.util.db;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,6 @@ import org.hibernate.criterion.Example;
 import org.hibernate.query.Query;
 
 import com.google.common.collect.ImmutableMap;
-import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
@@ -58,7 +56,20 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
     {
         if ((session == null) || !session.isOpen())
         {
-            session = getSessionFactory().openSession(); // getCurrentSession();
+        	SessionFactory sessionFactory = getSessionFactory();
+        	if (sessionFactory == null) {
+        		sessionFactory = (SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION);
+       		/*
+                final Properties properties = new Properties();
+                ImmutableMap<String,?> props = ImmutableMap.of(
+                    	"hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect",
+                    	"SecondLevelCacheEnabled", false); 
+                properties.putAll(props);
+                sessionFactory = new LocalSessionFactoryBuilder(null).addProperties(properties).buildSessionFactory();
+                */
+                setSessionFactory(sessionFactory);
+        	}
+            session = sessionFactory.openSession(); // getCurrentSession();
         }
         return session;
     }
@@ -67,7 +78,6 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
 	public AbstractDAS() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
                                 .getGenericSuperclass()).getActualTypeArguments()[0];
-        setSessionFactory((SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION));
     }
 
     protected <K,V> ImmutableMap<K,V> immutableMapOf( K k1, V v1, K k2, V v2)
@@ -110,6 +120,11 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
 	@SuppressWarnings("hiding")
 	protected <T> List<T> selectAll(final Class<T> theClass, final ImmutableMap<String, ?> values) {
 		return createQuery(theClass, values).list();
+	}
+
+	@SuppressWarnings("hiding")
+	protected <T> List<T> selectAll(final Class<T> theClass) {
+		return createQuery(theClass).list();
 	}
 
 	@SuppressWarnings("hiding")
@@ -161,14 +176,21 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("hiding")
+	protected <T> Query<T> createQuery(final Class<T> theClass) {
+		return createQuery(theClass, null, null, false);
+	}
+	
+	@SuppressWarnings("hiding")
 	protected <T> Query<T> createQuery(final Class<T> theClass, final ImmutableMap<String, ?> values, String orderValue, boolean ascending) {
 		final Session session = getSession();
-		final CriteriaBuilder criteriaBuilder = getSession().getCriteriaBuilder();
+		final CriteriaBuilder criteriaBuilder = getSession().getCriteriaBuilder(); // this compiles with Hibernate 	5.4.2 but not 5.2.18
 		final CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(theClass);
 		final List<Predicate> predicates = new ArrayList<>();
 		final Root<T> root = criteriaQuery.from(theClass);
-		for (Map.Entry<String, ?> mapEntry : values.entrySet()) {
-			predicates.add(criteriaBuilder.equal(root.get(mapEntry.getKey()), mapEntry.getValue()));
+		if (values !=  null) { // we can't supply an empty ImmutableMap because type inference fails, so have to supply null instead
+			for (Map.Entry<String, ?> mapEntry : values.entrySet()) {
+				predicates.add(criteriaBuilder.equal(root.get(mapEntry.getKey()), mapEntry.getValue()));
+			}
 		}
 		if (orderValue != null) {
 			final Expression<?> expression = root.get(orderValue);

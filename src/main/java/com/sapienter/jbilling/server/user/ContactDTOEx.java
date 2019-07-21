@@ -93,6 +93,9 @@ public class ContactDTOEx extends ContactDTO implements Serializable  {
      */
     public ContactDTOEx(ContactDTO otherValue) {
         super(otherValue);
+        if (otherValue instanceof ContactDTOEx) {
+        	setType(((ContactDTOEx)otherValue).getType());
+        }
     }
     
     public ContactDTOEx(ContactWS ws) {

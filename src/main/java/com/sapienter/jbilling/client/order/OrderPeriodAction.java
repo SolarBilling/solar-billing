@@ -158,8 +158,8 @@ public class OrderPeriodAction extends Action {
 				ret = "refresh";
 			} else if (action.equals("delete")) {
 				Integer id = Integer.valueOf(request.getParameter("id"));
-				Boolean result = orderSession.deletePeriod(id);
-				if (result.booleanValue()) {
+				final boolean result = orderSession.deletePeriod(id);
+				if (result) {
 					messages.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("order.period.deleted", id));
 					saveMessages(request, messages);

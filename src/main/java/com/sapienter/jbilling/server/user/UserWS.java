@@ -262,13 +262,13 @@ public class UserWS implements Serializable {
     public Boolean getIsParent() {
         return isParent;
     }
-    public void setIsParent(Boolean isParent) {
+    public void setIsParent(boolean isParent) {
         this.isParent = isParent;
     }
     public Boolean getInvoiceChild() {
         return invoiceChild;
     }
-    public void setInvoiceChild(Boolean invoiceChild) {
+    public void setInvoiceChild(boolean invoiceChild) {
         this.invoiceChild = invoiceChild;
     }
     public Date getCreateDatetime() {
@@ -350,7 +350,7 @@ public class UserWS implements Serializable {
         return userIdBlacklisted;
     }
 
-    public void setUserIdBlacklisted(Boolean userIdBlacklisted) {
+    public void setUserIdBlacklisted(boolean userIdBlacklisted) {
         this.userIdBlacklisted = userIdBlacklisted;
     }
 

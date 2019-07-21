@@ -153,8 +153,7 @@ public interface IUserSessionBean {
     public void updateCreditCard(String username, Integer entityId,
             CreditCardDTO dto) throws SessionInternalError;
 
-    public void setAuthPaymentType(Integer userId, Integer newMethod, 
-            Boolean use) throws SessionInternalError;
+    void setAuthPaymentType(Integer userId, Integer newMethod, boolean use);
     
     public Integer getAuthPaymentType(Integer userId) 
             throws SessionInternalError;
@@ -285,8 +284,7 @@ public interface IUserSessionBean {
     public void notifyCreditCardExpiration(Date today) 
             throws SessionInternalError;
 
-    public void setUserBlacklisted(Integer executorId, Integer userId, 
-            Boolean isBlacklisted) throws SessionInternalError;
+    void setUserBlacklisted(Integer executorId, Integer userId, boolean isBlacklisted);
 
     /**
      * @throws NumberFormatException 

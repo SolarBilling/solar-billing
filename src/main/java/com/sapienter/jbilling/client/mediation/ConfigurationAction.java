@@ -29,7 +29,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
 import com.sapienter.jbilling.client.util.CrudAction;
-import com.sapienter.jbilling.common.InvalidArgumentException;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.mediation.IMediationSessionBean;
 import com.sapienter.jbilling.server.mediation.db.MediationConfiguration;
@@ -73,7 +72,7 @@ public class ConfigurationAction extends CrudAction {
             if (e.getCause().getClass().equals(OptimisticLockException.class)) {
                 setup();
                 throw new OptimisticLockException();
-            } else if (e.getCause().getClass().equals(InvalidArgumentException.class)) {
+            } else if (e.getCause().getClass().equals(IllegalArgumentException.class)) {
                 errors.add(ActionMessages.GLOBAL_MESSAGE,
                         new ActionMessage("mediation.configuration.error"));
                 return null;

@@ -33,7 +33,7 @@ public class MenuOption extends MenuOptionDTO implements Comparator<MenuOption> 
 	 */
 	private static final long serialVersionUID = 1L;
 	private String display;
-    private Boolean selected;
+    private boolean selected;
     private List<Integer> options;
     private Integer parentId;
 
@@ -65,7 +65,7 @@ public class MenuOption extends MenuOptionDTO implements Comparator<MenuOption> 
     /**
      * @return
      */
-    public Boolean getSelected() {
+    public boolean getSelected() {
         return selected;
     }
 
@@ -86,7 +86,7 @@ public class MenuOption extends MenuOptionDTO implements Comparator<MenuOption> 
     /**
      * @param boolean1
      */
-    public void setSelected(Boolean boolean1) {
+    public void setSelected(boolean boolean1) {
         selected = boolean1;
     }
 

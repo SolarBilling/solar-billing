@@ -27,6 +27,6 @@ import com.sapienter.jbilling.server.util.db.AbstractDAS;
 public class CompanyDAS extends AbstractDAS<CompanyDTO> {
     @Transactional
     public List<CompanyDTO> findEntities() {
-        return getSession().createCriteria(CompanyDTO.class).list();
+        return selectAll(CompanyDTO.class);
     }
 }

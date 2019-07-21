@@ -37,7 +37,6 @@ import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sapienter.jbilling.common.InvalidArgumentException;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.mediation.db.MediationConfiguration;
 import com.sapienter.jbilling.server.mediation.db.MediationConfigurationDAS;
@@ -206,8 +205,7 @@ public class MediationSessionBean implements IMediationSessionBean {
 
     }
 
-    public List<MediationConfiguration> updateAllConfiguration(Integer executorId, List<MediationConfiguration> configurations)
-            throws InvalidArgumentException {
+    public List<MediationConfiguration> updateAllConfiguration(final Integer executorId, final List<MediationConfiguration> configurations) {
         MediationConfigurationDAS cfgDAS = new MediationConfigurationDAS();
         List<MediationConfiguration> retValue = new ArrayList<MediationConfiguration>();
         try {
@@ -220,19 +218,17 @@ public class MediationSessionBean implements IMediationSessionBean {
                     if (task != null && task.getEntityId().equals(cfg.getEntityId())) {
                         cfg.setPluggableTask(task);
                     } else {
-                        throw new InvalidArgumentException("Task not found or " +
+                        throw new IllegalArgumentException("Task not found or " +
                                 "entity of pluggable task is not the same when " +
-                                "creating a new mediation configuration", 1);
+                                "creating a new mediation configuration");
                     }
                 }
                 retValue.add(cfgDAS.save(cfg));
             }
             return retValue;
         } catch (EntityNotFoundException e1) {
-            throw new InvalidArgumentException("Wrong data saving mediation configuration", 1, e1);
-        } catch (InvalidArgumentException e2) {
-            throw new InvalidArgumentException(e2);
-        } catch (Exception e) {
+            throw new IllegalArgumentException("Wrong data saving mediation configuration", e1);
+        } catch (RuntimeException e) {
             throw new SessionInternalError("Exception updating mediation configurations ", MediationSessionBean.class, e);
         }
     }

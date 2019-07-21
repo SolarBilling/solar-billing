@@ -30,7 +30,7 @@ import com.sapienter.jbilling.server.order.db.OrderPeriodDTO;
 
 /**
  *
- * This is the session facade for the orders in general. It is a statless
+ * This is the session facade for the orders in general. It is a stateless
  * bean that provides services not directly linked to a particular operation
  *
  * @author emilc
@@ -55,22 +55,17 @@ public interface IOrderSessionBean {
             String rootUser, boolean process) throws SessionInternalError;
      */
 
-    public void delete(Integer id, Integer executorId) 
-            throws SessionInternalError;
+    void delete(Integer id, Integer executorId); 
  
-    public OrderPeriodDTO[] getPeriods(Integer entityId, Integer languageId) 
-            throws SessionInternalError;
+    OrderPeriodDTO[] getPeriods(Integer entityId, Integer languageId); 
 
-    public OrderPeriodDTO getPeriod(Integer languageId, Integer id) 
-            throws SessionInternalError;
+    OrderPeriodDTO getPeriod(Integer languageId, Integer id);
 
-    public void setPeriods(Integer languageId, OrderPeriodDTO[] periods)
-            throws SessionInternalError;
+    void setPeriods(Integer languageId, OrderPeriodDTO[] periods);
 
-    public void addPeriod(Integer entityId, Integer languageId) 
-            throws SessionInternalError;
+    void addPeriod(Integer entityId, Integer languageId); 
 
-    public Boolean deletePeriod(Integer periodId) throws SessionInternalError;
+    boolean deletePeriod(Integer periodId);
 
     public OrderDTO getMainOrder(Integer userId) throws SessionInternalError;
 
