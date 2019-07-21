@@ -75,7 +75,7 @@ public class BlacklistDAS extends AbstractDAS<BlacklistDTO> {
     public List<BlacklistDTO> filterByAddress(Integer entityId, String address1,
             String address2, String city, String stateProvince, 
             String postalCode, String countryCode) {
-    	final Map<String, Object> parameters = new HashMap<>(immutableMapOf(
+    	final Map<String, Object> parameters = new HashMap<String,Object>(immutableMapOf(
         		"company.id", entityId,
         		"type", BlacklistDTO.TYPE_ADDRESS,
         		"ct.address1", address1,
