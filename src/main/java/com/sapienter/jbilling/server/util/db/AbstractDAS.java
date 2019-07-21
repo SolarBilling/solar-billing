@@ -63,7 +63,8 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
         return session;
     }
     
-    public AbstractDAS() {
+    @SuppressWarnings("unchecked")
+	public AbstractDAS() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
                                 .getGenericSuperclass()).getActualTypeArguments()[0];
         setSessionFactory((SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION));
@@ -189,7 +190,8 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
      * @return
      */
     public T save(T newEntity) {
-        T retValue = (T) getSession().merge(newEntity);
+        @SuppressWarnings("unchecked")
+		T retValue = (T) getSession().merge(newEntity);
         return retValue;
     }
     
@@ -244,7 +246,7 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
         if (id == null) {
             return null;
         }
-        T entity = (T) getHibernateTemplate().get(getPersistentClass(), id, LockMode.UPGRADE);
+        T entity = (T) getHibernateTemplate().get(getPersistentClass(), id, LockMode.PESSIMISTIC_WRITE);
 
         return entity;
     }
@@ -253,28 +255,29 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
         return findByCriteria();
     }
 
+    protected Criteria createCriteria() {
+    	return getSession().createCriteria(getPersistentClass());
+    }
+    
     @SuppressWarnings("unchecked")
     public List<T> findByExample(T exampleInstance, String... excludeProperty) {
-        Criteria crit = getSession().createCriteria(getPersistentClass());
-        Example example =  Example.create(exampleInstance);
+        return findCriteriaByExample(exampleInstance, excludeProperty).list();    	
+    }
+    
+    protected Criteria findCriteriaByExample(T exampleInstance, String... excludeProperty) {
+        final Criteria crit = createCriteria();
+        final Example example =  Example.create(exampleInstance);
         for (String exclude : excludeProperty) {
             example.excludeProperty(exclude);
         }
         crit.add(example);
         crit.setCacheable(queriesCached);
-        return crit.list();
+        return crit;
     }
 
     @SuppressWarnings("unchecked")
     public T findByExampleSingle(T exampleInstance, String... excludeProperty) {
-        Criteria crit = getSession().createCriteria(getPersistentClass());
-        Example example =  Example.create(exampleInstance);
-        for (String exclude : excludeProperty) {
-            example.excludeProperty(exclude);
-        }
-        crit.add(example);
-        crit.setCacheable(queriesCached);
-        return (T) crit.uniqueResult();
+    	return (T)findCriteriaByExample(exampleInstance, excludeProperty).uniqueResult();
     }
     
     public T makePersistent(T entity) {
@@ -299,22 +302,21 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
      */
     @SuppressWarnings("unchecked")
     protected List<T> findByCriteria(Criterion... criterion) {
-        Criteria crit = getSession().createCriteria(getPersistentClass());
+        return createCriteria(criterion).list();
+    }
+
+    protected Criteria createCriteria(final Criterion... criterion) {
+        final Criteria crit = createCriteria();
         for (Criterion c : criterion) {
             crit.add(c);
         }
         crit.setCacheable(queriesCached);
-        return crit.list();
-   }
-
+        return crit;
+    }
+    
     @SuppressWarnings("unchecked")
     protected T findByCriteriaSingle(Criterion... criterion) {
-        Criteria crit = getSession().createCriteria(getPersistentClass());
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        crit.setCacheable(queriesCached);
-        return (T) crit.uniqueResult();
+        return (T) createCriteria(criterion).uniqueResult();
    }
 
     protected void useCache() {
@@ -332,7 +334,7 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
     }
 
     /**
-     * Places the DTO in the session without updates or version checkes.
+     * Places the DTO in the session without updates or version checks.
      * You have to make sure that the DTO has not been modified to use this
      * @param dto
      */
@@ -347,27 +349,5 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
     public void detach(T dto) {
         getSession().flush(); // without this, get ready for the evil 'nonthreadsafe access to session'
         getSession().evict(dto);
-    }
-    
-    protected void touch(List<T> list, String methodName) {
-    	
-//    	// find any getter, but not the id or we'll get stuck with the proxy
-//    	for (Method myMethod: persistentClass.getDeclaredMethods()) {
-//    		if (myMethod.getName().startsWith("get") && !myMethod.getName().equals("getId")) {
-//    			toCall = myMethod;
-//    			break;
-//    		}
-//    	}
-    	
-    	try {
-        	Method toCall = persistentClass.getMethod(methodName, (Class<?>[]) null); //PCC
-			for(int f=0; list.size() < f; f++) {
-				toCall.invoke(list.get(f), (Object[]) null); //PCC
-			}
-		} catch (Exception e) {
-			throw new SessionInternalError("Error invoking method when touching proxy object", 
-					AbstractDAS.class, e);
-			
-		} 
-	}
+    }    
 }
