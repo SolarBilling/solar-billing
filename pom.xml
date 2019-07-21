@@ -27,6 +27,31 @@
 	<name>jBilling Example Web Service</name>	
 	<dependencies>
 <dependency>
+    <groupId>com.sun.xml.bind</groupId>
+    <artifactId>jaxb-impl</artifactId>
+    <version>2.3.2</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.cxf</groupId>
+	<artifactId>cxf-core</artifactId>
+	<version>3.3.2</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.cxf</groupId>
+	<artifactId>cxf-rt-frontend-jaxws</artifactId>
+	<version>3.3.2</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.cxf</groupId>
+	<artifactId>cxf-rt-transports-http</artifactId>
+	<version>3.3.2</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.cxf</groupId>
+	<artifactId>cxf-rt-transports-http-jetty</artifactId>
+	<version>3.3.2</version>
+</dependency>
+<dependency>
     <groupId>com.google.collections</groupId>
     <artifactId>google-collections</artifactId>
     <version>1.0</version>
@@ -37,36 +62,6 @@
       <version>2.7.7</version>
       <scope>compile</scope>
     </dependency>
-<dependency>
-	<groupId>org.apache.cxf</groupId>
-	<artifactId>cxf-core</artifactId>
-	<version>3.1.6</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.cxf</groupId>
-	<artifactId>cxf-rt-frontend-jaxws</artifactId>
-	<version>3.1.6</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.cxf</groupId>
-	<artifactId>cxf-rt-transports-http</artifactId>
-	<version>3.1.6</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.cxf</groupId>
-	<artifactId>cxf-api</artifactId>
-	<version>2.7.18</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.cxf</groupId>
-	<artifactId>cxf-rt-core</artifactId>
-	<version>2.7.18</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.cxf</groupId>
-	<artifactId>cxf-rt-transports-http-jetty</artifactId>
-	<version>3.1.6</version>
-</dependency>
 <dependency>
     <groupId>org.apache.taglibs</groupId>
     <artifactId>taglibs-standard-impl</artifactId>
@@ -257,19 +252,24 @@
     <version>0.11-SNAPSHOT</version>
 </dependency>
 <dependency>
-	<groupId>org.springframework.integration</groupId>
-		<artifactId>spring-integration-mail</artifactId>
-			<version>4.2.6.RELEASE</version>
+	<groupId>org.springframework</groupId>
+		<artifactId>spring-jms</artifactId>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
-		<artifactId>spring-jms</artifactId>
-			<version>4.2.6.RELEASE</version>
+		<artifactId>spring-core</artifactId>
+			<version>4.3.24.RELEASE</version>
+			</dependency>
+<dependency>
+	<groupId>org.springframework</groupId>
+		<artifactId>spring-beans</artifactId>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-context-support</artifactId>
-			<version>4.2.6.RELEASE</version>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 <dependency>
             <groupId>junit</groupId>
@@ -315,17 +315,17 @@
 																		     <dependency>
              <groupId>org.springframework</groupId>
                      <artifactId>spring-context</artifactId>
-                             <version>4.2.6.RELEASE</version>
+                             <version>4.3.24.RELEASE</version>
                                  </dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-webmvc</artifactId>
-			<version>4.2.6.RELEASE</version>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-test</artifactId>
-			<version>4.2.6.RELEASE</version>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 <dependency>
 	<groupId>aopalliance</groupId>
@@ -335,17 +335,17 @@
 			<dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-orm</artifactId>
-			<version>4.2.6.RELEASE</version>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 			<dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-tx</artifactId>
-			<version>4.2.6.RELEASE</version>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 			<dependency>
 	<groupId>org.springframework</groupId>
 		<artifactId>spring-aop</artifactId>
-			<version>4.2.6.RELEASE</version>
+			<version>4.3.24.RELEASE</version>
 			</dependency>
 <dependency>
     <groupId>dom4j</groupId>
@@ -364,6 +364,11 @@
             <artifactId>jaxws-rt</artifactId>
             <version>2.1.7</version>
         </dependency>
+	<dependency>
+		<groupId>org.springframework.integration</groupId>
+		<artifactId>spring-integration-mail</artifactId>
+		<version>4.3.20.RELEASE</version>
+	</dependency>
     </dependencies>
 	
     <build>
