@@ -252,6 +252,11 @@
 			<version>0.9.5.4</version>
 	</dependency>
 <dependency>
+    <groupId>org.springmodules</groupId>
+    <artifactId>spring-modules-cache</artifactId>
+    <version>0.11-SNAPSHOT</version>
+</dependency>
+<dependency>
 	<groupId>org.springframework.integration</groupId>
 		<artifactId>spring-integration-mail</artifactId>
 			<version>4.2.6.RELEASE</version>
@@ -348,11 +353,11 @@
     <version>1.6.1</version>
 </dependency>
 
-			<dependency>
+	<dependency>
 	<groupId>org.springframework.data</groupId>
 		<artifactId>spring-data-commons</artifactId>
 			<version>1.13.12.RELEASE</version>
-			</dependency>
+	</dependency>
 						
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
