@@ -2522,6 +2522,10 @@ env-entry, and ejb-ref elements should follow this fragment.
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+<listener>
+      <listener-class>net.sf.ehcache.constructs.web.ShutdownListener</listener-class>
+ </listener
+
     <!-- No configuration files at this time -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
