@@ -20,10 +20,13 @@
 package com.sapienter.jbilling.client.process;
 
 import org.apache.log4j.Logger;
+import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
+
+import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 
 /**
  * Singleton wrapper to provide easy access to the Quartz Scheduler. Used to schedule
@@ -37,11 +40,15 @@ public class JobScheduler {
     private static final Logger LOG = Logger.getLogger(JobScheduler.class);
 
     private static JobScheduler instance = null;
-    private SchedulerFactory factory = null;
-    private Scheduler scheduler = null;
+    final private Scheduler scheduler;
 
     private JobScheduler() {
-        factory = new StdSchedulerFactory();
+        try {
+			scheduler = new StdSchedulerFactory().getScheduler();
+		} catch (SchedulerException e) {
+            LOG.error("Exception occurred retrieving the scheduler instance.", e);
+			throw new PluggableTaskException(e);
+		}
     }
 
     public static JobScheduler getInstance() {
@@ -50,14 +57,15 @@ public class JobScheduler {
         return instance;
     }
 
-    public Scheduler getScheduler() {
-        if (scheduler == null) {
-            try {
-                scheduler = factory.getScheduler();
-            } catch (SchedulerException e) {
-                LOG.error("Exception occurred retrieving the scheduler instance.", e);
-            }
-        }
+    public boolean isShutdown() {
+    	try {
+			return scheduler.isShutdown();
+		} catch (SchedulerException e) {
+			throw new PluggableTaskException(e);
+		}
+    }
+    
+    private Scheduler getScheduler() {
         return scheduler;
     }
 
@@ -66,6 +74,7 @@ public class JobScheduler {
             getScheduler().start();
         } catch (SchedulerException e) {
             LOG.error("Exception occurred starting the scheduler.", e);
+            throw new PluggableTaskException(e);
         }
     }
 
@@ -73,7 +82,20 @@ public class JobScheduler {
         try {
             getScheduler().shutdown();
         } catch (SchedulerException e) {
-            // swallow
+            LOG.error("Exception occurred shutting down the scheduler.", e);
         }
     }
+
+	public void scheduleJob(JobDetail jobDetail, Trigger trigger) {
+		if (isShutdown()) {
+			LOG.warn("not scheduling job " + jobDetail + " because the scheduler has shut down");
+		} else {
+			try {
+			getScheduler().scheduleJob(jobDetail, trigger);
+			} catch (SchedulerException e) {
+	            LOG.error("Exception scheduling job" + jobDetail, e);
+	            throw new PluggableTaskException(e);
+	        }
+		}
+	}
 }

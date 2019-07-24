@@ -32,7 +32,6 @@ import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
@@ -75,12 +74,8 @@ public class Trigger implements Job {
         String time = null;
         String frequency = null;
 
-        try {
-            time = Util.getSysProp("process.time");
-            frequency = Util.getSysProp("process.frequency");
-        } catch (Exception e) {
-        // just eat it
-        }
+        time = Util.getSysProp("process.time");
+        frequency = Util.getSysProp("process.frequency");
 
         // both null or empty, log one message and return
         if ((time == null || time.length() == 0) && (frequency == null || frequency.length() == 0)) {
@@ -144,15 +139,11 @@ public class Trigger implements Job {
 
             trigger.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT);
 
-            JobScheduler.getInstance().getScheduler().scheduleJob(jbillingJob, trigger);
+            JobScheduler.getInstance().scheduleJob(jbillingJob, trigger);
             
-        } catch (SchedulerException e) {
+        } catch (RuntimeException e) {
             LOG.error("An exception occurred scheduling the jBilling batch processes.",e);
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
