@@ -617,7 +617,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
 
                 task = (NotificationTask) taskManager.getNextClass();
             }
-        } catch (PluggableTaskException | RuntimeException e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError("Finding number of sections for notifications", 
                     NotificationBL.class, e);
         }

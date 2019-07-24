@@ -22,6 +22,7 @@ package com.sapienter.jbilling.server.util;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.jws.WebService;
 
@@ -44,40 +45,34 @@ import com.sapienter.jbilling.server.entity.AchDTO;
  * Interface for WebServicesSessionBean
  */
 @WebService
-public interface IWebServicesSessionBean {
+public interface IWebServicesSessionBean extends Function<Integer, InvoiceWS> {
 
     /*
      * INVOICES
      */
-    public InvoiceWS getInvoiceWS(Integer invoiceId)
-            throws SessionInternalError;
+    InvoiceWS getInvoiceWS(Integer invoiceId);
 
-    public InvoiceWS getLatestInvoice(Integer userId)
-            throws SessionInternalError;
+    InvoiceWS getLatestInvoice(Integer userId);
 
-    public Integer[] getLastInvoices(Integer userId, Integer number)
-            throws SessionInternalError;
+    Integer[] getLastInvoices(Integer userId, Integer number);
 
-    public Integer[] getInvoicesByDate(String since, String until)
-            throws SessionInternalError;
+    Integer[] getInvoicesByDate(String since, String until);
 
-    public Integer[] getUserInvoicesByDate(Integer userId, String since, 
-            String until) throws SessionInternalError;
+    Integer[] getUserInvoicesByDate(Integer userId, String since, String until);
 
     /**
      * Deletes an invoice 
      * @param invoiceId
      * The id of the invoice to delete
      */
-    public void deleteInvoice(Integer invoiceId);
+    void deleteInvoice(Integer invoiceId);
 
     /**
      * Generates invoices for orders not yet invoiced for this user.
      * Optionally only allow recurring orders to generate invoices. 
      * Returns the ids of the invoices generated. 
      */
-    public Integer[] createInvoice(Integer userId, boolean onlyRecurring)
-            throws SessionInternalError;
+    Integer[] createInvoice(Integer userId, boolean onlyRecurring);
 
 
     /*

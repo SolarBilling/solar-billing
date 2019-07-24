@@ -22,6 +22,7 @@ package com.sapienter.jbilling.server.order;
 
 import com.sapienter.jbilling.common.CommonConstants;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sapienter.jbilling.server.item.ItemBL;
 import com.sapienter.jbilling.server.item.db.ItemDTO;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -235,7 +237,8 @@ public class OrderLineBL {
             // the diff line will have a '0' for the order id and the
             // saving of the mediation record lines gets really complicated
             if (persist) {
-                new OrderDAS().save(newOrder);
+                final Consumer<OrderDTO> orderConsumer = new OrderDAS();
+                orderConsumer.accept(newOrder);
             }
         } else {
             // the item is there, I just have to update the quantity

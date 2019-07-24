@@ -28,12 +28,14 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.List;
 
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -97,8 +99,9 @@ import java.util.ArrayList;
  * @author Emil
  */
 public class OrderBL extends ResultList
-        implements OrderSQL {
+        implements OrderSQL, Supplier<OrderDTO> {
 
+    @Autowired private Function<Integer, CompanyDTO> companyDas = new CompanyDAS();
     private OrderDTO order = null;
     private OrderLineDAS orderLineDAS = null;
     private OrderPeriodDAS orderPeriodDAS = null;
@@ -107,6 +110,7 @@ public class OrderBL extends ResultList
     private ProvisioningStatusDAS provisioningStatusDas = null;
     private static final Logger LOG = Logger.getLogger(OrderBL.class);
     private EventLogger eLogger = null;
+    @Autowired private Supplier<List<CompanyDTO>> companyDAS = new CompanyDAS();
 
     public OrderBL(Integer orderId) {
         init();
@@ -139,8 +143,8 @@ public class OrderBL extends ResultList
         return (orderPeriodDAS.find(id));
     }
 
-    public void set(Integer id) {
-        order = orderDas.find(id);
+    public void set(int id) {
+        order = orderDas.apply(id);
     }
 
     public void setForUpdate(Integer id) {
@@ -1145,8 +1149,7 @@ public class OrderBL extends ResultList
 
     public void addPeriod(Integer entityId, Integer languageId) {
         OrderPeriodDTO newPeriod = new OrderPeriodDTO();
-        CompanyDAS companyDas = new CompanyDAS();
-        newPeriod.setCompany(companyDas.find(entityId));
+        newPeriod.setCompany(companyDas.apply(entityId));
         PeriodUnitDAS periodDas = new PeriodUnitDAS();
         newPeriod.setPeriodUnit(periodDas.find(1));
         newPeriod.setValue(1);
@@ -1429,4 +1432,9 @@ public class OrderBL extends ResultList
 
         return new OrderDAS().save(newOrder);
     }
+
+	@Override
+	public OrderDTO get() {
+		return order;
+	}
 }

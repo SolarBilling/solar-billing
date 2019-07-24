@@ -108,7 +108,7 @@ public class OrderDTO implements java.io.Serializable {
      private List<OrderLineDTO> lines = new ArrayList<OrderLineDTO>(0);
      private Integer isCurrent;
      private Integer versionNum;
-     // other non-persitent fields
+     // other non-persistent fields
      private Collection<OrderProcessDTO> nonReviewPeriods = new ArrayList<OrderProcessDTO>(0);
      private Collection<InvoiceDTO> invoices = new ArrayList<InvoiceDTO>(0);
      private Collection<BillingProcessDTO> billingProcesses = new ArrayList<BillingProcessDTO>(0);

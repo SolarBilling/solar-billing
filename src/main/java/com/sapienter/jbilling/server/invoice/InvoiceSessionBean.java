@@ -40,6 +40,7 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.process.BillingProcessBL;
 import com.sapienter.jbilling.server.user.UserBL;
+import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import java.util.Set;
 
@@ -127,33 +128,30 @@ public class InvoiceSessionBean implements IInvoiceSessionBean {
         return ret;
     }
 
-    public byte[] getPDFInvoice(Integer invoiceId)
-            throws SessionInternalError {
+    public byte[] getPDFInvoice(Integer invoiceId) {
         try {
             if (invoiceId == null) {
                 return null;
             }
             NotificationBL notification = new NotificationBL();
-            InvoiceBL invoiceBl = new InvoiceBL(invoiceId);
-            Integer entityId = invoiceBl.getEntity().getBaseUser().
-                    getEntity().getId();
+            final InvoiceDTO invoiceDTO = new InvoiceBL(invoiceId).getEntity();
+            int entityId = invoiceDTO.getBaseUser().getEntity().getId();
+            final UserDTO userDTO = invoiceDTO.getBaseUser();
             // the language doesn't matter when getting a paper invoice
             MessageDTO message = notification.getInvoicePaperMessage(
-                    entityId, null, invoiceBl.getEntity().getBaseUser().
-                    getLanguageIdField(), invoiceBl.getEntity());
+                    entityId, null, userDTO.getLanguageIdField(), invoiceDTO);
             PaperInvoiceNotificationTask task =
                     new PaperInvoiceNotificationTask();
             PluggableTaskBL taskBL = new PluggableTaskBL<Object>();
             taskBL.set(entityId, Constants.PLUGGABLE_TASK_T_PAPER_INVOICE);
             task.initializeParameters(taskBL.getDTO());
-            return task.getPDF(invoiceBl.getEntity().getBaseUser(), message);
-        } catch (PluggableTaskException | RuntimeException e) {
+            return task.getPDF(userDTO, message);
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
 
-    public void delete(Integer invoiceId, Integer executorId)
-            throws SessionInternalError {
+    public void delete(final int invoiceId, final Integer executorId) {
         InvoiceBL invoice = new InvoiceBL(invoiceId);
         invoice.delete(executorId);
     }
@@ -229,4 +227,9 @@ public class InvoiceSessionBean implements IInvoiceSessionBean {
         ret.iterator().next().getDueDate(); // touch
         return ret;
     }
+
+	@Override
+	public InvoiceDTO apply(final Integer id) {
+		return getInvoice(id);
+	}
 }    

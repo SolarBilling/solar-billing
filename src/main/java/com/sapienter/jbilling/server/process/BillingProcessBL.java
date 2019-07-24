@@ -30,6 +30,7 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -378,10 +379,9 @@ public class BillingProcessBL extends ResultList
                         holder.setInvoiceStatus(new InvoiceStatusDAS().find(Constants.INVOICE_STATUS_UNPAID));
 
                         // need to set a due date, so use the order default
-                        OrderBL orderBl = new OrderBL();
                         OrderDTO order = new OrderDTO();
                         order.setBaseUserByUserId(user);
-                        orderBl.set(order);
+                        OrderBL orderBl = new OrderBL(order);
                         TimePeriod dueDatePeriod = orderBl.getDueDate();
 
                         holder.setDueDatePeriod(dueDatePeriod);
@@ -390,7 +390,7 @@ public class BillingProcessBL extends ResultList
 
                     InvoiceBL ibl = new InvoiceBL(invoice);
                     holder.addInvoice(ibl.getDTO());
-                    // for those invoices wiht only overdue invoices, the
+                    // for those invoices with only overdue invoices, the
                     // currency has to be initialized
                     if (holder.getCurrency() == null) {
                         holder.setCurrency(invoice.getCurrency());
@@ -415,12 +415,9 @@ public class BillingProcessBL extends ResultList
                 LOG.debug("invoice " + invoice.getId() + " result " +
                         isProcessable);
 
-            } catch (PluggableTaskException e) {
-                LOG.fatal("Problems handling task invoice filter.", e);
-                throw new SessionInternalError("Problems handling task invoice filter.");
             } catch (TaskException e) {
-                LOG.fatal("Problems excecuting task invoice filter.", e);
-                throw new SessionInternalError("Problems executing task invoice filter.");
+                LOG.fatal("Problems executing task invoice filter.", e);
+                throw new SessionInternalError("Problems executing task invoice filter.", e);
             }
 
         }
@@ -968,7 +965,8 @@ public class BillingProcessBL extends ResultList
             BillingProcessRunTotalDTOEx<BigDecimal> totalRowDto =
                     new BillingProcessRunTotalDTOEx<BigDecimal>();
             totalRowDto.setProcessRun(runDto);
-            totalRowDto.setCurrency(new CurrencyDAS().find((Integer) row[2]));
+            Function<Integer, CurrencyDTO> currencyDAS = new CurrencyDAS(); 
+            totalRowDto.setCurrency(currencyDAS.apply((Integer) row[2]));
             totalRowDto.setCurrencyName(totalRowDto.getCurrency().getDescription(language));
             totalRowDto.setId(-1);
             totalRowDto.setTotalInvoiced((BigDecimal) row[1]);

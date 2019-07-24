@@ -25,6 +25,7 @@ import java.util.Date;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  *
@@ -33,14 +34,13 @@ import java.util.Set;
  *
  * @author emilc
  **/
-public interface IInvoiceSessionBean {
+public interface IInvoiceSessionBean extends Function<Integer, InvoiceDTO> {
 
-    public InvoiceDTO getInvoice(Integer invoiceId) throws SessionInternalError;
+    InvoiceDTO getInvoice(Integer invoiceId);
 
-    public void create(Integer entityId, Integer userId,
-            NewInvoiceDTO newInvoice) throws SessionInternalError;
+    void create(Integer entityId, Integer userId, NewInvoiceDTO newInvoice);
 
-    public String getFileName(Integer invoiceId) throws SessionInternalError;
+    String getFileName(Integer invoiceId);
 
     /**
      * The transaction requirements of this are not big. The 'atom' is 
@@ -48,14 +48,13 @@ public interface IInvoiceSessionBean {
      * previous ones got updated. In fact, they should, since the email
      * has been sent.
      */
-    public void sendReminders(Date today) throws SessionInternalError;
+    void sendReminders(Date today);
 
     public InvoiceDTO getInvoiceEx(Integer invoiceId, Integer languageId);
 
     public byte[] getPDFInvoice(Integer invoiceId) throws SessionInternalError;
 
-    public void delete(Integer invoiceId, Integer executorId)
-            throws SessionInternalError;
+    public void delete(int invoiceId, Integer executorId);
 
     /**
      * The real path is known only to the web server

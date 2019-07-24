@@ -152,5 +152,6 @@ public class Context {
     // called at shutdown
     public static void shutdown() {
         factoryRef.release();
+        spring.close();
     }
 }

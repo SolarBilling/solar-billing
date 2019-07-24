@@ -24,6 +24,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,6 +35,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,14 +44,16 @@ import org.hibernate.criterion.Example;
 import org.hibernate.query.Query;
 
 import com.google.common.collect.ImmutableMap;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 
-public abstract class AbstractDAS<T> extends HibernateDaoSupport {
+public abstract class AbstractDAS<T> extends HibernateDaoSupport implements Function<Integer,T>, Supplier<List<T>>, Consumer<T> {
+    private final Logger LOG = Logger.getLogger(getClass());
 
-    private Class<T> persistentClass;
+    final private Class<T> persistentClass;
     // if querys will be run cached or not
     private boolean queriesCached = false;
     private Session session;
@@ -80,6 +86,15 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
                                 .getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
+	@Override
+	public T apply(final Integer id) {
+//		return uniqueResult(persistentClass, ImmutableMap.of(getIdFieldName(), id));
+		return find(id); // TODO would findNow be better ?
+	}
+
+	// child classes can override this method if the primary key is called something else
+	protected String getIdFieldName() { return "id"; }
+	
     protected <K,V> ImmutableMap<K,V> immutableMapOf( K k1, V v1, K k2, V v2)
     {
     	return immutableMapOf(k1, v1, k2, v2, null, null);
@@ -116,15 +131,37 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
     	}
     	return builder.build();
     }
+
+    // this seems to be necessary because otherwise Java seems to limit the number of levels of nested exceptions included in a stack trace
+    private void logAllCauses(Throwable throwable) {
+    	LoggerFactory.getLogger(getClass()).error("", throwable);
+    	LOG.error("", throwable);
+		final Throwable cause = throwable.getCause();
+		if ((cause != null) && (cause != throwable)) {
+			logAllCauses(cause);
+		} else {
+			throw new RuntimeException(throwable); // TODO this shouldn't be necessary but the logging doesn't seem to be working
+		}
+    }
     
 	@SuppressWarnings("hiding")
 	protected <T> List<T> selectAll(final Class<T> theClass, final ImmutableMap<String, ?> values) {
-		return createQuery(theClass, values).list();
+		try {
+			return createQuery(theClass, values).list();
+		} catch (final RuntimeException rte) {
+			logAllCauses(rte);
+			throw rte;
+		}
 	}
 
 	@SuppressWarnings("hiding")
-	protected <T> List<T> selectAll(final Class<T> theClass) {
-		return createQuery(theClass).list();
+	@Override public List<T> get() {
+		try {
+			return createQuery(persistentClass).list();
+		} catch (final RuntimeException rte) {
+			logAllCauses(rte);
+			throw rte;
+		}
 	}
 
 	@SuppressWarnings("hiding")
@@ -206,14 +243,18 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport {
 		return session.createQuery(criteriaQuery);
 	}
 
+	public void accept(final T entity) {
+		save(entity);
+	}
+	
    /**
      * Merges the entity, creating or updating as necessary
      * @param newEntity
      * @return
      */
-    public T save(T newEntity) {
+    public T save(final T newEntity) {
         @SuppressWarnings("unchecked")
-		T retValue = (T) getSession().merge(newEntity);
+		final T retValue = (T) getSession().merge(newEntity);
         return retValue;
     }
     

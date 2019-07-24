@@ -107,7 +107,7 @@ public class PaymentInfoNoValidateTask
                     retValue.setPaymentMethod(new PaymentMethodDAS().find(Constants.PAYMENT_METHOD_ACH));
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new TaskException(e);
         }
         if (retValue == null) {

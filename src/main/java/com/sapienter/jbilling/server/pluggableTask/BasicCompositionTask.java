@@ -102,7 +102,7 @@ public class BasicCompositionTask extends PluggableTask
                     LOG.debug("Adding order line from " + order.getId() +
                             " quantity " + orderLine.getQuantity() +
                             " period " + period + " price " + orderLine.getPrice());
-                    // this would probably have to exlude taxes, calculate
+                    // this would probably have to exclude taxes, calculate
                     // interests, then recalculate taxes, etc...
                     // now the whole orders is just copied. 
                     InvoiceLineDTO invoiceLine = null;

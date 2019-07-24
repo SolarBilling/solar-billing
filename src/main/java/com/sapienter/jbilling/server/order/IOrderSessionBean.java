@@ -22,6 +22,7 @@ package com.sapienter.jbilling.server.order;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.function.Function;
 
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.item.ItemDecimalsException;
@@ -35,17 +36,15 @@ import com.sapienter.jbilling.server.order.db.OrderPeriodDTO;
  *
  * @author emilc
  **/
-public interface IOrderSessionBean {
+public interface IOrderSessionBean extends Function<Integer, OrderDTO> {
     
-    public void reviewNotifications(Date today) throws SessionInternalError;
+    void reviewNotifications(Date today);
 
-    public OrderDTO getOrder(Integer orderId) throws SessionInternalError;
+    public OrderDTO getOrder(int orderId);
 
-    public OrderDTO getOrderEx(Integer orderId, Integer languageId) 
-            throws SessionInternalError;
+    OrderDTO getOrderEx(int orderId, int languageId); 
 
-    public OrderDTO setStatus(Integer orderId, Integer statusId, 
-            Integer executorId, Integer languageId) throws SessionInternalError;
+    OrderDTO setStatus(int orderId, int statusId, int executorId, int languageId);
 
     /**
      * This is a version used by the http api, should be
@@ -65,9 +64,9 @@ public interface IOrderSessionBean {
 
     void addPeriod(Integer entityId, Integer languageId); 
 
-    boolean deletePeriod(Integer periodId);
+    boolean deletePeriod(int periodId);
 
-    public OrderDTO getMainOrder(Integer userId) throws SessionInternalError;
+    OrderDTO getMainOrder(int userId);
 
     public OrderDTO addItem(Integer itemID, BigDecimal quantity, OrderDTO order,
             Integer languageId, Integer userId, Integer entityId) 
@@ -80,9 +79,7 @@ public interface IOrderSessionBean {
     public OrderDTO recalculate(OrderDTO modifiedOrder, Integer entityId) 
             throws ItemDecimalsException;
 
-    public Integer createUpdate(Integer entityId, Integer executorId, 
-            OrderDTO order, Integer languageId) throws SessionInternalError;
+    Integer createUpdate(Integer entityId, Integer executorId, OrderDTO order, Integer languageId);
 
-     public Long getCountWithDecimals(Integer itemId) 
-             throws SessionInternalError;    
+    Long getCountWithDecimals(Integer itemId);
 }

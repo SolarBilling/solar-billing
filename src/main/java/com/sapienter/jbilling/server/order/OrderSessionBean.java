@@ -23,9 +23,10 @@ package com.sapienter.jbilling.server.order;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,7 @@ import com.sapienter.jbilling.server.order.db.OrderPeriodDTO;
 public class OrderSessionBean implements IOrderSessionBean {
     
     private static final Logger LOG = Logger.getLogger(OrderSessionBean.class);
+	@Autowired private Function<Integer, OrderDTO> das = new OrderDAS();
 
     @Transactional( propagation = Propagation.REQUIRES_NEW )
     public void reviewNotifications(Date today) 
@@ -60,46 +62,33 @@ public class OrderSessionBean implements IOrderSessionBean {
     	}
     }
 
-    public OrderDTO getOrder(Integer orderId) throws SessionInternalError {
-        try {
-        	OrderDAS das = new OrderDAS();
-        	OrderDTO order = das.find(orderId);
+    public OrderDTO apply(Integer orderId) {
+    	return getOrder(orderId);
+    }
+    
+    public OrderDTO getOrder(int orderId) {
+        	OrderDTO order = das.apply(orderId);
         	order.touch();
         	return order;
-        } catch (Exception e) {
-            throw new SessionInternalError(e);
-        }
     }
 
-    public OrderDTO getOrderEx(Integer orderId, Integer languageId) 
-            throws SessionInternalError {
-        try {
-        	OrderDAS das = new OrderDAS();
-        	OrderDTO order = das.find(orderId);
+    public OrderDTO getOrderEx(int orderId, int languageId) {
+        	OrderDTO order = das.apply(orderId);
         	order.addExtraFields(languageId);
         	order.touch();
-        	das.detach(order);
+        	new OrderDAS().detach(order);
         	Collections.sort(order.getLines(), new OrderLineComparator());
         	//LOG.debug("returning order " + order);
         	return order;
-        } catch (Exception e) {
-            throw new SessionInternalError(e);
-        }
     }
 
-    public OrderDTO setStatus(Integer orderId, Integer statusId, 
-            Integer executorId, Integer languageId) 
-            throws SessionInternalError {
-        try {
+    public OrderDTO setStatus(int orderId, int statusId, int executorId, int languageId) { 
             OrderBL order = new OrderBL(orderId);
             order.setStatus(executorId, statusId);
             OrderDTO dto = order.getDTO();
             dto.addExtraFields(languageId);
             dto.touch();
             return dto;
-        } catch (Exception e) {
-            throw new SessionInternalError(e);
-        }
     }
 
     /**
@@ -186,24 +175,22 @@ public class OrderSessionBean implements IOrderSessionBean {
             // now get the order
             OrderBL bl = new OrderBL();
             bl.addPeriod(entityId, languageId);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
 
-    @Override public boolean deletePeriod(Integer periodId) 
-            throws SessionInternalError {
+    @Override public boolean deletePeriod(final int periodId) { 
         try {
             // now get the order
             OrderBL bl = new OrderBL();
             return bl.deletePeriod(periodId);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
 
-    public OrderDTO getMainOrder(Integer userId)
-            throws SessionInternalError {
+    public OrderDTO getMainOrder(final int userId) {
         try {
             OrderBL bl = new OrderBL();
             Integer orderId = bl.getMainOrderId(userId);
@@ -212,7 +199,7 @@ public class OrderSessionBean implements IOrderSessionBean {
                 return null;
             }
             return getOrder(orderId);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }

@@ -22,6 +22,8 @@ package com.sapienter.jbilling.server.order.task;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 
@@ -36,7 +38,9 @@ import com.sapienter.jbilling.server.order.db.OrderDAS;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineDTO;
 import com.sapienter.jbilling.server.order.db.OrderLineTypeDAS;
+import com.sapienter.jbilling.server.order.db.OrderLineTypeDTO;
 import com.sapienter.jbilling.server.order.db.OrderPeriodDAS;
+import com.sapienter.jbilling.server.order.db.OrderPeriodDTO;
 import com.sapienter.jbilling.server.order.event.NewActiveUntilEvent;
 import com.sapienter.jbilling.server.order.event.NewQuantityEvent;
 import com.sapienter.jbilling.server.pluggableTask.TaskException;
@@ -150,10 +154,10 @@ public class CancellationFeeRulesTask extends RulesItemManager implements IInter
             applyFee(itemId, qty, daysInPeriod);
         }
 
-        // all the methods from OrderManager are actually unnecesary for this
+        // all the methods from OrderManager are actually unnecessary for this
         // helper but it is an instance or OrderManager that makes it into the working
         // memory
-        public void applyFee(Integer itemId, BigDecimal quantity, Integer daysInPeriod) {
+        public void applyFee(Integer itemId, BigDecimal quantity, int daysInPeriod) {
             ResourceBundle bundle;
             UserBL userBL;
             try {
@@ -170,12 +174,8 @@ public class CancellationFeeRulesTask extends RulesItemManager implements IInter
                 LOG.info("Old active until not present. Period will be 1.");
             } else {
                 long totalMills = oldActiveUntil.getTime() - newActiveUntil.getTime();
-                BigDecimal periodMills = new BigDecimal(daysInPeriod)
-                        .multiply(new BigDecimal(24))
-                        .multiply(new BigDecimal(60))
-                        .multiply(new BigDecimal(60))
-                        .multiply(new BigDecimal(1000));
-
+                final long millisInPeriod = (long)1000 * 24 * 60 * 60 * daysInPeriod;
+                final BigDecimal periodMills = new BigDecimal(millisInPeriod);
                 BigDecimal calcPeriods = new BigDecimal(totalMills)
                         .divide(periodMills, Constants.BIGDECIMAL_SCALE, Constants.BIGDECIMAL_ROUND);
 
@@ -199,14 +199,16 @@ public class CancellationFeeRulesTask extends RulesItemManager implements IInter
             feeOrder.setBaseUserByUserId(getOrder().getBaseUserByUserId());
             feeOrder.setCurrency(getOrder().getCurrency());
             feeOrder.setNotes(bundle.getString("order.cancelationFee.notes") + " " + getOrder().getId());
-            feeOrder.setOrderPeriod(new OrderPeriodDAS().find(Constants.ORDER_PERIOD_ONCE));
+            Function<Integer, OrderPeriodDTO> orderPeriodDAS = new OrderPeriodDAS(); 
+            feeOrder.setOrderPeriod(orderPeriodDAS.apply(Constants.ORDER_PERIOD_ONCE));
             // now the line
             ItemDTO item = new ItemDAS().find(itemId);
             OrderLineDTO line = new OrderLineDTO();
             line.setDeleted(0);
             line.setDescription(item.getDescription(userBL.getEntity().getLanguageIdField()));
             line.setItem(item);
-            line.setOrderLineType(new OrderLineTypeDAS().find(Constants.ORDER_LINE_TYPE_ITEM));
+            Function<Integer, OrderLineTypeDTO> orderLineTypeDAS = new OrderLineTypeDAS(); 
+            line.setOrderLineType(orderLineTypeDAS.apply(Constants.ORDER_LINE_TYPE_ITEM));
             line.setPurchaseOrder(feeOrder);
             feeOrder.getLines().add(line);
             line.setQuantity(quantity);

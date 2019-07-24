@@ -28,6 +28,7 @@ package com.sapienter.jbilling.server.util;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
 
@@ -169,6 +170,7 @@ public class WSMethodSecurityProxy extends WSMethodBaseSecurityProxy {
         } catch(NoSuchMethodException e) {
             String msg = "Failed to find method " + name;
             LOG.error(msg, e);
+            java.util.logging.Logger.getLogger("WSMethodSecurityProxy").log(Level.SEVERE,"j.u.l.:" + msg, e);
             throw new RuntimeException(msg);
          }
     }

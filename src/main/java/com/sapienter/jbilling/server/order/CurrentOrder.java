@@ -77,7 +77,7 @@ public class CurrentOrder {
             order = new OrderBL(subscriptionId);
             entityId = order.getEntity().getBaseUserByUserId().getCompany().getId();
             currencyId = order.getEntity().getCurrencyId();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError("Error looking for main subscription order", 
                     CurrentOrder.class, e);
         }
@@ -112,7 +112,7 @@ public class CurrentOrder {
                         break;
                     }
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 throw new SessionInternalError(
                         "Error looking for one time orders",
                         CurrentOrder.class, e);
@@ -135,7 +135,7 @@ public class CurrentOrder {
         } while (!orderFound);  
         
         // the result is in 'order'
-        Integer retValue = order.getEntity().getId();
+        int retValue = order.getEntity().getId();
         LOG.debug("Returning " + retValue);
         return retValue;
     }
@@ -198,7 +198,7 @@ public class CurrentOrder {
             ResourceBundle bundle = ResourceBundle.getBundle("entityNotifications", 
                     entity.getLocale());
             currentOrder.setNotes(bundle.getString("order.current.notes"));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError("Error setting the new order notes", 
                     CurrentOrder.class, e);
         } 
@@ -206,10 +206,7 @@ public class CurrentOrder {
         currentOrder.setActiveSince(activeSince);
         
         // create the order
-        if (order == null) {
-            order = new OrderBL();
-        }
-        order.set(currentOrder);
+        order = new OrderBL(currentOrder);
         order.addRelationships(userId, Constants.ORDER_PERIOD_ONCE, currencyId);
         return order.create(entityId, null, currentOrder);
     }

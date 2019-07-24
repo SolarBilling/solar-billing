@@ -157,7 +157,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
         return criteria.uniqueResult() != null;
     }
 
-	private void addUserCriteria(Criteria criteria, Integer userId) {
+	private void addUserCriteria(Criteria criteria, int userId) {
 		criteria.add(Restrictions.eq("deleted", 0))
 				.createAlias("baseUser", "u").add(
 						Restrictions.eq("u.id", userId));
@@ -346,7 +346,7 @@ public class InvoiceDAS extends AbstractDAS<InvoiceDTO> {
         return selectAll(InvoiceDTO.class, ImmutableMap.of("billingProcess", process));
     }
 
-    public List<Integer> findIdsByUserAndDate(Integer userId, Date since, 
+    public List<Integer> findIdsByUserAndDate(int userId, Date since, 
             Date until) {
         Criteria criteria = getSession().createCriteria(InvoiceDTO.class);
         addUserCriteria(criteria, userId);

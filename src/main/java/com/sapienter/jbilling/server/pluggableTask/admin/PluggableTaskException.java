@@ -25,22 +25,17 @@
  */
 package com.sapienter.jbilling.server.pluggableTask.admin;
 
+import com.sapienter.jbilling.server.pluggableTask.TaskException;
+
 /**
  * @author Emil
  */
-public class PluggableTaskException extends Exception {
+public class PluggableTaskException extends TaskException {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-     * 
-     */
-    public PluggableTaskException() {
-        super();
-    }
 
     /**
      * @param message

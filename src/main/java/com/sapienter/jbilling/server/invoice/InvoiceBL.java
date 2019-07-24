@@ -71,28 +71,20 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
 	private static final long serialVersionUID = 1L;
-	private InvoiceDAS invoiceDas = null;
+	private final InvoiceDAS invoiceDas = new InvoiceDAS();
     private InvoiceDTO invoice = null;
     private static final Logger LOG = Logger.getLogger(InvoiceBL.class);
-    private EventLogger eLogger = null;
+    private final EventLogger eLogger = EventLogger.getInstance();;
 
     public InvoiceBL(Integer invoiceId) {
-        init();
         set(invoiceId);
     }
 
     public InvoiceBL() {
-        init();
     }
 
     public InvoiceBL(InvoiceDTO invoice) {
-        init();
         set(invoice.getId());
-    }
-
-    private void init() {
-        eLogger = EventLogger.getInstance();
-        invoiceDas = new InvoiceDAS();
     }
 
     public InvoiceDTO getEntity() {
@@ -104,7 +96,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
     }
 
     public void set(Integer id) {
-        invoice = invoiceDas.find(id);
+        invoice = invoiceDas.apply(id);
     }
 
     public void set(InvoiceDTO invoice) {
@@ -333,7 +325,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
             if (contact.setInvoice(invoice.getId())) {
                 contact.delete();
             }
-        } catch (Exception e1) {
+        } catch (RuntimeException e1) {
             LOG.error("Exception deleting the contact of an invoice", e1);
         }
 
@@ -389,11 +381,10 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return total;
     }
 
-    public CachedRowSet getPayableInvoicesByUser(Integer userId)
-            throws SQLException, Exception {
+    public CachedRowSet getPayableInvoicesByUser(int userId) throws SQLException {
 
         prepareStatement(InvoiceSQL.payableByUser);
-        cachedResults.setInt(1, userId.intValue());
+        cachedResults.setInt(1, userId);
 
         execute();
         conn.close();
@@ -409,7 +400,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return retValue;
     }
 
-    public CachedRowSet getList(Integer orderId) throws SQLException, Exception {
+    public CachedRowSet getList(Integer orderId) throws SQLException {
         prepareStatement(InvoiceSQL.customerList);
 
         // find out the user from the order
@@ -427,7 +418,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
     }
 
     public CachedRowSet getList(Integer entityId, Integer userRole,
-            Integer userId) throws SQLException, Exception {
+            Integer userId) throws SQLException {
 
         if (userRole.equals(Constants.TYPE_INTERNAL)) {
             prepareStatement(InvoiceSQL.internalList);
@@ -442,7 +433,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
             prepareStatement(InvoiceSQL.customerList);
             cachedResults.setInt(1, userId.intValue());
         } else {
-            throw new Exception("The invoice list for the type " + userRole + " is not supported");
+            throw new RuntimeException("The invoice list for the type " + userRole + " is not supported");
         }
 
         execute();
@@ -450,31 +441,27 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return cachedResults;
     }
 
-    public CachedRowSet getInvoicesByProcessId(Integer processId)
-            throws SQLException, Exception {
+    public CachedRowSet getInvoicesByProcessId(int processId) throws SQLException {
 
         prepareStatement(InvoiceSQL.processList);
-        cachedResults.setInt(1, processId.intValue());
+        cachedResults.setInt(1, processId);
 
         execute();
         conn.close();
         return cachedResults;
     }
 
-    public CachedRowSet getInvoicesToPrintByProcessId(Integer processId)
-            throws SQLException, Exception {
+    public CachedRowSet getInvoicesToPrintByProcessId(int processId) throws SQLException {
 
         prepareStatement(InvoiceSQL.processPrintableList);
-        cachedResults.setInt(1, processId.intValue());
+        cachedResults.setInt(1, processId);
 
         execute();
         conn.close();
         return cachedResults;
     }
 
-    public CachedRowSet getInvoicesByUserId(Integer userId)
-            throws SQLException, Exception {
-
+    public CachedRowSet getInvoicesByUserId(Integer userId) throws SQLException {
         prepareStatement(InvoiceSQL.custList);
         cachedResults.setInt(1, userId.intValue());
 
@@ -483,21 +470,19 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return cachedResults;
     }
 
-    public CachedRowSet getInvoicesByIdRange(Integer from, Integer to,
-            Integer entityId) throws SQLException, Exception {
+    public CachedRowSet getInvoicesByIdRange(int from, int to, int entityId) throws SQLException {
 
         prepareStatement(InvoiceSQL.rangeList);
-        cachedResults.setInt(1, from.intValue());
-        cachedResults.setInt(2, to.intValue());
-        cachedResults.setInt(3, entityId.intValue());
+        cachedResults.setInt(1, from);
+        cachedResults.setInt(2, to);
+        cachedResults.setInt(3, entityId);
 
         execute();
         conn.close();
         return cachedResults;
     }
 
-    public Integer[] getInvoicesByCreateDateArray(Integer entityId, Date since,
-            Date until) throws SQLException, Exception {
+    public Integer[] getInvoicesByCreateDateArray(Integer entityId, Date since, Date until) throws SQLException {
 
         cachedResults = getInvoicesByCreateDate(entityId, since, until);
 
@@ -514,9 +499,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return retValue;
     }
 
-    public CachedRowSet getInvoicesByCreateDate(Integer entityId, Date since,
-            Date until) throws SQLException, Exception {
-
+    public CachedRowSet getInvoicesByCreateDate(Integer entityId, Date since, Date until) throws SQLException {
         prepareStatement(InvoiceSQL.getByDate);
         cachedResults.setInt(1, entityId.intValue());
         cachedResults.setDate(2, new java.sql.Date(since.getTime()));
@@ -532,8 +515,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return cachedResults;
     }
 
-    public Integer convertNumberToID(Integer entityId, String number)
-            throws SQLException, Exception {
+    public Integer convertNumberToID(Integer entityId, String number) throws SQLException {
 
         prepareStatement(InvoiceSQL.getIDfromNumber);
         cachedResults.setInt(1, entityId.intValue());
@@ -546,7 +528,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
             return null;
         } else {
             cachedResults.next();
-            return new Integer(cachedResults.getInt(1));
+            return cachedResults.getInt(1);
         }
     }
 
@@ -570,7 +552,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return retValue;
     }
 
-    public Integer getLastByUserAndItemType(Integer userId, Integer itemTypeId) 
+    public Integer getLastByUserAndItemType(Integer userId, int itemTypeId) 
             throws SQLException {
 
         Integer retValue = null;
@@ -579,7 +561,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         }            
         prepareStatement(InvoiceSQL.lastIdbyUserAndItemType);
         cachedResults.setInt(1, userId.intValue());
-        cachedResults.setInt(2, itemTypeId.intValue());
+        cachedResults.setInt(2, itemTypeId);
         
         execute();
         if (cachedResults.next()) {
@@ -593,13 +575,13 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return retValue;
     }
 
-    public Boolean isUserWithOverdueInvoices(Integer userId, Date today,
+    public Boolean isUserWithOverdueInvoices(int userId, Date today,
             Integer excludeInvoiceId) throws SQLException {
 
-        Boolean retValue;
+        final boolean retValue;
         prepareStatement(InvoiceSQL.getOverdueForAgeing);
         cachedResults.setDate(1, new java.sql.Date(today.getTime()));
-        cachedResults.setInt(2, userId.intValue());
+        cachedResults.setInt(2, userId);
         if (excludeInvoiceId != null) {
             cachedResults.setInt(3, excludeInvoiceId.intValue());
         } else {
@@ -609,10 +591,10 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
 
         execute();
         if (cachedResults.next()) {
-            retValue = new Boolean(true);
+            retValue = true;
             LOG.debug("user with invoice:" + cachedResults.getInt(1));
         } else {
-            retValue = new Boolean(false);
+            retValue = false;
         }
         conn.close();
         LOG.debug("user with overdue: " + retValue);
@@ -624,8 +606,7 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return result.toArray(new Integer[result.size()]);
     }
 
-    public Integer[] getUserInvoicesByDate(Integer userId, Date since, 
-            Date until) {
+    public Integer[] getUserInvoicesByDate(int userId, Date since, Date until) {
         // add a day to include the until date
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(until);
@@ -638,15 +619,13 @@ public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
         return result.toArray(new Integer[result.size()]);
     }
 
-    public Integer[] getManyWS(Integer userId, Integer number)
-            throws SessionInternalError {
+    public Integer[] getManyWS(int userId, Integer number) {
         List<Integer> result = new InvoiceDAS().findIdsByUserLatestFirst(
                 userId, number);
         return result.toArray(new Integer[result.size()]);
     }
 
-    public Integer[] getManyByItemTypeWS(Integer userId, Integer itemTypeId, Integer number)
-            throws SessionInternalError {
+    public Integer[] getManyByItemTypeWS(Integer userId, Integer itemTypeId, Integer number) {
         List<Integer> result = new InvoiceDAS().findIdsByUserAndItemTypeLatestFirst(userId, itemTypeId, number);
         return result.toArray(new Integer[result.size()]);
     }

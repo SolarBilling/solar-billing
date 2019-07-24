@@ -178,7 +178,7 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
         return result;
 	}
 
-    public List<OrderDTO> findOneTimersByDate(Integer userId, Date activeSince) {
+    public List<OrderDTO> findOneTimersByDate(final Integer userId, final Date activeSince) {
         final String hql = 
         "select o " +
         "  from OrderDTO o " +
@@ -187,11 +187,10 @@ public class OrderDAS extends AbstractDAS<OrderDTO> {
         "   and activeSince = :activeSince " + // TODO shouldn't this be greater than or equal to ?
         "   and deleted = 0";
 
-        List<OrderDTO> result = (List<OrderDTO>) getSession()
-                .createQuery(hql)
-                .setInteger("userId", userId)
-                .setDate("activeSince", activeSince).list();
-
+        final List<OrderDTO> result = selectHQL( hql, OrderDTO.class, ImmutableMap.of(
+        		"userId", userId,
+        		"activeSince", activeSince
+        	));  
         return result;
     }
 
