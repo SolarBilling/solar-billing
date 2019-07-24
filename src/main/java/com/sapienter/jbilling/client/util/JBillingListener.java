@@ -20,6 +20,9 @@
 
 package com.sapienter.jbilling.client.util;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -31,13 +34,18 @@ import com.sapienter.jbilling.server.process.task.IScheduledTask;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.*;
+
+import net.sf.ehcache.CacheManager;
+
 import org.apache.log4j.Logger;
 
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.client.item.CurrencyArrayWrap;
 import com.sapienter.jbilling.client.process.Trigger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.list.IListSessionBean;
 import org.quartz.SchedulerException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Listens for servlet context initialization and destruction. Used to
@@ -47,12 +55,15 @@ import org.quartz.SchedulerException;
 public class JBillingListener implements ServletContextListener {
 
     private static final Logger LOG = Logger.getLogger(JBillingListener.class);
+    @Autowired private Supplier<List<CompanyDTO>> companyDAS = new CompanyDAS();
 
 	public void contextInitialized(ServletContextEvent event) {
-		
+		LOG.info("log4j logging is working");
+		LoggerFactory.getLogger(getClass()).info("slf4j logging is working");
+		java.util.logging.Logger.getLogger(getClass().getName()).info("java.util.logging is working");
         // validate that the java version is correct
         validateJava();
-		
+        System.setProperty("com.sun.net.ssl.enableECC", "false");
         // initializes scheduled billing batch processes
 		Trigger.Initialize();
 
@@ -62,7 +73,7 @@ public class JBillingListener implements ServletContextListener {
         LOG.debug("Processing pluggable scheduled tasks...");
 
         try {
-            for (CompanyDTO entity : new CompanyDAS().findEntities()) {
+            for (CompanyDTO entity : companyDAS.get()) {
                 PluggableTaskManager<IScheduledTask> taskManager =
                         new PluggableTaskManager<IScheduledTask>
                                 (entity.getId(), com.sapienter.jbilling.server.util.Constants.PLUGGABLE_TASK_SCHEDULED);
@@ -72,13 +83,11 @@ public class JBillingListener implements ServletContextListener {
                 IScheduledTask task = taskManager.getNextClass();
                 while (task != null) {
                     LOG.debug("scheduled task '" + task.getTaskName() + "', " + task.getClass());
-                    scheduler.getScheduler().scheduleJob(task.getJobDetail(), task.getTrigger());
+                    scheduler.scheduleJob(task.getJobDetail(), task.getTrigger());
                     task = taskManager.getNextClass();
                 }
             }
         } catch (PluggableTaskException e) {
-            LOG.error("Exception occurred scheduling pluggable tasks.", e);
-        } catch (SchedulerException e) {
             LOG.error("Exception occurred scheduling pluggable tasks.", e);
         }
 
@@ -95,7 +104,7 @@ public class JBillingListener implements ServletContextListener {
             context.setAttribute(Constants.APP_CURRENCY_SYMBOLS, 
                     new CurrencyArrayWrap(
                             myRemoteSession.getCurrencySymbolsMap()));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
         
@@ -118,7 +127,10 @@ public class JBillingListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent event) {
+    	LOG.info("JBilling servlet context destroyed. Shutting down...");
         Context.shutdown(); // shutdown Spring container
+        // CacheManager.getInstance().shutdown(); // shut down EhCache - unfortunately getInstance() creates a new instance if we've already shut down
         JobScheduler.getInstance().shutdown(); // shutdown Quartz scheduler
+    	LOG.info("JBilling finished shutting down.");
     }
 }
