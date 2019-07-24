@@ -944,7 +944,7 @@ public class GatewayBL {
                     }
                     String message = apps.getString(action.getMsg());
                     // read the variables
-                    Map vars = field.getVars();
+                    // Map vars = field.getVars();
                     // will need some changes to accomodate 'range'
                     Object[] args = new Object[2];
                     args[0] = propertyName;
