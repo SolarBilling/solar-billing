@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 import org.apache.struts.validator.DynaValidatorForm;
 
@@ -61,8 +62,7 @@ public class ContactEditAction extends Action {
         String forward = "edit";
         // Look up the module configuration information. Later will need it
         // to create the dynamic bean
-        ModuleConfig moduleConfig = RequestUtils.getModuleConfig(request,
-                servlet.getServletContext());
+		final ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, servlet.getServletContext());
         
         Integer userId = (request.getParameter("userId") == null) 
                 ? (Integer) session.getAttribute(

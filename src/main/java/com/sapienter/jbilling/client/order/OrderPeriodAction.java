@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.hibernate.StaleObjectStateException;
@@ -90,8 +91,7 @@ public class OrderPeriodAction extends Action {
 					arr4[f] = periods[f].getDescription();
 				}
 
-				ModuleConfig moduleConfig = RequestUtils.getModuleConfig(
-						request, servlet.getServletContext());
+				final ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, servlet.getServletContext());
 				myForm = (DynaValidatorForm) RequestUtils.createActionForm(
 						request, mapping, moduleConfig, servlet);
 				myForm.set("id", arr1);

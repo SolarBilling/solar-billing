@@ -47,35 +47,47 @@ import com.google.common.collect.ImmutableMap;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
-import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
 
-public abstract class AbstractDAS<T> extends HibernateDaoSupport implements Function<Integer,T>, Supplier<List<T>>, Consumer<T> {
+public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<List<T>>, Consumer<T> {
     private final Logger LOG = Logger.getLogger(getClass());
 
     final private Class<T> persistentClass;
     // if querys will be run cached or not
     private boolean queriesCached = false;
     private Session session;
+    private HibernateTemplate hibernateTemplate;
+    private SessionFactory sessionFactory;
 
+    private HibernateTemplate getHibernateTemplate() {
+    	if (hibernateTemplate == null) {
+    		hibernateTemplate = new HibernateTemplate(getSessionFactory());
+    	}
+    	return hibernateTemplate;
+    }
+    
+    private SessionFactory getSessionFactory() {
+    	if (sessionFactory == null) {
+    		sessionFactory = (SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION);
+    		/*
+        final Properties properties = new Properties();
+        ImmutableMap<String,?> props = ImmutableMap.of(
+            	"hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect",
+            	"SecondLevelCacheEnabled", false); 
+        properties.putAll(props);
+        sessionFactory = new LocalSessionFactoryBuilder(null).addProperties(properties).buildSessionFactory();
+        */
+    	}
+    	return sessionFactory;
+    }
+
+    
     protected Session getSession()
     {
         if ((session == null) || !session.isOpen())
         {
-        	SessionFactory sessionFactory = getSessionFactory();
-        	if (sessionFactory == null) {
-        		sessionFactory = (SessionFactory) Context.getBean(Context.Name.HIBERNATE_SESSION);
-       		/*
-                final Properties properties = new Properties();
-                ImmutableMap<String,?> props = ImmutableMap.of(
-                    	"hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect",
-                    	"SecondLevelCacheEnabled", false); 
-                properties.putAll(props);
-                sessionFactory = new LocalSessionFactoryBuilder(null).addProperties(properties).buildSessionFactory();
-                */
-                setSessionFactory(sessionFactory);
-        	}
-            session = sessionFactory.openSession(); // getCurrentSession();
+            session = getSessionFactory().openSession(); // getCurrentSession();
         }
         return session;
     }
@@ -265,6 +277,10 @@ public abstract class AbstractDAS<T> extends HibernateDaoSupport implements Func
 
     public void refresh(T entity) {
     	getHibernateTemplate().refresh(entity);
+    }
+    
+    protected void initializeProxy(Object proxy) {
+    	getHibernateTemplate().initialize(proxy);
     }
     
     public Class<T> getPersistentClass() {

@@ -37,7 +37,7 @@ public class MediationRecordStatusDAS extends AbstractGenericStatusDAS<Mediation
      * @param proxy Hibernate proxy object for initialization
      */
     protected void initialize(MediationRecordStatusDTO proxy) {
-        getHibernateTemplate().initialize(proxy);
+        initializeProxy(proxy);
     }
 }
 

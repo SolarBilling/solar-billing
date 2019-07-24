@@ -34,6 +34,7 @@ import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.impl.JobDetailImpl;
+import org.quartz.impl.triggers.AbstractTrigger;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
 
 import com.sapienter.jbilling.common.SessionInternalError;
@@ -130,7 +131,7 @@ public class Trigger implements Job {
         try {
             JobDetail jbillingJob = new JobDetailImpl("jbilling", Scheduler.DEFAULT_GROUP, Trigger.class);
 
-            SimpleTriggerImpl trigger = new SimpleTriggerImpl("jbillingTrigger",
+            AbstractTrigger<SimpleTrigger> trigger = new SimpleTriggerImpl("jbillingTrigger",
                     Scheduler.DEFAULT_GROUP,
                     startTime,
                     null,

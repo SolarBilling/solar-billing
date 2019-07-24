@@ -50,6 +50,7 @@ public abstract class ScheduledTask extends PluggableTask implements IScheduledT
         detail.getJobDataMap().put("entityId", getEntityId());
         detail.getJobDataMap().put("taskId", getTaskId());
         detail.getJobDataMap().putAll(parameters);
+        detail.setJobClass(getClass());
         return detail;
     }
 

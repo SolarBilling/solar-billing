@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 
 import com.sapienter.jbilling.client.util.Constants;
@@ -91,8 +92,7 @@ public class NotesEditAction extends Action {
 
 	            forward = "customer_view";
     		} else if (action.equals("setup")) {
-    	        ModuleConfig moduleConfig = RequestUtils.getModuleConfig(request,
-    	                servlet.getServletContext());
+    			final ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, servlet.getServletContext());
     	        DynaActionForm myForm = (DynaActionForm) RequestUtils.createActionForm(
     	                request, mapping, moduleConfig, servlet);
     	        

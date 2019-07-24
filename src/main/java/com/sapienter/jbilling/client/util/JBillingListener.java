@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.sql.DataSource;
 
 import com.sapienter.jbilling.client.process.JobScheduler;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
@@ -33,18 +34,17 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
 import com.sapienter.jbilling.server.process.task.IScheduledTask;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
-import com.sapienter.jbilling.server.util.*;
-
-import net.sf.ehcache.CacheManager;
+import com.sapienter.jbilling.server.util.Context;
 
 import org.apache.log4j.Logger;
 
+import com.mchange.v2.c3p0.AbstractComboPooledDataSource;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.client.item.CurrencyArrayWrap;
 import com.sapienter.jbilling.client.process.Trigger;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.list.IListSessionBean;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -97,8 +97,22 @@ public class JBillingListener implements ServletContextListener {
 
         // initialize the currencies, which are in application scope
         ServletContext context = event.getServletContext();
-        LOG.debug("Loadding application currency symbols");
+        LOG.debug("Loading application currency symbols");
         try {
+        	DataSource dataSource = (DataSource)Context.getBean(Context.Name.DATA_SOURCE);
+        	// if (dataSource instanceof AbstractComboPooledDataSource) 
+        	{
+        		AbstractComboPooledDataSource pooledDataSource = (AbstractComboPooledDataSource) dataSource; 
+        		if (pooledDataSource.getPassword() == null) {
+            		pooledDataSource.setPassword("password");
+            		throw new RuntimeException("password was not set");
+        		}
+        		if (pooledDataSource.getUser() == null) {
+            		pooledDataSource.setUser("postgres");
+            		throw new RuntimeException("user was not set");
+        		}
+        		java.util.logging.Logger.getLogger("JBillingListener").info("database username and password have been set");
+        	}
             IListSessionBean myRemoteSession = (IListSessionBean) 
                     Context.getBean(Context.Name.LIST_SESSION);
             context.setAttribute(Constants.APP_CURRENCY_SYMBOLS, 

@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.apache.struts.validator.Resources;
@@ -219,8 +220,7 @@ public abstract class CrudAction extends Action {
     }
     
 	private void preSetup() {
-        ModuleConfig moduleConfig = RequestUtils.getModuleConfig(request,
-                servlet.getServletContext());
+		final ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, servlet.getServletContext());
         myForm = (DynaValidatorForm) RequestUtils.createActionForm(
                 request, mapping, moduleConfig, servlet);
         forward = "edit";

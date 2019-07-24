@@ -30,7 +30,10 @@ import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
+import org.apache.struts.config.ConfigHelper;
+import org.apache.struts.config.ConfigHelperInterface;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 import org.apache.struts.validator.DynaValidatorForm;
 
@@ -74,14 +77,14 @@ public class GetUserTag extends TagSupport {
             pageContext.setAttribute(Constants.PAGE_USER_DTO,
                     dto, PageContext.PAGE_SCOPE);
             
-            // see if the form bean has to be createn and initialized        
+            // see if the form bean has to be created and initialized        
             if (createForm.booleanValue()) {
                 // I have to go finding all sort of object to produce the
                 // form bean
                 String action = "/userMaintain"; // all starts with the action
-                ModuleConfig moduleConfig = RequestUtils.getModuleConfig(
-                        pageContext);
-                String mappingName = RequestUtils.getActionMappingName(action);
+        		final ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig((HttpServletRequest)pageContext.getRequest());
+        		final ConfigHelperInterface configHelper = new ConfigHelper();
+                String mappingName = configHelper.getActionMappingName(action);
                 ActionMapping mapping = (ActionMapping) moduleConfig.
                         findActionConfig(mappingName);
                         

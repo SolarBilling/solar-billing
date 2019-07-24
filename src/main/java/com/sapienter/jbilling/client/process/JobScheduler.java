@@ -19,6 +19,8 @@
  */
 package com.sapienter.jbilling.client.process;
 
+import java.util.Objects;
+
 import org.apache.log4j.Logger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -91,7 +93,7 @@ public class JobScheduler {
 			LOG.warn("not scheduling job " + jobDetail + " because the scheduler has shut down");
 		} else {
 			try {
-			getScheduler().scheduleJob(jobDetail, trigger);
+				getScheduler().scheduleJob(Objects.requireNonNull(jobDetail), Objects.requireNonNull(trigger));
 			} catch (SchedulerException e) {
 	            LOG.error("Exception scheduling job" + jobDetail, e);
 	            throw new PluggableTaskException(e);
