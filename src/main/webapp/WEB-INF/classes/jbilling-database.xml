@@ -34,9 +34,7 @@
     <!-- Datasource from a local resource -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="org.postgresql.Driver"/>
-        <property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/jbilling_test" />
-        <property name="user" value="postgres" />
-        <property name="password" value="password" />
+        <property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/jbilling" />
         <property name="acquireIncrement" value="2"/>
         <property name="initialPoolSize" value="5"/>
         <property name="maxPoolSize" value="20" />
