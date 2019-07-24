@@ -99,6 +99,7 @@ public class JBillingListener implements ServletContextListener {
         ServletContext context = event.getServletContext();
         LOG.debug("Loading application currency symbols");
         try {
+        	/*
         	DataSource dataSource = (DataSource)Context.getBean(Context.Name.DATA_SOURCE);
         	// if (dataSource instanceof AbstractComboPooledDataSource) 
         	{
@@ -113,6 +114,7 @@ public class JBillingListener implements ServletContextListener {
         		}
         		java.util.logging.Logger.getLogger("JBillingListener").info("database username and password have been set");
         	}
+        	*/
             IListSessionBean myRemoteSession = (IListSessionBean) 
                     Context.getBean(Context.Name.LIST_SESSION);
             context.setAttribute(Constants.APP_CURRENCY_SYMBOLS, 
