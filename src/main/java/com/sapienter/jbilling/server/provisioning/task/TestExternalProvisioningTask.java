@@ -70,12 +70,4 @@ public class TestExternalProvisioningTask extends PluggableTask
         return PARAM_ID_DEFAULT;
     }
 
-    private void pause(long t) {
-        LOG.debug("TestExternalProvisioningTask: pausing for " + t + " ms...");
-
-        try {
-            Thread.sleep(t);
-        } catch (InterruptedException e) {
-        }
-    }
 }

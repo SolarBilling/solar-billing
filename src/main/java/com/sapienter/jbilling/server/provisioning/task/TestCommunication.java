@@ -59,16 +59,8 @@ public class TestCommunication implements IExternalCommunication {
         return response;
     }
 
-    public void close() throws TaskException {
+    public void close() {
         LOG.debug("Close");
     }
 
-    private void pause(long t) {
-        LOG.debug("TestCommunication: pausing for " + t + " ms...");
-
-        try {
-            Thread.sleep(t);
-        } catch (InterruptedException e) {
-        }
-    }
 }

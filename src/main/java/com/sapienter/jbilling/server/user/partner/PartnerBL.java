@@ -520,11 +520,13 @@ public class PartnerBL extends ResultList implements PartnerSQL {
             		CommonConstants.BIGDECIMAL_ROUND).multiply(rate);
         } else if (fee != null && (fee.compareTo(BigDecimal.ZERO) != 0)) {
             CurrencyBL currency = new CurrencyBL();
-            Integer partnerCurrencyId = partner.getFeeCurrency().getId();
+            int partnerCurrencyId = partner.getFeeCurrency().getId();
+            /*
             if (partnerCurrencyId == null) {
                 LOG.info("Partner without currency, using entity's as default");
                 partnerCurrencyId = partner.getUser().getEntity().getCurrencyId();
             }
+            */
             result = currency.convert(partnerCurrencyId, currencyId, fee,
                     partner.getUser().getEntity().getId());
         } else {

@@ -75,13 +75,4 @@ public class TestMMSCCommunication implements IMMSCHandlerFacade {
 		return response;
     }
 
-	private void pause(long t) {
-		LOG.debug("TestMMSCCommunication: pausing for " + t + " ms...");
-
-		try {
-			Thread.sleep(t);
-		} catch (InterruptedException e) {
-		}
-	}
-
 }

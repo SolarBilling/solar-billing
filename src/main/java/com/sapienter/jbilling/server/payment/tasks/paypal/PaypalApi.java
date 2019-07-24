@@ -169,7 +169,9 @@ public class PaypalApi {
     public PaypalResult doCapture(String authorizationId, Payment payment, CompleteType completeType)
             throws PayPalRESTException 
     {
-    	final Authorization authorization = null; // TODO createAuthorization( payment );
+    	throw new PayPalRESTException("TODO createAuthorization( payment )");
+    	/*
+    	final Authorization authorization = null; // 
         final Capture capture = new Capture();
 		capture.setAmount(getAmount(payment));
 		
@@ -178,6 +180,7 @@ public class PaypalApi {
     	result.setSucceseeded(true);
         result.setTransactionId(authorizationId);
         return result;
+        */
     }
 
     private Capture getCapture( String transactionId )
@@ -189,12 +192,15 @@ public class PaypalApi {
     public PaypalResult doVoid(String transactionId)
             throws PayPalRESTException 
     {
-    	final Authorization authorization = null; // TODO generate the authorization from the transaction ID
+    	throw new PayPalRESTException("TODO generate the authorization from the transaction ID");
+    	/*
+    	final Authorization authorization = null;
     	authorization.doVoid(accessToken);
     	PaypalResult result = new PaypalResult();
     	result.setSucceseeded(true);
         result.setTransactionId(transactionId);
         return result;
+        */
     }
     
     private Amount getAmount( String amount )

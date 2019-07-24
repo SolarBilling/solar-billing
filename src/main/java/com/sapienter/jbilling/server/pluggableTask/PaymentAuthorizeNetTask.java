@@ -393,7 +393,7 @@ public class PaymentAuthorizeNetTask extends PluggableTask
     
     public AuthorizeNetResponseDTO makeCall(NameValuePair[] data) 
             throws HttpException, IOException {
-        Credentials creds = null;
+//        Credentials creds = null;
         log = Logger.getLogger(PaymentAuthorizeNetTask.class);
 //            creds = new UsernamePasswordCredentials(args[1], args[2]);
 
@@ -404,11 +404,11 @@ public class PaymentAuthorizeNetTask extends PluggableTask
         for (int f = 0; f < data.length; f++) {
             log.debug("Data=" + data[f].getName() + " " + data[f].getValue());    
         }
-        */
         //set the default credentials
         if (creds != null) {
             client.getState().setCredentials(null, null, creds);
         }
+        */
 
         PostMethod post = new PostMethod(url);
         

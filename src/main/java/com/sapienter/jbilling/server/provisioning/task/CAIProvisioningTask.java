@@ -120,7 +120,7 @@ public class CAIProvisioningTask extends PluggableTask
                     "parameter found.");
         }
         String password = (String) parameters.get(PARAM_PASSWORD);
-        if (username == null) {
+        if (password == null) {
             throw new TaskException("No '" + PARAM_PASSWORD + "' plug-in " +
                     "parameter found.");
         }
