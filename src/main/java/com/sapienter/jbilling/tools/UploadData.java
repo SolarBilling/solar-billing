@@ -309,17 +309,11 @@ public class UploadData {
                 
                 // the credit card
                 CreditCardDTO cc = new CreditCardDTO();
-                cc.setCcExpiry(new Date());
                 if (credit_card_number >= 0 && 
                         fields[credit_card_number].trim().length() > 0) {
                     cc.setNumber(fields[credit_card_number].trim());
-                    if (expiry_month >= 0) {
-                        cc.getCcExpiry().setMonth(Integer.valueOf(fields[expiry_month].trim()).intValue());
-                        cc.getCcExpiry().setDate(1);
-                    }
-                    if (expiry_year >= 0) {
-                        cc.getCcExpiry().setYear(Integer.valueOf(fields[expiry_year].trim()).
-                                intValue() - 1900);
+                    if ((expiry_month >= 0) && (expiry_year >= 0)) {
+                        cc.setCcExpiry(new Date(Integer.parseInt(fields[expiry_year].trim()), Integer.parseInt((fields[expiry_month].trim())), 1));
                     }
                     if (name_on_card >= 0) {
                         cc.setName(fields[name_on_card].trim());
