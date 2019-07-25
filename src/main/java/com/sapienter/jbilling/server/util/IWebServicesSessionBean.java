@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 import javax.jws.WebService;
 
+import com.sapienter.jbilling.common.CommonConstants.Authentication;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
 import com.sapienter.jbilling.server.item.ItemDTOEx;
@@ -168,8 +169,7 @@ public interface IWebServicesSessionBean extends Function<Integer, InvoiceWS> {
      * See the constants in WebServicesConstants (AUTH*) for details.
      * @throws SessionInternalError
      */
-    public Integer authenticate(String username, String password)
-            throws SessionInternalError;
+    public Authentication authenticate(String username, String password);
 
 
     /**

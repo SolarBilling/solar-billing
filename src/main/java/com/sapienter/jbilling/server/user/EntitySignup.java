@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Calendar;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
@@ -87,7 +88,7 @@ public final class EntitySignup {
         this.languageId = languageId;
     }
 
-    public int process() throws Exception {
+    public int process() {
         
         try {
 
@@ -101,25 +102,24 @@ public final class EntitySignup {
             conn.close();
 			return newEntity;
 			
-        } catch (Exception e) {
+        } catch (NamingException | SQLException e) {
         	try {
         		conn.close();
-        	} catch(Exception x) {}
-			throw new Exception(e);
+        	} catch(SQLException x) {}
+			throw new RuntimeException(e);
         }
     }
     
     
-    void processTable(Table table) 
-        	throws Exception {
+    void processTable(Table table) { 
 
-        StringBuffer sql = new StringBuffer();
-        if (table.columns[0].equals("i_id")) {
-            initTable(table);
-        }
-        int rowIdx = table.nextId;
-
+        final StringBuffer sql = new StringBuffer();
+        int rowIdx = 0;
         try {
+            if (table.columns[0].equals("i_id")) {
+                initTable(table);
+            }
+            rowIdx = table.nextId;
 
             System.out.println("Now processing " + 
                     table.name + " [" + table.index + "]");
@@ -191,7 +191,7 @@ public final class EntitySignup {
                                 stmt.setFloat(columnIdx + 1, Float.valueOf(field));
                             }                            
                         } else {
-                            throw new Exception("Don't know the type " + type);
+                            throw new RuntimeException("Don't know the type " + type);
                         }
                     }
                     
@@ -199,7 +199,7 @@ public final class EntitySignup {
                 }
 
                 if (stmt.executeUpdate() != 1) {
-                    throw new Exception(
+                    throw new RuntimeException(
                             "insert failed. Row "
                             + rowIdx
                             + " table "
@@ -221,11 +221,12 @@ public final class EntitySignup {
             stmt.close();
             updateBettyTablesRows(table.index, rowIdx);
             table.nextId = rowIdx;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             System.err.println(e.getMessage());
-            throw new Exception("Error inserting table " + table.name + 
-                    " row " + (rowIdx + 1));
+            Logger.getLogger(EntitySignup.class).error(e);
+            throw new RuntimeException("Error inserting table " + table.name + 
+                    " row " + (rowIdx + 1), e);
         } 
     }
 
@@ -336,7 +337,7 @@ public final class EntitySignup {
     }
 
     // idealy, this should be loaded from betty-schema.xml
-    int initData() throws Exception {
+    int initData() throws SQLException {
 
         String now = Util.parseDate(Calendar.getInstance().getTime());
         //ENTITY

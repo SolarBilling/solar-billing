@@ -23,6 +23,7 @@ package com.sapienter.jbilling.server.util.api;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.sapienter.jbilling.common.CommonConstants;
 import com.sapienter.jbilling.server.entity.AchDTO;
 import com.sapienter.jbilling.server.entity.CreditCardDTO;
 import com.sapienter.jbilling.server.invoice.InvoiceWS;
@@ -62,11 +63,10 @@ public class SpringAPI implements JbillingAPI {
         }
     }
 
-    public Integer authenticate(String username, String password)
-            throws JbillingAPIException {
+    @Override public CommonConstants.Authentication authenticate(String username, String password) {
         try {
             return session.authenticate(username, password);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new JbillingAPIException(e);
         }
     }

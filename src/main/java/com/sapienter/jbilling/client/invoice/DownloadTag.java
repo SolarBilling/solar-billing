@@ -51,11 +51,7 @@ import com.sapienter.jbilling.server.util.Context;
  */
 public class DownloadTag extends TagSupport {
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private String name = null;
 
     public int doStartTag() throws JspException {
         int retValue = SKIP_BODY;

@@ -123,7 +123,7 @@ public class ListTag extends TagSupport {
                 }
                 log.debug("Added the reports list to the session");
             } 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
                     new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 

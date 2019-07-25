@@ -42,7 +42,6 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.db.JbillingTable;
 
 @Entity
-@org.hibernate.annotations.Entity(mutable = false)
 @TableGenerator(
         name="event_log_GEN",
         table="jbilling_seqs",

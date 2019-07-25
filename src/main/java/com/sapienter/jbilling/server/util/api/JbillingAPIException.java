@@ -19,28 +19,17 @@
  */
 package com.sapienter.jbilling.server.util.api;
 
-/**
- * This is a checked exception because the client should always catch it and decide
- * what to do. A failure on a call is not necessary an unrecoverable error.
- * 
- * @author Emiliano Conde
- *
- */
-public class JbillingAPIException extends Exception {
+public class JbillingAPIException extends RuntimeException {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public JbillingAPIException() {
-        super();
-    }
-
     public JbillingAPIException(String s) {
         super(s);
     }
     
-    public JbillingAPIException(Exception e) {
+    public JbillingAPIException(Throwable e) {
         super(e);
     }
 }

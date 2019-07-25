@@ -22,7 +22,6 @@ package com.sapienter.jbilling.server.order;
 
 import com.sapienter.jbilling.common.CommonConstants;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sapienter.jbilling.server.item.ItemBL;
 import com.sapienter.jbilling.server.item.db.ItemDTO;

@@ -558,9 +558,9 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
      * See the constants in WebServicesConstants (AUTH*) for details.
      * @
      */
-    public Integer authenticate(String username, String password)
+    @Override public Constants.Authentication authenticate(String username, String password)
              {
-        Integer retValue = null;
+    	Constants.Authentication retValue = null;
 
         // the caller will tell us what entity is this
         UserBL bl = new UserBL();
@@ -575,11 +575,11 @@ public class WebServicesSessionSpringBean implements IWebServicesSessionBean {
         // do the authentication
         IUserSessionBean myRemoteSession = (IUserSessionBean) Context.getBean(Context.Name.USER_SESSION);
         retValue = myRemoteSession.authenticate(user);
-        if (retValue.equals(Constants.AUTH_OK)) {
+        if (retValue.equals(Constants.Authentication.AUTH_OK)) {
             // see if the password is not expired
             bl.set(user.getUserName(), entityId);
             if (bl.isPasswordExpired()) {
-                retValue = WebServicesConstants.AUTH_EXPIRED;
+                retValue = Constants.Authentication.AUTH_EXPIRED;
             }
         }
 

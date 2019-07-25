@@ -339,10 +339,10 @@ public class MaintainAction extends Action {
                 throw new ServletException("action is not supported :" + action);
             }
             saveMessages(request, messages);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("all.internal"));
-            LOG.debug("Exception:", e);
+            LOG.error("Exception:", e);
         }
         
         if (!errors.isEmpty()) {

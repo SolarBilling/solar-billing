@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 
 import com.sapienter.jbilling.common.SessionInternalError;
-import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.user.db.AchDTO;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
@@ -37,6 +36,7 @@ import com.sapienter.jbilling.server.user.partner.db.PartnerPayout;
 import com.sapienter.jbilling.server.user.partner.db.PartnerRange;
 import com.sapienter.jbilling.server.util.audit.db.EventLogDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
+import com.sapienter.jbilling.server.util.Constants;
 
 /**
  *
@@ -51,17 +51,14 @@ import com.sapienter.jbilling.server.util.db.CurrencyDTO;
  */
 public interface IUserSessionBean {
     /**
-    * @return the populated userDTO if ok, or null if fails.
     * @param clientUser The userDTO with the username and password to authenticate
     */
-    public Integer authenticate(UserDTOEx clientUser) 
-            throws SessionInternalError;
+	Constants.Authentication authenticate(UserDTOEx clientUser); 
 
     /**
      * Returns UserDTO if authentication successful, otherwise null.
      */
-    public UserDTO webServicesAuthenticate(String username, String password)
-            throws SessionInternalError;
+    UserDTO webServicesAuthenticate(String username, String password);
 
     /**
      * This returns more than a DTOEx, it includes the permissions and menu that
@@ -69,59 +66,47 @@ public interface IUserSessionBean {
      * @param userId
      * @return
      */
-    public UserDTOEx getGUIDTO(String username, Integer entityId);
+    UserDTOEx getGUIDTO(String username, Integer entityId);
 
     /**
-     * @return the new user id if everthing ok, or null if the username is already 
+     * @return the new user id if everything ok, or null if the username is already 
      * taken, any other problems go as an exception
      */
-    public Integer create(UserDTOEx newUser, ContactDTOEx contact) 
-            throws SessionInternalError;
+    Integer create(UserDTOEx newUser, ContactDTOEx contact); 
 
-    public Integer createEntity(ContactDTO contact, UserDTOEx user, 
+    Integer createEntity(ContactDTO contact, UserDTOEx user, 
             Integer pack, Boolean config, String language,
-            ContactDTO paymentContact) throws SessionInternalError;
+            ContactDTO paymentContact);
   
-    public UserDTO getUserDTO(String userName, Integer entityId) 
-            throws SessionInternalError;
+    UserDTO getUserDTO(String userName, Integer entityId); 
 
-    public String getCustomerNotes(Integer userId) throws SessionInternalError;
+    String getCustomerNotes(Integer userId);
 
-    public Locale getLocale(Integer userId) throws SessionInternalError;
+    Locale getLocale(Integer userId);
    
-    public void setCustomerNotes(Integer userId, String notes)
-            throws SessionInternalError;
+    void setCustomerNotes(Integer userId, String notes);
 
-    public void delete(Integer executorId, Integer userId) 
-            throws SessionInternalError;
+    void delete(Integer executorId, Integer userId); 
 
-    public void delete(String userName, Integer entityId) 
-            throws SessionInternalError;
+    void delete(String userName, Integer entityId); 
 
     /**
      * @param userId The user that is doing this change, it could be
      * the same user or someone else in behalf.
      */
-    public void update(Integer executorId, UserDTOEx dto) 
-            throws SessionInternalError;
+    void update(Integer executorId, UserDTOEx dto); 
+            
+    void updatePartner(Integer executorId, Partner dto); 
 
-    public void updatePartner(Integer executorId, Partner dto) 
-            throws SessionInternalError;
+    void updatePartnerRanges(Integer executorId, Integer partnerId, PartnerRange[] ranges);
 
-    public void updatePartnerRanges(Integer executorId, Integer partnerId, 
-            PartnerRange[] ranges) throws SessionInternalError;
-
-    public ContactDTOEx getPrimaryContactDTO(Integer userId)
-            throws SessionInternalError;
+    ContactDTOEx getPrimaryContactDTO(Integer userId);
     
-    public void setPrimaryContact(ContactDTOEx dto, Integer userId)
-            throws SessionInternalError;
+    void setPrimaryContact(ContactDTOEx dto, Integer userId);
 
-     public ContactDTOEx getContactDTO(Integer userId, Integer contactTypeId)
-             throws SessionInternalError;
+    ContactDTOEx getContactDTO(Integer userId, Integer contactTypeId);
  
-    public ContactDTOEx getVoidContactDTO(Integer entityId)
-            throws SessionInternalError;
+    public ContactDTOEx getVoidContactDTO(Integer entityId);
 
     public void setContact(ContactDTOEx dto, Integer userId, Integer 
             contactTypeId) throws SessionInternalError;
@@ -286,14 +271,7 @@ public interface IUserSessionBean {
 
     void setUserBlacklisted(Integer executorId, Integer userId, boolean isBlacklisted);
 
-    /**
-     * @throws NumberFormatException 
-     * @throws NotificationNotFoundException 
-     * @throws SessionInternalError 
-     */
-    public void sendLostPassword(String entityId, String username) 
-        throws NumberFormatException, SessionInternalError,
-        NotificationNotFoundException;
+    void sendLostPassword(int entityId, String username);
     
     public boolean isPasswordExpired(Integer userId);
 

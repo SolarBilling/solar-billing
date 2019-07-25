@@ -105,10 +105,9 @@ public class EntityBL extends ResultList
      * @throws Exception
      */
     public Integer create(UserDTOEx user, ContactDTO contact, 
-            Integer languageId) 
-            throws Exception {
+            Integer languageId) {
         EntitySignup sign = new EntitySignup(user, contact, languageId);
-        return new Integer(sign.process());
+        return sign.process();
     }
     
     public Integer[] getAllIDs() 

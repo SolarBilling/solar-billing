@@ -24,8 +24,6 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import org.apache.log4j.Logger;
 
 import com.sapienter.jbilling.common.SessionInternalError;
@@ -85,11 +83,8 @@ public class DTOFactory {
 	 * @param username
 	 * @return UserDTO
 	 * @throws HomeFactoryException
-	 * @throws NamingException
 	 */
-	public static UserDTOEx getUserDTO(String username, Integer entityId)
-			throws NamingException, SessionInternalError {
-
+	public static UserDTOEx getUserDTO(String username, Integer entityId) {
 		LOG.debug("getting the user " + username);
 
 		UserDTO user = new UserDAS().findByUserName(username, entityId);
@@ -98,16 +93,14 @@ public class DTOFactory {
 		return getUserDTOEx(user);
 	}
 
-	public static UserDTOEx getUserDTOEx(Integer userId)
-			throws NamingException, SessionInternalError {
-
+	public static UserDTOEx getUserDTOEx(Integer userId) {
 		LOG.debug("getting the user " + userId);
 
 		UserDTO user = new UserDAS().find(userId);
 		return getUserDTOEx(user);
 	}
 
-	public static UserDTOEx getUserDTOEx(UserDTO user) throws SessionInternalError {
+	public static UserDTOEx getUserDTOEx(UserDTO user) {
 		UserDTOEx dto = new UserDTOEx(user);
 
 		// get the status
@@ -203,8 +196,7 @@ public class DTOFactory {
 		return dto;
 	}
 
-	public static ReportDTOEx getReportDTOEx(Integer reportId, Integer entityId)
-			throws SessionInternalError {
+	public static ReportDTOEx getReportDTOEx(Integer reportId, Integer entityId) {
 		ReportDAS reportHome = new ReportDAS();
 
 		ReportDTO report = reportHome.find(reportId);
@@ -305,8 +297,7 @@ public class DTOFactory {
 				.getReport(), rUser.getCreateDatetime(), rUser.getTitle());
 	}
 
-	public static MenuOption getMenuOption(Integer id, Integer languageId)
-			throws NamingException {
+	public static MenuOption getMenuOption(Integer id, Integer languageId) {
 		MenuOptionDAS menuDas = new MenuOptionDAS();
 
 		MenuOptionDTO option = menuDas.find(id);

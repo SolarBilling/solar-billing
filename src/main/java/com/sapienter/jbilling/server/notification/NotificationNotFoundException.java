@@ -32,19 +32,9 @@ package com.sapienter.jbilling.server.notification;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class NotificationNotFoundException extends Exception {
+public class NotificationNotFoundException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
-	public NotificationNotFoundException() {
-		super();
-	}
 
 	/**
 	 * @param message
@@ -52,20 +42,4 @@ public class NotificationNotFoundException extends Exception {
 	public NotificationNotFoundException(String message) {
 		super(message);
 	}
-
-	/**
-	 * @param cause
-	 */
-	public NotificationNotFoundException(Throwable cause) {
-		super(cause);
-	}
-
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public NotificationNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 }

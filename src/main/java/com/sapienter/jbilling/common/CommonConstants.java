@@ -184,10 +184,10 @@ public interface CommonConstants {
     public static final BigDecimal BIGDECIMAL_ONE_CENT = new BigDecimal("0.01");
 
     // codes for login resuls
-    public final static Integer AUTH_OK = new Integer(0);
-    public final static Integer AUTH_WRONG_CREDENTIALS = new Integer(1);
-    public final static Integer AUTH_LOCKED = new Integer(2);  // invalid login creds - bad attempt locked account
-    public final static Integer AUTH_EXPIRED = new Integer(3); // login creds ok - password expired and needs updating
+    enum Authentication { AUTH_OK, AUTH_WRONG_CREDENTIALS,
+    		AUTH_LOCKED, // invalid login creds - bad attempt locked account
+    		AUTH_EXPIRED // login creds ok - password expired and needs updating 
+    }
 
     // provisioning status constants
     public final static Integer PROVISIONING_STATUS_ACTIVE=new Integer(1);

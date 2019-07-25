@@ -21,10 +21,8 @@
 package com.sapienter.jbilling.client.user;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,6 +32,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.jfree.util.Log;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,26 +63,24 @@ public final class UserLoginAction extends Action {
      * @param request The HTTP request we are processing
      * @param response The HTTP response we are creating
      *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet exception occurs
      */
     public ActionForward execute(
-        ActionMapping mapping,
-        ActionForm form,
-        HttpServletRequest request,
-        HttpServletResponse response)
-        throws IOException, ServletException {
+        final ActionMapping mapping,
+        final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response)
+        {
             
 
         // Get the values from the form and do further validation
         // or parsing
-        ActionMessages errors = new ActionMessages();
+        final ActionMessages errors = new ActionMessages();
         Locale locale = null;
         boolean internalLogin = false;
-        UserLoginForm info = (UserLoginForm) form;
-        String username = info.getUserName().trim();
-        String password = info.getPassword().trim();
-        String entityId = info.getEntityId().trim();
+        final UserLoginForm info = (UserLoginForm) form;
+        final String username = info.getUserName().trim();
+        final String password = info.getPassword().trim();
+        final String entityId = info.getEntityId().trim();
 
         // create the bean that is going to be passed to the session
         // bean for authentication
@@ -97,16 +94,24 @@ public final class UserLoginAction extends Action {
                     Util.getSysProp("internal_key"))) {
                 user.setCompany(new CompanyDTO(1));
                 internalLogin = true;
-                LOG.debug("identified interal login");
+                LOG.debug("identified internal login");
             } else {
                 LOG.debug("internal failed. Key is not good " + key);
             }
         }
+    	int companyId = 1;
         if (!internalLogin) {
-            user.setCompany(new CompanyDTO(Integer.valueOf(entityId)));
-        } else {
-            user.setCompany(new CompanyDTO(1));
+        	try { 
+        		companyId = Integer.parseInt(entityId);
+        	} catch (NumberFormatException nfe) {
+                errors.add(
+                        ActionMessages.GLOBAL_MESSAGE,
+                        new ActionMessage("errors.company.id.nan"));        		
+                saveErrors(request, errors);
+                return (new ActionForward(mapping.getInput()));
+        	}
         }
+        user.setCompany(new CompanyDTO(companyId));
         
         // verify that the billing process is not running
         File lock = new File(Util.getSysProp("login_lock"));
@@ -119,18 +124,18 @@ public final class UserLoginAction extends Action {
             return (new ActionForward(mapping.getInput()));
         }
 
-        // now do the call to the business object
-        // get the value from a Session EJB 
-        IUserSessionBean myRemoteSession = null;
+        boolean expired = false;
         try {
-            myRemoteSession = (IUserSessionBean) Context.getBean(
+        	// now do the call to the business object
+            // get the value from a Session EJB 
+            final IUserSessionBean myRemoteSession = (IUserSessionBean) Context.getBean(
                     Context.Name.USER_SESSION);
-            Integer result = myRemoteSession.authenticate(user);
-            if (result.equals(Constants.AUTH_WRONG_CREDENTIALS)) {
+            Constants.Authentication result = myRemoteSession.authenticate(user);
+            if (result.equals(Constants.Authentication.AUTH_WRONG_CREDENTIALS)) {
                 errors.add(
                     ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("user.login.badpassword"));
-            } else if (result.equals(Constants.AUTH_LOCKED)) {
+            } else if (result.equals(Constants.Authentication.AUTH_LOCKED)) {
                 errors.add(
                         ActionMessages.GLOBAL_MESSAGE,
                         new ActionMessage("user.login.passwordLocked"));
@@ -147,8 +152,9 @@ public final class UserLoginAction extends Action {
                 locale = myRemoteSession.getLocale(user.getUserId());
                 // it is authenticated, let's create the session
             }
-
-        } catch (Exception e) {
+            expired = myRemoteSession.isPasswordExpired(user.getUserId());
+        } catch (RuntimeException e) {
+        	Log.error(e);
             errors.add(
                 ActionMessages.GLOBAL_MESSAGE,
                 new ActionMessage("all.internal"));
@@ -167,11 +173,10 @@ public final class UserLoginAction extends Action {
         	session = request.getSession();
         }
         
-        // this is for struts to pick up the right messges file
+        // this is for struts to pick up the right messages file
         session.setAttribute(Globals.LOCALE_KEY, locale);
         
         // verify that the password has not expired
-        boolean  expired = myRemoteSession.isPasswordExpired(user.getUserId());
         if (expired) {
             // can't login, go to the change password page
             // the user id is needed to validate the new password (validators)

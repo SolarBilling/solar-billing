@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.util.Random;
 import java.util.List;
 
-import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.NameValuePair;

@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.sql.DataSource;
 
 import com.sapienter.jbilling.client.process.JobScheduler;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
@@ -38,8 +37,6 @@ import com.sapienter.jbilling.server.util.Context;
 
 import org.apache.log4j.Logger;
 
-import com.mchange.v2.c3p0.AbstractComboPooledDataSource;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.client.item.CurrencyArrayWrap;
 import com.sapienter.jbilling.client.process.Trigger;

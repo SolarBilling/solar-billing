@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.DynaValidatorForm;
+import org.jfree.util.Log;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.server.user.UserDTOEx;
@@ -76,7 +77,8 @@ public class ChangePasswordAction extends Action {
         try {
             myRemoteSession = (IUserSessionBean) Context.getBean(
                     Context.Name.USER_SESSION);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+        	Log.error(e);
             errors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("all.internal"));
         }
@@ -95,7 +97,8 @@ public class ChangePasswordAction extends Action {
             // I still need to call this method, because it populates the dto
             // with the menu and other fields needed for the login
             user = myRemoteSession.getGUIDTO(user.getUserName(), user.getEntityId());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+        	Log.error(e);
             errors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("all.internal"));
         }

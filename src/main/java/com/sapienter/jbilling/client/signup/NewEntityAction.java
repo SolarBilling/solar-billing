@@ -66,10 +66,9 @@ public class NewEntityAction extends Action {
         }
         
         String retValue = null;
-        HttpSession session;
-        
+        HttpSession session = request.getSession(false);
+
         if (action.equals("setup")) {
-            session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
@@ -88,7 +87,6 @@ public class NewEntityAction extends Action {
                 locale = new Locale(language, country);
             }
             
-            
             session.setAttribute(Globals.LOCALE_KEY, locale);
             session.setAttribute("signup_language", language);
             log.debug("Setup language to " + 
@@ -97,7 +95,6 @@ public class NewEntityAction extends Action {
 
             retValue = "edit";
         } else if (action.equals("edit")) {
-            session = request.getSession(false);
             DynaValidatorForm myForm = (DynaValidatorForm) form;
             ActionErrors errors = new ActionErrors(myForm.validate(
                     mapping, request));

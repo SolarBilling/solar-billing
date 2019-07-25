@@ -87,7 +87,7 @@ public class ReviewOrderAction extends Action {
                 newOrder = remoteOrder.recalculate(newOrder,
                         (Integer) session.getAttribute(
                             Constants.SESSION_ENTITY_ID_KEY));
-                // initializing the wraping form to allow displaying and
+                // initializing the wrapping form to allow displaying and
                 // updating the dto
                 Hashtable<Integer, OrderLineDTO> hashlines = new Hashtable<Integer, OrderLineDTO>();
                 ((NewOrderDTOForm) form).setOrderLines(hashlines);
@@ -211,7 +211,7 @@ public class ReviewOrderAction extends Action {
                 saveErrors(request, errors);
                 forward = "show";
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error processing a new order", e);
             
             if( e instanceof ItemDecimalsException ){

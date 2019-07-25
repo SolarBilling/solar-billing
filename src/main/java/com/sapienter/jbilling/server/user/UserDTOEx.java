@@ -227,7 +227,7 @@ public final class UserDTOEx extends UserDTO {
      * @param entityId The entityId to set
      */
     public void setEntityId(Integer entityId) {
-        setCompany(new CompanyDAS().find(entityId));
+        setCompany(new CompanyDAS().apply(entityId));
     }
 
     /**

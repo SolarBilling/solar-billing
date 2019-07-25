@@ -20,6 +20,8 @@
 
 package com.sapienter.jbilling.server.user;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,6 +35,8 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
+import javax.mail.MessagingException;
+import javax.persistence.EntityNotFoundException;
 
 import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -42,7 +46,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sapienter.jbilling.common.JNDILookup;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.notification.NotificationBL;
-import com.sapienter.jbilling.server.notification.NotificationNotFoundException;
 import com.sapienter.jbilling.server.process.AgeingBL;
 import com.sapienter.jbilling.server.user.contact.db.ContactDTO;
 import com.sapienter.jbilling.server.user.db.AchDTO;
@@ -87,31 +90,30 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
     * @return the populated userDTO if ok, or null if fails.
     * @param clientUser The userDTO with the username and password to authenticate
     */
-    public Integer authenticate(UserDTOEx clientUser) 
-            throws SessionInternalError {
-        Integer result = Constants.AUTH_WRONG_CREDENTIALS;
+    @Override public Constants.Authentication authenticate(final UserDTOEx clientUser) {
+    	Constants.Authentication result = Constants.Authentication.AUTH_WRONG_CREDENTIALS;
         try {
             LOG.debug("Authentication of " + clientUser.getUserName() + 
             		" password = [" + clientUser.getPassword() + "]" +
                     " entity = " + clientUser.getEntityId());
-            UserDTOEx dbUser = DTOFactory.getUserDTO(clientUser.getUserName(), 
+            final UserDTOEx dbUser = DTOFactory.getUserDTO(clientUser.getUserName(), 
                     clientUser.getEntityId());
             if (dbUser == null) return result; // username is wrong (not found in DB)
             LOG.debug("DB password is [" + dbUser.getPassword() + "]");
             // the permissions and menu will get loaded only for
-            // successfulls logins
+            // successful logins
             UserBL user = new UserBL();
             if(user.validateUserNamePassword(clientUser, dbUser)) {
-                result = Constants.AUTH_OK;
+                result = Constants.Authentication.AUTH_OK;
                 user.successLoginAttempt();
             } else {
                 user.set(clientUser.getUserName(), clientUser.getEntityId());
                 if (user.failedLoginAttempt()) {
-                    result = Constants.AUTH_LOCKED;
+                    result = Constants.Authentication.AUTH_LOCKED;
                 }
             }
 
-        } catch (Exception e) { // all the rest are internal error
+        } catch (RuntimeException e) { // all the rest are internal error
             // I catch everything here, and let know to the client that an
             // internal error has happened.
             throw new SessionInternalError(e);
@@ -129,7 +131,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
         try {
             UserBL user = new UserBL();
             return user.webServicesAuthenticate(username, password);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -142,25 +144,22 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * @return DTO for GUI
      */
     public UserDTOEx getGUIDTO(String username, Integer entityId) {
-        UserDTOEx retValue;
         try {
-            UserBL bl = new UserBL(username, entityId);
-            retValue = DTOFactory.getUserDTOEx(bl.getEntity());
+            final UserBL bl = new UserBL(username, entityId);
+            final UserDTOEx retValue = DTOFactory.getUserDTOEx(bl.getEntity());
             retValue.setAllPermissions(bl.getPermissions());
             retValue.setMenu(bl.getMenu(retValue.getAllPermissions()));
-        } catch (Exception e) {
+            return retValue;
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         } 
-        
-        return retValue;
     }
 
     /**
      * @return the new user id if everthing ok, or null if the username is already 
      * taken, any other problems go as an exception
      */
-    public Integer create(UserDTOEx newUser, ContactDTOEx contact) 
-            throws SessionInternalError {
+    public Integer create(UserDTOEx newUser, ContactDTOEx contact) { 
         try {
             UserBL bl = new UserBL();
             if (!bl.exists(newUser.getUserName(), newUser.getEntityId())) {
@@ -186,15 +185,14 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
             
             return null;
             
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
 
     public Integer createEntity(ContactDTO contact, UserDTOEx user, 
             Integer pack, Boolean todoRemoveThisUnusedParameter, String language,
-            ContactDTO paymentContact)
-            throws SessionInternalError {
+            ContactDTO paymentContact) {
         try {
             // start by creating the new entity
             EntityBL bl = new EntityBL();
@@ -205,7 +203,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
             
             if (paymentContact != null) {
                 // now a new customer for Sapienter
-                user.setEntityId(new Integer(1));
+                user.setEntityId(1);
                 String userName = user.getUserName();
                 Integer newUserId = null;
                 Random rnd = new Random();
@@ -229,7 +227,9 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
             }
             
             return entityId;
-        } catch (Exception e) {
+        } catch (IOException ioe) {
+        	throw new UncheckedIOException(ioe);
+        } catch (MessagingException | RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -1008,16 +1008,17 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
     }
 
     /**
-     * @throws NumberFormatException 
-     * @throws NotificationNotFoundException 
+     * @throws EntityNotFoundException if no user with that username and entity ID exists 
      * @throws SessionInternalError 
      */
-    public void sendLostPassword(String entityId, String username) 
-            throws NumberFormatException, SessionInternalError, 
-            NotificationNotFoundException {
-    	UserBL user = new UserBL(username, Integer.valueOf(entityId));
-
-		user.sendLostPassword(Integer.valueOf(entityId), user.getEntity().getUserId(),  user.getEntity().getLanguageIdField());	
+    public void sendLostPassword(int entityId, String username) 
+            throws NumberFormatException {
+    	final UserBL userBL = new UserBL(username, entityId);
+    	final UserDTO userDTO = userBL.getEntity();
+    	if (userDTO == null) {
+    		throw new EntityNotFoundException("user " + username + ", company " + entityId);
+    	}
+		userBL.sendLostPassword(entityId, userDTO.getUserId(),  userDTO.getLanguageIdField());	
     }
     
    public boolean isPasswordExpired(Integer userId) {

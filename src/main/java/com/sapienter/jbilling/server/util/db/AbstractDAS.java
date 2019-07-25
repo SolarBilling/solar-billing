@@ -298,10 +298,13 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
      * @return
      */
     public T find(Serializable id) {
+/*
     	if (id == null) return null;
         T entity = (T) getHibernateTemplate().load(getPersistentClass(), id);
 
         return entity;
+  */
+    	return findNow(id);
     }
     
     /**

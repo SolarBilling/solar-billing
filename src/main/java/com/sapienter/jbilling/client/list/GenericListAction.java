@@ -362,7 +362,7 @@ public class GenericListAction extends Action {
                 
                 retValue = (mapping.findForward(forwardTo)); 
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             errors.add(
                 ActionMessages.GLOBAL_MESSAGE,
                 new ActionMessage("all.internal"));
@@ -383,7 +383,7 @@ public class GenericListAction extends Action {
     
     private void reset(PagedList dto) {
         dto.setCurrentPage(new Integer(0));
-        List<?> starts = new ArrayList();
+        List<Integer> starts = new ArrayList<>();
         starts.add(null);
         dto.setPageFrom(starts);
         dto.setDoSearch(null);

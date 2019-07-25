@@ -44,6 +44,8 @@ import com.sapienter.jbilling.server.process.BillingProcessDTOEx;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.partner.db.Partner;
 import com.sapienter.jbilling.server.util.Context;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -247,7 +249,7 @@ public class GenericListTag extends ListTagBase {
                     list.setDoSearch(null);
                     session.setAttribute(Constants.SESSION_PAGED_LIST, 
                             list);
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     throw new JspException(e);
                 }
             } else {
@@ -477,7 +479,7 @@ public class GenericListTag extends ListTagBase {
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 
                     errors);
             log.error("Session exception at Generic List tag.", e);
-        } catch (Exception e) {
+        } catch (RuntimeException | SQLException e) {
             log.error("Exception at Generic List tag", e);
             throw new JspException("Web error" + e.getMessage());
         }

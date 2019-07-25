@@ -20,6 +20,8 @@
 
 package com.sapienter.jbilling.client.report;
 
+import java.sql.SQLException;
+
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
@@ -66,7 +68,7 @@ public class ExecuteTag extends ListTagBase {
                     Constants.SESSION_REPORT_DTO);
             if (report == null) { //means that the session has timed out
                 log.fatal(
-                    "The session timed out, but the filted didn't catch it");
+                    "The session timed out, but the filter didn't catch it");
                 throw new JspException("CustomerListTag: session timed out.");
             }
             
@@ -92,7 +94,7 @@ public class ExecuteTag extends ListTagBase {
                 retValue = EVAL_BODY_INCLUDE;
             }
 
-        } catch (Exception e) {
+        } catch (RuntimeException | SQLException e) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, 
                     new ActionMessage("all.internal"));
             pageContext.getRequest().setAttribute(Globals.ERROR_KEY, 

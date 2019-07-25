@@ -34,7 +34,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
-@org.hibernate.annotations.Entity(mutable = false)
 @Table(name="event_log_message")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class EventLogMessageDTO  implements java.io.Serializable {

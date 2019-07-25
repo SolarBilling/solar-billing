@@ -81,7 +81,6 @@ import com.sapienter.jbilling.server.payment.PaymentDTOEx;
 import com.sapienter.jbilling.server.pluggableTask.NotificationTask;
 import com.sapienter.jbilling.server.pluggableTask.PaperInvoiceNotificationTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
 import com.sapienter.jbilling.server.user.ContactBL;
 import com.sapienter.jbilling.server.user.ContactDTOEx;
@@ -521,7 +520,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
     }
 
     private void setContent(MessageDTO newMessage, Integer type,
-            Integer entity, Integer language) throws SessionInternalError,
+            Integer entity, Integer language) throws 
             NotificationNotFoundException {
         set(type, language, entity);
         if (messageRow != null) {
@@ -540,7 +539,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
 
     }
 
-    private void setContent(MessageDTO newMessage) throws SessionInternalError {
+    private void setContent(MessageDTO newMessage) {
 
         // go through the sections
         final Collection<NotificationMessageSectionDTO> sections = messageRow.getNotificationMessageSections();
@@ -701,19 +700,18 @@ public class NotificationBL extends ResultList implements NotificationSQL {
     private static JasperPrint generatePaperInvoice(String design, 
             boolean useSqlQuery, InvoiceDTO invoice, ContactDTOEx from, 
             ContactDTOEx to, String message1, String message2, Integer entityId,
-            String username, String password) throws FileNotFoundException,
-            SessionInternalError {
-        try {
-            // This is needed for JasperRerpots to work, for some twisted
-            // XWindows issue
-            System.setProperty("java.awt.headless", "true");
-            String designFile = com.sapienter.jbilling.common.Util
-                    .getSysProp("base_dir")
-                    + "designs/" + design + ".jasper";
-            File compiledDesign = new File(designFile);
-            LOG.debug("Generating paper invoice with design file : "
-                    + designFile);
-            FileInputStream stream = new FileInputStream(compiledDesign);
+            String username, String password) throws FileNotFoundException {
+        // This is needed for JasperRerpots to work, for some twisted
+        // XWindows issue
+        System.setProperty("java.awt.headless", "true");
+        String designFile = com.sapienter.jbilling.common.Util
+                .getSysProp("base_dir")
+                + "designs/" + design + ".jasper";
+        File compiledDesign = new File(designFile);
+        LOG.debug("Generating paper invoice with design file : "
+                + designFile);
+        try (FileInputStream stream = new FileInputStream(compiledDesign)){
+            
             Locale locale = (new UserBL(invoice.getUserId())).getLocale();
 
             // add all the invoice data
@@ -779,7 +777,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
                     parameters.put("prevInvoicePaid", "0");
                 }
 
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 LOG.error("Exception generating paper invoice", e);
                 return null;
             }
@@ -877,7 +875,7 @@ public class NotificationBL extends ResultList implements NotificationSQL {
             stream.close();
 
             return report;
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException | JRException | SQLException e) {
             LOG.error("Exception generating paper invoice", e);
             return null;
         }

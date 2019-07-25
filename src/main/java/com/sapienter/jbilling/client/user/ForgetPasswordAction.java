@@ -21,7 +21,9 @@
 package com.sapienter.jbilling.client.user;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +51,7 @@ public class ForgetPasswordAction extends Action {
     	
     	UserLoginForm info = (UserLoginForm) form;
         String username = info.getUserName().trim();
-        String entityId = info.getEntityId().trim();
+        final int entityId = Integer.parseInt(info.getEntityId().trim());
     	
         log.debug("Received ForgetPasswordAction Request with userName " + 
         		username + " entityId " + entityId);
@@ -59,11 +61,17 @@ public class ForgetPasswordAction extends Action {
         try {
             IUserSessionBean myRemoteSession = (IUserSessionBean) 
                     Context.getBean(Context.Name.USER_SESSION);
-            myRemoteSession.sendLostPassword(entityId, username);
+            try {
+                myRemoteSession.sendLostPassword(entityId, username);
+            } catch( EntityNotFoundException enfe) {
+            	log.debug(enfe);
+            }
     	} catch( NotificationNotFoundException e) {
     		errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
                     "forgetPassword.errors.notificationnotactivated"));
-    	} catch (Exception e) {
+    	} catch (RuntimeException rte) {
+    		java.util.logging.Logger.getLogger(getClass().getName()).log(Level.SEVERE, 
+    			"error handling forgotten password for user " + username + ", company " + entityId, rte);
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("all.internal"));
         }
     	

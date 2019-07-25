@@ -34,14 +34,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
-@org.hibernate.annotations.Entity(mutable = false)
 @Table(name="event_log_module")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class EventLogModuleDTO  implements java.io.Serializable {
-
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id 

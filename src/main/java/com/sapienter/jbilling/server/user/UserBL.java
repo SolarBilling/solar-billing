@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -65,6 +66,7 @@ import com.sapienter.jbilling.server.report.db.ReportUserDTO;
 import com.sapienter.jbilling.server.user.db.AchDAS;
 import com.sapienter.jbilling.server.user.db.AchDTO;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
+import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
 import com.sapienter.jbilling.server.user.db.CustomerDAS;
 import com.sapienter.jbilling.server.user.db.SubscriberStatusDAS;
@@ -91,6 +93,8 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 
@@ -98,34 +102,31 @@ public class UserBL extends ResultList
         implements UserSQL {
     private UserDTO user = null;
     private final static Logger LOG = Logger.getLogger(UserBL.class);
-    private EventLogger eLogger = null;
+    final private EventLogger eLogger = EventLogger.getInstance();
     private Integer mainRole = null;
-    private UserDAS das = null;
+    final private UserDAS das = new UserDAS();
+    @Autowired private Function<Integer, CompanyDTO> companyDAS = new CompanyDAS();
 
     public UserBL(Integer userId) {
-        init();
         set(userId);
     }
 
     public UserBL() {
-        init();
     }
 
     public UserBL(UserDTO entity) {
         user = entity;
-        init();
     }
 
-    public UserBL(String username, Integer entityId) {
-        init();
+    public UserBL(String username, int entityId) {
         user = das.findByUserName(username, entityId);
     }
 
     public void set(Integer userId) {
-        user = das.find(userId);
+        user = das.apply(userId);
     }
 
-    public void set(String userName, Integer entityId) {
+    public void set(String userName, int entityId) {
         user = das.findByUserName(userName, entityId);
     }
 
@@ -137,17 +138,11 @@ public class UserBL extends ResultList
         user = das.findRoot(userName);
     }
 
-    private void init() {
-        eLogger = EventLogger.getInstance();
-        das = new UserDAS();
-    }
-
     /**
      * @param userId This is the user that has ordered the update
      * @param dto This is the user that will be updated
      */
-    public void update(Integer executorId, UserDTOEx dto)
-            throws SessionInternalError {
+    public void update(Integer executorId, UserDTOEx dto) {
         // password is the only one that might've not been set
     	String changedPassword = dto.getPassword();
     	if (changedPassword != null){
@@ -175,7 +170,7 @@ public class UserBL extends ResultList
         if (dto.getEntityId() != null && user.getEntity().getId() !=
         		dto.getEntityId()) {
 
-	        user.setCompany(new CompanyDAS().find(dto.getEntityId()));
+	        user.setCompany(companyDAS.apply(dto.getEntityId()));
         }
         if (dto.getStatusId() != null && user.getStatus().getId() !=
         		dto.getStatusId()) {
@@ -228,9 +223,7 @@ public class UserBL extends ResultList
         updateRoles(dto.getRoles(), dto.getMainRoleId());
     }
 
-    private void updateRoles(Set<RoleDTO> theseRoles, Integer main)
-            throws SessionInternalError {
-
+    private void updateRoles(Set<RoleDTO> theseRoles, Integer main) {
         if (theseRoles == null || theseRoles.isEmpty()) {
             if (main != null) {
                 if (theseRoles == null) {
@@ -263,7 +256,7 @@ public class UserBL extends ResultList
         }
     }
 
-    public Integer create(UserDTOEx dto) throws SessionInternalError {
+    public Integer create(UserDTOEx dto) {
 
         Integer newId;
         LOG.debug("Creating user " + dto);
@@ -361,7 +354,7 @@ public class UserBL extends ResultList
         }
 
         UserDTO newUser = new UserDTO();
-        newUser.setCompany(new CompanyDAS().find(entityId));
+        newUser.setCompany(companyDAS.apply(entityId));
         newUser.setUserName(userName);
         newUser.setPassword(password);
         newUser.setLanguage(new LanguageDAS().find(languageId));
@@ -390,8 +383,7 @@ public class UserBL extends ResultList
     }
 
 
-    public boolean validateUserNamePassword(UserDTOEx loggingUser,
-           UserDTOEx db) {
+    public boolean validateUserNamePassword(final UserDTOEx loggingUser, final UserDTOEx db) {
 
         // the user status is not part of this check, as a customer that
         // can't login to the entity's service still has to be able to
@@ -402,7 +394,7 @@ public class UserBL extends ResultList
         	String dbPassword = db.getPassword();
         	String notCryptedLoggingPassword = loggingUser.getPassword();
 
-        	//using service specific for DB-user, loging one may not have its role set
+        	//using service specific for DB-user, logging one may not have its role set
         	JBCrypto passwordCryptoService = JBCrypto.getPasswordCrypto(db.getMainRoleId());
         	String comparableLoggingPassword = passwordCryptoService.encrypt(notCryptedLoggingPassword);
 
@@ -458,9 +450,7 @@ public class UserBL extends ResultList
       * @throws SessionInternalError
       * @throws NotificationNotFoundException when no message row or message row is not activated for the specified entity
       */
-     public void sendLostPassword(Integer entityId, Integer userId,
-             Integer languageId) throws SessionInternalError,
-             NotificationNotFoundException {
+     public void sendLostPassword(int entityId, int userId, int languageId) {
     	 NotificationBL notif = new NotificationBL();
     	 MessageDTO message = notif.getForgetPasswordEmailMessage(entityId, userId, languageId);
          INotificationSessionBean notificationSess =
@@ -508,9 +498,7 @@ public class UserBL extends ResultList
          return ret;
      }
 
-    public Menu getMenu(List<PermissionDTO> permissions)
-            throws NamingException, SessionInternalError {
-
+    public Menu getMenu(List<PermissionDTO> permissions) {
         Menu menu = new Menu();
         // this should be doable in EJB/QL !! :( :(
         LOG.debug("getting menu for user=" + user.getUserId());

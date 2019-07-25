@@ -24,7 +24,6 @@
  */
 package com.sapienter.jbilling.client.list;
 
-import java.util.Hashtable;
 import java.util.List;
 
 import com.sapienter.jbilling.server.list.PagedListDTO;
@@ -41,8 +40,7 @@ public class PagedList extends PagedListDTO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Hashtable<?, ?> parameters = null;
-    private List<?> pageFrom = null;
+    private List<Integer> pageFrom = null;
     private Boolean direction = null;
     // works as an index, starting with 0.
     // It is always displayed + 1.
@@ -65,9 +63,9 @@ public class PagedList extends PagedListDTO {
     }
     public PagedList(PagedListDTO dto) {
         super(dto);
-        pageFrom = new ArrayList<Object>();
-        direction = new Boolean(false);
-        currentPage = new Integer(0);
+        pageFrom = new ArrayList<>();
+        direction = false;
+        currentPage = 0;
     }
     public Long getNumberOfPages() {
         if (getCount() != null) {
@@ -96,17 +94,11 @@ public class PagedList extends PagedListDTO {
     public void setDirection(Boolean direction) {
         this.direction = direction;
     }
-    public List getPageFrom() {
+    public List<Integer> getPageFrom() {
         return pageFrom;
     }
-    public void setPageFrom(List pageFrom) {
+    public void setPageFrom(List<Integer> pageFrom) {
         this.pageFrom = pageFrom;
-    }
-    public Hashtable getParameters() {
-        return parameters;
-    }
-    public void setParameters(Hashtable parameters) {
-        this.parameters = parameters;
     }
     public Boolean getDoSearch() {
         return doSearch;

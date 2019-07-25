@@ -480,6 +480,7 @@ public class UploadData {
                 type[0] = (Integer) types.get(fields[5]);
                 if (type[0] == null) {
                     System.out.println("Missing item category " + fields[5]);
+                    file.close();
                     return;
                 }
                 item.setTypes(type);

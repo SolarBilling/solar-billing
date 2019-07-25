@@ -37,7 +37,6 @@ import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
 import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDTO;
 import com.sapienter.jbilling.server.pluggableTask.PaperInvoiceNotificationTask;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskBL;
-import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.process.BillingProcessBL;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.db.UserDTO;

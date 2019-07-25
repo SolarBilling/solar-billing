@@ -36,6 +36,7 @@ import com.sapienter.jbilling.server.user.CreateResponseWS;
 import com.sapienter.jbilling.server.user.UserTransitionResponseWS;
 import com.sapienter.jbilling.server.user.UserWS;
 import com.sapienter.jbilling.server.user.ValidatePurchaseWS;
+import com.sapienter.jbilling.common.CommonConstants.Authentication;
 import com.sapienter.jbilling.server.entity.AchDTO;
 import com.sapienter.jbilling.server.entity.CreditCardDTO;
 
@@ -159,8 +160,7 @@ public interface JbillingAPI {
     public UserTransitionResponseWS[] getUserTransitionsAfterId(Integer id)
             throws JbillingAPIException;
 
-    public Integer authenticate(String username, String password)
-            throws JbillingAPIException;
+    Authentication authenticate(String username, String password);
     
     public ItemDTOEx getItem(Integer itemId, Integer userId, PricingField[] fields)
     		throws JbillingAPIException;

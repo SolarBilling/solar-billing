@@ -64,7 +64,7 @@ public class Menu implements Serializable {
         return lmOptions;
     }
     
-    protected void addOption(MenuOption option) throws NamingException {
+    protected void addOption(MenuOption option) {
         options.put(option.getId(), option);
     }
     
