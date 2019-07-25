@@ -188,8 +188,7 @@ public class AgeingBL {
         // make the http call back
         String url = null;
         try {
-            PreferenceBL pref = new PreferenceBL();
-            pref.set(user.getEntity().getEntity().getId(), 
+            PreferenceBL pref = new PreferenceBL(user.getEntity().getEntity().getId(), 
                     Constants.PREFERENCE_URL_CALLBACK);
             url = pref.getString();
         } catch (EmptyResultDataAccessException e2) {

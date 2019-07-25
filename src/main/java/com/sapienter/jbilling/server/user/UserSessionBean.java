@@ -683,7 +683,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
         
             LOG.debug("result for " + preferenceId + " =" + result);
             return result;    
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }

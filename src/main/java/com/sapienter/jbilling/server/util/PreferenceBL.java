@@ -22,9 +22,10 @@ package com.sapienter.jbilling.server.util;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.sapienter.jbilling.server.user.EntityBL;
@@ -39,27 +40,24 @@ public class PreferenceBL {
     
 
     // private methods
-    private PreferenceDAS preferenceDas = null;
-    private PreferenceTypeDAS typeDas = null;
+    final private PreferenceDAS preferenceDas = new PreferenceDAS();
+    @Autowired private Function<Integer, PreferenceTypeDTO> typeDas = new PreferenceTypeDAS();
     private PreferenceDTO preference = null;
     private PreferenceTypeDTO type = null;
     private static Logger LOG = Logger.getLogger(PreferenceBL.class);
     private Locale locale = null;
-    private JbillingTableDAS jbDAS = null;
+    final private JbillingTableDAS jbDAS = (JbillingTableDAS) Context.getBean(Context.Name.JBILLING_TABLE_DAS);
     
-    public PreferenceBL(Integer preferenceId) {
-        init();
-        preference = preferenceDas.find(preferenceId);
+    public PreferenceBL(int preferenceId) {
+        preference = preferenceDas.apply(preferenceId);
     }
     
-    public PreferenceBL() {
-        init();
+    public PreferenceBL(int entityId, int typeId)
+    {
+        set(entityId, typeId);
     }
     
-    private void init() {
-        preferenceDas = new PreferenceDAS();
-        typeDas = new PreferenceTypeDAS();
-        jbDAS = (JbillingTableDAS) Context.getBean(Context.Name.JBILLING_TABLE_DAS);
+    @Deprecated public PreferenceBL() {
     }
     
     /**
@@ -76,31 +74,27 @@ public class PreferenceBL {
         LOG.debug("Now looking for preference " + typeId + " ent " +
                 entityId + " table " + Constants.TABLE_ENTITY);
         if (entityId != null) {
-            try {
                 EntityBL en = new EntityBL(entityId);
                 locale = en.getLocale();
-            } catch (Exception e) {}
         }
         
         preference = preferenceDas.findByType_Row(
                 typeId, entityId, Constants.TABLE_ENTITY);
         if (preference == null) {
-            type = typeDas.find(typeId);
+            type = typeDas.apply(typeId);
             throw new EmptyResultDataAccessException("Could not find preference " + typeId, 1);
         }
             
     }
 
     public void setForUser(Integer userId, Integer typeId) {
-        try {
             UserBL us = new UserBL(userId);
             locale = us.getLocale();
-        } catch (Exception e) {}
 
         preference = preferenceDas.findByType_Row(typeId, userId,
                 Constants.TABLE_BASE_USER);
         if (preference == null) {
-            type = typeDas.find(typeId);
+            type = typeDas.apply(typeId);
             throw new EmptyResultDataAccessException("Could not find preference " + typeId, 1);
         }
 
@@ -191,9 +185,9 @@ public class PreferenceBL {
         return null;
     }
     
-    public String getDefaultAsString(Integer id) {
+    public String getDefaultAsString(int id) {
         LOG.debug("Looking for preference default for type " + id);
-        type = typeDas.find(id);
+        type = typeDas.apply(id);
         if (type.getIntDefValue() != null) {
             return type.getIntDefValue().toString();
         } else if (type.getStrDefValue() != null) {

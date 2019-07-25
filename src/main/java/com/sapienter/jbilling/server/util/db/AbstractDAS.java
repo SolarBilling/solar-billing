@@ -101,7 +101,8 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
 	@Override
 	public T apply(final Integer id) {
 //		return uniqueResult(persistentClass, ImmutableMap.of(getIdFieldName(), id));
-		return find(id); // TODO would findNow be better ?
+//		return find(id); // TODO would findNow be better ?
+		return findNow(id);
 	}
 
 	// child classes can override this method if the primary key is called something else
@@ -280,6 +281,7 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
     }
     
     protected void initializeProxy(Object proxy) {
+    	getSession();
     	getHibernateTemplate().initialize(proxy);
     }
     
