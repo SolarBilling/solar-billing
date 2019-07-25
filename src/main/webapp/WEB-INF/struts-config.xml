@@ -641,7 +641,7 @@
 
     <controller maxFileSize="10M" />
 
-    <message-resources parameter="ApplicationResources.properties" />
+    <message-resources parameter="ApplicationResources" />
 
   <!-- 
      Add multiple validator resource files by setting the pathnames property 
