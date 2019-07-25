@@ -35,8 +35,8 @@ public class SessionInternalError extends RuntimeException {
         super(s);
     }
     
-    public SessionInternalError(String s, Class<?> className, Exception e) {
-        super(s);
+    public SessionInternalError(String s, Class<?> className, Throwable e) {
+        super(s, e);
         Logger log = Logger.getLogger(className);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -50,11 +50,11 @@ public class SessionInternalError extends RuntimeException {
     /**
      * Method SessionInternalError.
      * Gets the original exception as a parameter an logs the message
-     * and whole stack trece.
+     * and whole stack trace.
      * @param e
      */
-    public SessionInternalError(Exception e) {
-        super(e.getMessage());
+    public SessionInternalError(Throwable e) {
+        super(e);
         
         Logger log = Logger.getLogger("com.sapienter.jbilling");
         StringWriter sw = new StringWriter();
