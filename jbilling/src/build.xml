@@ -1,4 +1,45 @@
-<project name="bop" default="deploy-local" basedir=".">
+<project name="bop" default="jspc" basedir=".">
+
+   <import file="/${tomcat.home}/bin/catalina-tasks.xml"/>
+
+   <target name="jspc">
+
+    <jasper
+             validateXml="false"
+             uriroot="${webapp.path}"
+             webXmlInclude="${webapp.path}/WEB-INF/generated_web.xml"
+             outputDir="${webapp.path}/WEB-INF/src" />
+
+  </target>
+
+  <target name="compile">
+
+    <mkdir dir="${webapp.path}/WEB-INF/classes"/>
+    <mkdir dir="${webapp.path}/WEB-INF/lib"/>
+
+    <javac destdir="${webapp.path}/WEB-INF/classes"
+           optimize="off"
+           debug="on" failonerror="false"
+           srcdir="${webapp.path}/WEB-INF/src"
+           excludes="**/*.smap">
+      <classpath>
+        <pathelement location="${webapp.path}/WEB-INF/classes"/>
+        <fileset dir="${webapp.path}/WEB-INF/lib">
+          <include name="*.jar"/>
+        </fileset>
+        <pathelement location="${tomcat.home}/lib"/>
+        <fileset dir="${tomcat.home}/lib">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${tomcat.home}/bin">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <include name="**" />
+      <exclude name="tags/**" />
+    </javac>
+
+  </target>
     
 
     <property name="base_dir" value="${basedir}/descriptors"/>
@@ -223,7 +264,7 @@
     <!-- Complies the source code                                            -->
     <!-- =================================================================== -->
    
-    <target name="compile" depends="init">
+    <target name="compile.old" depends="init">
         <javac
             debug="on"
             destdir="${build.classes.dir}"
@@ -721,7 +762,7 @@ server="upload.sourceforge.net" userid="anonymous">
     <!-- JSPC target to precompile JSP's 
 	     This is only used to generate the binary image for a release,
 	     to avoid having the Java SDK as a requirement. -->
-    <target name="jspc" depends="compile, xdoclet-webgenerate">
+    <target name="jspc.old" depends="compile, xdoclet-webgenerate">
         
         <taskdef classname="org.apache.jasper.JspC" name="jasper2"> 
             <classpath id="jspc.classpath">
