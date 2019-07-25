@@ -38,8 +38,6 @@
 
    <bean id="jbillingTableDAS" class="com.sapienter.jbilling.server.util.db.JbillingTableDAS"
         factory-method="getInstance" scope="prototype">
-        <property name="cache" ref="cacheProviderFacade"/>
-        <property name="cacheModel" ref="cacheModelReadOnly"/>
    </bean>
 
    <bean id="pluggableTaskDAS" class="com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskDAS"
