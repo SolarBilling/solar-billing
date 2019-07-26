@@ -48,11 +48,12 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.partner.db.Partner;
 import com.sapienter.jbilling.server.util.Constants;
+import com.sapienter.jbilling.server.util.Currency;
 
 @Entity
 @Table(name="currency")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class CurrencyDTO extends AbstractDescription  implements java.io.Serializable {
+public class CurrencyDTO extends AbstractDescription  implements java.io.Serializable, Currency {
 
     /**
 	 * 

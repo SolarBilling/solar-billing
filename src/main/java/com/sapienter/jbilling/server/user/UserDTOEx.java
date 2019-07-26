@@ -36,7 +36,6 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.permisson.db.Permission;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionDTO;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionTypeDTO;
-import com.sapienter.jbilling.server.user.permisson.db.RoleDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 import com.sapienter.jbilling.server.util.db.LanguageDAS;
@@ -199,7 +198,7 @@ public final class UserDTOEx extends UserDTO {
                     */
         }
         boolean retValue;
-        PermissionDTO permission = new PermissionDTO(0, new PermissionTypeDTO(typeId, null), 
+        Permission permission = PermissionDTO.createPermission(0, PermissionTypeDTO.createPermissionType(typeId, null), 
                 foreignId, null, null);
         if (Collections.binarySearch(permissionsTypeId, permission,
                 new PermissionTypeIdComparator()) >= 0) {

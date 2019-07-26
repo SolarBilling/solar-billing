@@ -21,6 +21,7 @@ package com.sapienter.jbilling.server.user.permisson.db;
 
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -41,20 +42,20 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class PermissionTypeDTO  implements java.io.Serializable, PermissionType {
 	private static final long serialVersionUID = 1L;
 	private int id;
-     private String description;
-     private Set<PermissionDTO> permissions = new HashSet<PermissionDTO>(0);
+    private String description;
+    private Set<PermissionDTO> permissions = new HashSet<PermissionDTO>(0);
 
+    /* called when instantiating as a bean (Hibernate or Spring) */
     public PermissionTypeDTO() {
     }
-
 	
     public PermissionTypeDTO(int id, String description) {
         this.id = id;
-        this.description = description;
+        this.description = Objects.requireNonNull(description);
     }
+    
     public PermissionTypeDTO(int id, String description, Set<PermissionDTO> permissions) {
-       this.id = id;
-       this.description = description;
+       this(id, description);
        this.permissions = permissions;
     }
    
@@ -86,8 +87,22 @@ public class PermissionTypeDTO  implements java.io.Serializable, PermissionType 
         this.permissions = permissions;
     }
 
+
+	public static PermissionType createPermissionType(final int typeId, final String description) {
+		return new PermissionTypeDTO(typeId, description);
+	}
+
+	public static PermissionTypeDTO getDTO(PermissionType permissionType) {
+		if (permissionType instanceof PermissionTypeDTO) {
+			return (PermissionTypeDTO)permissionType;
+		}
+		return new PermissionTypeDTO(permissionType.getId(), permissionType.getDescription(), permissionType.getPermissions());
+	}
+
+    /*
 	@Override
 	public Set<PermissionDTO> get() {
 		return getPermissions();
 	}
+	*/
 }

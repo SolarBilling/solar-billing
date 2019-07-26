@@ -81,7 +81,7 @@ public class PermissionDTO  implements java.io.Serializable, Permission {
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="type_id", nullable=false)
-    @Override public PermissionType getPermissionType() {
+    @Override public PermissionTypeDTO getPermissionType() {
         return this.permissionType;
     }
     
@@ -122,6 +122,11 @@ public class PermissionDTO  implements java.io.Serializable, Permission {
         if (p != null && ((PermissionDTO)p).getId() == this.id) return true;
         return false;
     }
+
+	public static Permission createPermission(int i, PermissionType createPermissionType, Integer foreignId,
+			Set<PermissionUserDTO> permissionUsers, Set<RoleDTO> roles) {
+		return new PermissionDTO(i, PermissionTypeDTO.getDTO(createPermissionType), foreignId, permissionUsers, roles );
+	}
 
 
 }

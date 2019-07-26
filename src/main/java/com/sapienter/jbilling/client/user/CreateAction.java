@@ -21,8 +21,6 @@
 package com.sapienter.jbilling.client.user;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

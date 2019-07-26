@@ -51,6 +51,7 @@ import com.sapienter.jbilling.server.notification.db.NotificationMessageArchDTO;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
 import com.sapienter.jbilling.server.payment.db.PaymentDTO;
 import com.sapienter.jbilling.server.report.db.ReportUserDTO;
+import com.sapienter.jbilling.server.user.User;
 import com.sapienter.jbilling.server.user.partner.db.Partner;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionUserDTO;
 import com.sapienter.jbilling.server.user.permisson.db.RoleDTO;
@@ -69,7 +70,7 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
         )
 // No cache, mutable and critical
 @Table(name = "base_user")
-public class UserDTO implements java.io.Serializable {
+public class UserDTO implements java.io.Serializable, User {
 
     /**
 	 * 
@@ -230,7 +231,7 @@ public class UserDTO implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     public UserStatusDTO getUserStatus() {
-        return this.userStatus;
+        return this.userStatus; // TODO - this method doesn't seem to be being used, except as a bean - remove ?
     }
 
     public void setUserStatus(UserStatusDTO userStatus) {

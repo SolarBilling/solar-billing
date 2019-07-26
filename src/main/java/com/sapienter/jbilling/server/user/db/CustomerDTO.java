@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 
 import com.sapienter.jbilling.common.Constants;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDeliveryMethodDTO;
+import com.sapienter.jbilling.server.user.Customer;
 import com.sapienter.jbilling.server.user.UserWS;
 import com.sapienter.jbilling.server.user.partner.db.Partner;
 import com.sapienter.jbilling.server.user.partner.db.PartnerDAS;
@@ -60,7 +61,7 @@ import java.math.BigDecimal;
         )
 // No cache, mutable and critical
 @Table(name="customer")
-public class CustomerDTO  implements java.io.Serializable {
+public class CustomerDTO  implements java.io.Serializable, Customer {
 
     /**
 	 * 

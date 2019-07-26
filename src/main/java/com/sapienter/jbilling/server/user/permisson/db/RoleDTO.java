@@ -48,19 +48,36 @@ import com.sapienter.jbilling.server.util.db.AbstractDescription;
 public class RoleDTO extends AbstractDescription implements java.io.Serializable, Role {
 	private static final long serialVersionUID = 1L;
 	private int id;
-    private final ImmutableSet<UserDTO> baseUsers;
-    private final ImmutableSet<PermissionDTO> permissions;
+    private ImmutableSet<UserDTO> baseUsers;
+    private ImmutableSet<PermissionDTO> permissions;
 
+    // bean methods:
+    // these are not called directly from any of our code, however they are called when instantiating this class as a spring or Hibernate bean 
+    
+    public RoleDTO() {}
+    
+    public void setBaseUsers(final Set<UserDTO> baseUsers)
+    {
+    	this.baseUsers = ImmutableSet.copyOf(baseUsers);
+    }
+    
+    public void setPermissions(final Set<PermissionDTO> permissions)
+    {
+    	this.permissions = ImmutableSet.copyOf(permissions);
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+     
+
+    
+    
      @Override public String toString()
      {
     	 return "RoleDTO " + id;
      }
  
-    // this is not called directly from any of our code, however it is called when instantiating this class as a spring bean 
-    public void setId(int id) {
-        this.id = id;
-    }
-     
     public RoleDTO(int id) {
         this.id = id;
         this.baseUsers = ImmutableSet.of();

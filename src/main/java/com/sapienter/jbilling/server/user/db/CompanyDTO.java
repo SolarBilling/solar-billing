@@ -55,6 +55,7 @@ import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
 import com.sapienter.jbilling.server.process.db.BillingProcessConfigurationDTO;
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
 import com.sapienter.jbilling.server.report.db.ReportDTO;
+import com.sapienter.jbilling.server.user.Company;
 import com.sapienter.jbilling.server.user.contact.db.ContactFieldTypeDTO;
 import com.sapienter.jbilling.server.user.contact.db.ContactTypeDTO;
 import com.sapienter.jbilling.server.util.audit.db.EventLogDTO;
@@ -64,7 +65,7 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
 @Entity
 @Table(name="entity")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class CompanyDTO  implements java.io.Serializable {
+public class CompanyDTO  implements java.io.Serializable, Company {
 	private static final long serialVersionUID = 1L;
 	private int id;
      private CurrencyDTO currencyDTO;

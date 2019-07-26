@@ -40,7 +40,6 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import com.google.common.collect.ImmutableSet;
 import com.sapienter.jbilling.common.JBCrypto;
 import com.sapienter.jbilling.common.PermissionConstants;
 import com.sapienter.jbilling.common.PermissionIdComparator;
@@ -76,7 +75,6 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.db.UserStatusDAS;
 import com.sapienter.jbilling.server.user.partner.PartnerBL;
 import com.sapienter.jbilling.server.user.permisson.db.Permission;
-import com.sapienter.jbilling.server.user.permisson.db.PermissionDTO;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionUserDTO;
 import com.sapienter.jbilling.server.user.permisson.db.Role;
 import com.sapienter.jbilling.server.user.permisson.db.RoleDAS;

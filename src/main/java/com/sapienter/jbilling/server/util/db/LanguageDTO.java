@@ -35,13 +35,14 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.sapienter.jbilling.server.notification.db.NotificationMessageDTO;
+import com.sapienter.jbilling.server.user.Language;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 
 @Entity
 @Table(name="language")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class LanguageDTO  implements java.io.Serializable {
+public class LanguageDTO  implements java.io.Serializable, Language {
 
 
      /**

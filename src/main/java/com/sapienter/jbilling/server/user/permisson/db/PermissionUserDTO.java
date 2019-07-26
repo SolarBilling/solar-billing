@@ -99,7 +99,7 @@ public class PermissionUserDTO  implements java.io.Serializable, PermissionUser 
     }
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="permission_id")
-    @Override public Permission getPermission() {
+    @Override public PermissionDTO getPermission() {
         return this.permission;
     }
     
