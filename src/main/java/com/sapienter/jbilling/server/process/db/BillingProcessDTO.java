@@ -42,6 +42,7 @@ import org.apache.log4j.Logger;
 
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
+import com.sapienter.jbilling.server.process.BillingProcess;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.Cache;
@@ -59,7 +60,7 @@ import org.hibernate.annotations.OrderBy;
                 allocationSize = 10)
 @Table(name = "billing_process")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class BillingProcessDTO implements Serializable {
+public class BillingProcessDTO implements Serializable, BillingProcess {
 
     /**
 	 * 

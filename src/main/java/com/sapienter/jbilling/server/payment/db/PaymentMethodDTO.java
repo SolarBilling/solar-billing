@@ -34,6 +34,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.google.common.collect.ImmutableSet;
+import com.sapienter.jbilling.server.payment.PaymentMethod;
 import com.sapienter.jbilling.server.process.db.ProcessRunTotalPmDTO;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Constants;
@@ -45,11 +47,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "payment_method")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class PaymentMethodDTO extends AbstractDescription implements Serializable {
-
-    /**
-	 * 
-	 */
+public class PaymentMethodDTO extends AbstractDescription implements Serializable, PaymentMethod {
 	private static final long serialVersionUID = 1L;
 	private int id;
     private Set<PaymentDTO> payments = new HashSet<PaymentDTO>(0);
@@ -69,7 +67,7 @@ public class PaymentMethodDTO extends AbstractDescription implements Serializabl
             Set<ProcessRunTotalPmDTO> processRunTotalPms) {
         this.id = id;
         this.payments = payments;
-        this.entities = entities;
+        this.entities = ImmutableSet.copyOf(entities);
         this.processRunTotalPms = processRunTotalPms;
     }
 
@@ -104,7 +102,7 @@ public class PaymentMethodDTO extends AbstractDescription implements Serializabl
     }
 
     public void setEntities(Set<CompanyDTO> entities) {
-        this.entities = entities;
+        this.entities = ImmutableSet.copyOf(entities);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "paymentMethod")

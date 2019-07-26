@@ -65,9 +65,8 @@ import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskException;
 import com.sapienter.jbilling.server.pluggableTask.admin.PluggableTaskManager;
 import com.sapienter.jbilling.server.system.event.EventManager;
 import com.sapienter.jbilling.server.user.AchBL;
+import com.sapienter.jbilling.server.user.Company;
 import com.sapienter.jbilling.server.user.CreditCardBL;
-import com.sapienter.jbilling.server.user.db.CompanyDTO;
-import com.sapienter.jbilling.server.user.db.CreditCardDAS;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
 import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.partner.db.PartnerPayout;
@@ -80,7 +79,6 @@ public class PaymentBL extends ResultList implements PaymentSQL {
 
     private PaymentDAS paymentDas = null;
     private PaymentInfoChequeDAS chequeDas = null;
-    private CreditCardDAS ccDas = null;
     private PaymentMethodDAS methodDas = null;
     private PaymentInvoiceMapDAS mapDas = null;
     private PaymentDTO payment = null;
@@ -112,12 +110,10 @@ public class PaymentBL extends ResultList implements PaymentSQL {
 
             chequeDas = new PaymentInfoChequeDAS();
 
-            ccDas = new CreditCardDAS();
-
             methodDas = new PaymentMethodDAS();
 
             mapDas = new PaymentInvoiceMapDAS();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -630,10 +626,11 @@ public class PaymentBL extends ResultList implements PaymentSQL {
 
         boolean retValue = false;
 
-        PaymentMethodDTO method = methodDas.find(paymentMethodId);
+        PaymentMethod method = methodDas.apply(paymentMethodId);
 
-        for (Iterator<CompanyDTO> it = method.getEntities().iterator(); it.hasNext();) {
-            if ((it.next()).getId() == entityId) {
+        // TODO this is broken - there should be a table payment_accepted of (entity, paymentMethod) and we should be able to do a simple query instead of iterating
+        for (Company company : method.getEntities()) {
+            if (company.getId() == entityId) {
                 retValue = true;
                 break;
             }

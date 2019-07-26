@@ -409,7 +409,7 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
     	try {
     		throw new RuntimeException("Stack Trace");
     	} catch (RuntimeException rte) {
-    		LOG.info(rte);
+    		LOG.info("",rte);
     	}
     }
     

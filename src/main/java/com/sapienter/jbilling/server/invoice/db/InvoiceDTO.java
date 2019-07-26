@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.sapienter.jbilling.server.invoice.Invoice;
 import com.sapienter.jbilling.server.order.db.OrderProcessDTO;
 import com.sapienter.jbilling.server.payment.db.PaymentInvoiceMapDTO;
 import com.sapienter.jbilling.server.process.db.BillingProcessDTO;
@@ -66,7 +67,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
         allocationSize = 100)
 @Table(name = "invoice")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class InvoiceDTO implements Serializable {
+public class InvoiceDTO implements Serializable, Invoice {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = Logger.getLogger(InvoiceDTO.class);

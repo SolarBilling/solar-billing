@@ -8,11 +8,10 @@ import com.sapienter.jbilling.server.util.Currency;
 
 public interface User extends BillingObject {
 	Currency getCurrency();
-	Company getCompany();
 	SubscriberStatusDTO getSubscriberStatus();
 	Language getLanguage();
 	Date getLastLogin();
-	String getUserName();
 	Date getLastStatusChange();
 	Customer getCustomer();
+	Company getCompany();
 }

@@ -53,7 +53,7 @@ public interface IUserSessionBean {
     /**
     * @param clientUser The userDTO with the username and password to authenticate
     */
-	Constants.Authentication authenticate(UserDTOEx clientUser); 
+	Constants.Authentication authenticate(UserCredentials clientUser); 
 
     /**
      * Returns UserDTO if authentication successful, otherwise null.
@@ -66,7 +66,7 @@ public interface IUserSessionBean {
      * @param userId
      * @return
      */
-    UserDTOEx getGUIDTO(String username, Integer entityId);
+    MutableUser getGUIDTO(String username, Integer entityId);
 
     /**
      * @return the new user id if everything ok, or null if the username is already 
@@ -94,7 +94,7 @@ public interface IUserSessionBean {
      * @param userId The user that is doing this change, it could be
      * the same user or someone else in behalf.
      */
-    void update(Integer executorId, UserDTOEx dto); 
+    void update(int executorId, UserDTOEx dto); 
             
     void updatePartner(Integer executorId, Partner dto); 
 
@@ -113,7 +113,7 @@ public interface IUserSessionBean {
 
     boolean addContact(ContactDTOEx dto, String username, Integer entityId);
 
-    UserDTOEx getUserDTOEx(Integer userId); 
+    UserDTOEx getUserDTOEx(int userId); 
     
     boolean isParentCustomer(Integer userId); 
     

@@ -72,9 +72,6 @@ import com.sapienter.jbilling.server.util.db.LanguageDTO;
 @Table(name = "base_user")
 public class UserDTO implements java.io.Serializable, User {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int id;
     private CurrencyDTO currencyDTO;
@@ -187,7 +184,13 @@ public class UserDTO implements java.io.Serializable, User {
         this.invoices = invoices;
     }
 
-    @Id
+    protected UserDTO(String username, String password, CompanyDTO company) {
+		this.userName = username;
+		this.password = password;
+		this.company = company;
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "base_user_GEN")
     @Column(name = "id", unique = true, nullable = false)
     public int getId() {
@@ -517,4 +520,5 @@ public class UserDTO implements java.io.Serializable, User {
             getPartner().touch();
         }
     }
+
 }

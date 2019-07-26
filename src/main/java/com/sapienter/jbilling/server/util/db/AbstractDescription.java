@@ -43,7 +43,7 @@ public abstract class AbstractDescription implements Serializable {
      * Returns the description.
      * @return String
      */
-    public String getDescription(Integer languageId) {
+    public String getDescription(int languageId) {
         return getDescription(languageId, "description");
     }
     
@@ -69,7 +69,7 @@ public abstract class AbstractDescription implements Serializable {
      * Sets the description.
      * @param description The description to set
      */
-    public void setDescription(String labelProperty, Integer languageId, String content) {
+    public void setDescription(String labelProperty, int languageId, String content) {
         JbillingTableDAS jbDAS = (JbillingTableDAS) Context.getBean(Context.Name.JBILLING_TABLE_DAS);
         InternationalDescriptionId iid = new InternationalDescriptionId(jbDAS.findByName(
         		getTable()).getId(), getId(), labelProperty, languageId);
@@ -79,7 +79,7 @@ public abstract class AbstractDescription implements Serializable {
         de.save(desc);
     }
 
-    public void setDescription(String content, Integer languageId) {
+    public void setDescription(String content, int languageId) {
         setDescription("description", languageId, content);
     }
     

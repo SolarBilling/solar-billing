@@ -91,7 +91,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
     * @return the populated userDTO if ok, or null if fails.
     * @param clientUser The userDTO with the username and password to authenticate
     */
-    @Override public Constants.Authentication authenticate(final UserDTOEx clientUser) {
+    @Override public Constants.Authentication authenticate(final UserCredentials clientUser) {
     	Constants.Authentication result = Constants.Authentication.AUTH_WRONG_CREDENTIALS;
         try {
             LOG.debug("Authentication of " + clientUser.getUserName() + 
@@ -309,14 +309,9 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * @param userId The user that is doing this change, it could be
      * the same user or someone else in behalf.
      */
-    public void update(Integer executorId, UserDTOEx dto) 
-            throws SessionInternalError {
-        try {
-            UserBL bl = new UserBL(dto.getUserId());
-            bl.update(executorId, dto);
-        } catch(Exception e) {
-            throw new SessionInternalError(e);
-        }
+    @Override public void update(final int executorId, final UserDTOEx dto) { 
+        UserBL bl = new UserBL(dto.getUserId());
+        bl.update(executorId, dto);
     }
 
     public void updatePartner(Integer executorId, Partner dto) 
@@ -409,17 +404,9 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
         }
     }                    
 
-    public UserDTOEx getUserDTOEx(Integer userId) 
-            throws SessionInternalError {
-        UserDTOEx dto = null;
-        
-        try {
-            dto = DTOFactory.getUserDTOEx(userId);
-            dto.touch();
-        } catch (Exception e) {
-            throw new SessionInternalError(e);
-        }
-        
+    @Override public UserDTOEx getUserDTOEx(int userId) { 
+        final UserDTOEx dto = DTOFactory.getUserDTOEx(userId);
+        dto.touch();
         return dto;
     }
     

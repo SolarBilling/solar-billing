@@ -32,12 +32,13 @@ import javax.persistence.Transient;
 import javax.persistence.DiscriminatorValue;
 
 import com.sapienter.jbilling.server.process.db.AgeingEntityStepDTO;
+import com.sapienter.jbilling.server.user.UserStatus;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.db.AbstractGenericStatus;
 
 @Entity
 @DiscriminatorValue("user_status")
-public class UserStatusDTO extends AbstractGenericStatus implements java.io.Serializable {
+public class UserStatusDTO extends AbstractGenericStatus implements java.io.Serializable, UserStatus {
 
      /**
 	 * 

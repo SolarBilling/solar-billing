@@ -69,7 +69,7 @@ import com.sapienter.jbilling.server.util.audit.EventLogger;
 import java.util.ArrayList;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-public class InvoiceBL extends ResultList implements Serializable, InvoiceSQL {
+public class InvoiceBL extends ResultList implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final InvoiceDAS invoiceDas = new InvoiceDAS();
     private InvoiceDTO invoice = null;

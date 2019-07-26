@@ -143,7 +143,7 @@ public class UserBL extends ResultList
      * @param userId This is the user that has ordered the update
      * @param dto This is the user that will be updated
      */
-    public void update(Integer executorId, UserDTOEx dto) {
+    public void update(final int executorId, final UserDTOEx dto) {
         // password is the only one that might've not been set
     	String changedPassword = dto.getPassword();
     	if (changedPassword != null){
@@ -384,7 +384,7 @@ public class UserBL extends ResultList
     }
 
 
-    public boolean validateUserNamePassword(final UserDTOEx loggingUser, final UserDTOEx db) {
+    public boolean validateUserNamePassword(final UserCredentials loggingUser, final UserDTOEx db) {
 
         // the user status is not part of this check, as a customer that
         // can't login to the entity's service still has to be able to

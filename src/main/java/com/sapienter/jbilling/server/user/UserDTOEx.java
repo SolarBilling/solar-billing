@@ -30,6 +30,7 @@ import com.sapienter.jbilling.common.PermissionIdComparator;
 import com.sapienter.jbilling.common.PermissionTypeIdComparator;
 import com.sapienter.jbilling.server.user.db.AchDTO;
 import com.sapienter.jbilling.server.user.db.CompanyDAS;
+import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 /**
  * @author emilc
  */
-public final class UserDTOEx extends UserDTO {
+public final class UserDTOEx extends UserDTO implements MutableUser {
 
     // constants
     
@@ -216,19 +217,19 @@ public final class UserDTOEx extends UserDTO {
     }
 
     /**
-     * Returns the entityId.
-     * @return Integer
-     */
-    public Integer getEntityId() {
-        return getCompany().getId();
-    }
-
-    /**
      * Sets the entityId.
      * @param entityId The entityId to set
      */
     public void setEntityId(Integer entityId) {
         setCompany(new CompanyDAS().apply(entityId));
+    }
+
+    /**
+     * Returns the entityId.
+     * @return Integer
+     */
+    public Integer getEntityId() {
+        return getCompany().getId();
     }
 
     /**
@@ -449,4 +450,12 @@ public final class UserDTOEx extends UserDTO {
     public BigDecimal getBalance() {
         return balance;
     }
+
+    protected UserDTOEx(String username, String password, CompanyDTO company) {
+    	super(username, password, company);
+    }
+    
+	public static UserCredentials createCredentials(String username, String password, CompanyDTO company) {
+		return new UserDTOEx(username, password, company);
+	}
 }

@@ -39,6 +39,7 @@ import com.sapienter.jbilling.server.report.db.ReportTypeDTO;
 import com.sapienter.jbilling.server.report.db.ReportUserDTO;
 import com.sapienter.jbilling.server.user.AchBL;
 import com.sapienter.jbilling.server.user.EntityBL;
+import com.sapienter.jbilling.server.user.Language;
 import com.sapienter.jbilling.server.user.MenuOption;
 import com.sapienter.jbilling.server.user.UserBL;
 import com.sapienter.jbilling.server.user.UserDTOEx;
@@ -69,6 +70,8 @@ public class DTOFactory {
 
 	private static final Logger LOG = Logger.getLogger(DTOFactory.class);
 
+	//@Autowired private Function<Integer, UserDTO> userDAS = new UserDAS();
+	
 	/**
 	 * The constructor is private, do it doesn't get instantiated. All the
 	 * methods then are static.
@@ -84,24 +87,24 @@ public class DTOFactory {
 	 * @return UserDTO
 	 * @throws HomeFactoryException
 	 */
-	public static UserDTOEx getUserDTO(String username, Integer entityId) {
-		LOG.debug("getting the user " + username);
+	public static UserDTOEx getUserDTO(final String username, final Integer entityId) {
+		LOG.debug("getting the user " + username + ", entity " + entityId);
 
-		UserDTO user = new UserDAS().findByUserName(username, entityId);
+		final UserDTO user = new UserDAS().findByUserName(username, entityId);
 		if (user == null)
 			return null;
 		return getUserDTOEx(user);
 	}
 
-	public static UserDTOEx getUserDTOEx(Integer userId) {
+	public static UserDTOEx getUserDTOEx(int userId) {
 		LOG.debug("getting the user " + userId);
 
-		UserDTO user = new UserDAS().find(userId);
+		final UserDTO user = new UserDAS().apply(userId);
 		return getUserDTOEx(user);
 	}
 
 	public static UserDTOEx getUserDTOEx(UserDTO user) {
-		UserDTOEx dto = new UserDTOEx(user);
+		final UserDTOEx dto = new UserDTOEx(user);
 
 		// get the status
 		dto.setStatusId(user.getStatus().getId());
@@ -128,8 +131,8 @@ public class DTOFactory {
 		dto.setMainRoleStr(roleStr);
 
 		// now get the language
-		LanguageDTO language = new LanguageDAS()
-				.find(user.getLanguageIdField());
+		final Language language = new LanguageDAS()
+				.apply(user.getLanguageIdField());
 		dto.setLanguageStr(language.getDescription());
 
 		// add the last invoice id
