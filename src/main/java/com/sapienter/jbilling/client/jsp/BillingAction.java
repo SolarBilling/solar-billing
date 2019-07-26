@@ -1,8 +1,12 @@
 package com.sapienter.jbilling.client.jsp;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -12,6 +16,18 @@ import org.apache.struts.action.ActionMessages;
 import org.slf4j.LoggerFactory;
 
 public abstract class BillingAction extends Action {
+	final private Logger LOG = Logger.getLogger(getClass());
+	
+	protected void logSessionAttributes(final HttpSession session) {
+		LOG.info("session=" + session);
+		LOG.info("session id=" + session.getId());
+		final Enumeration<String> attributeNames = session.getAttributeNames(); 
+		while (attributeNames.hasMoreElements()) {
+			final String attributeName = attributeNames.nextElement();
+			LOG.info(attributeName + " = " + session.getAttribute(attributeName));
+		}
+	}
+	
     protected ActionForward errorResponse(final ActionMapping mapping, final HttpServletRequest request, final String message)
     {
         final ActionMessages errors = new ActionMessages();

@@ -20,93 +20,75 @@
 
 package com.sapienter.jbilling.client.user;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.jfree.util.Log;
 
+import com.sapienter.jbilling.client.jsp.BillingAction;
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.server.user.UserDTOEx;
 import com.sapienter.jbilling.server.user.IUserSessionBean;
+import com.sapienter.jbilling.server.user.MutableUser;
 import com.sapienter.jbilling.server.util.Context;
 
-public class ChangePasswordAction extends Action {
+public class ChangePasswordAction extends BillingAction {
     private static Logger LOG = Logger.getLogger(ChangePasswordAction.class);
     
-    public ActionForward execute(
-            ActionMapping mapping,
-            ActionForm form,
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws IOException, ServletException {
-
-        ActionMessages errors = new ActionMessages();
-        DynaValidatorForm info = (DynaValidatorForm) form;
-        String password = (String) info.get("password");
-        String verifyPassword = (String) info.get("verifyPassword");
-        HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute(Constants.SESSION_USER_ID);
+    protected ActionForward doExecute(
+            final ActionMapping mapping,
+            final ActionForm form,
+            final HttpServletRequest request,
+            final HttpServletResponse response)
+    {
+        final ActionMessages errors = new ActionMessages();
+        final DynaValidatorForm info = (DynaValidatorForm) form;
+        final String password = (String) info.get("password");
+        final String verifyPassword = (String) info.get("verifyPassword");
+        final HttpSession session = request.getSession();
+        logSessionAttributes(session);
+        final int userId = (Integer) session.getAttribute(Constants.SESSION_USER_ID);
         
         if (!password.equals(verifyPassword)) {
             errors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("user.create.error.password_match"));
         }
 
-        String oldPassword = (String) session.getAttribute("jsp_initial_password");
-        if (oldPassword.equalsIgnoreCase(password)) {
+        final String oldPassword = (String) session.getAttribute("jsp_initial_password");
+        if (password.equalsIgnoreCase(oldPassword)) {
             errors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("errors.repeated", "New password"));
         }
 
 
-        IUserSessionBean myRemoteSession = null;
-        UserDTOEx user = null;
-
         try {
-            myRemoteSession = (IUserSessionBean) Context.getBean(
+        	final IUserSessionBean myRemoteSession = (IUserSessionBean) Context.getBean(
                     Context.Name.USER_SESSION);
-        } catch (RuntimeException e) {
-        	Log.error(e);
-            errors.add(ActionMessages.GLOBAL_MESSAGE,
-                    new ActionMessage("all.internal"));
-        }
-        
-        if (!errors.isEmpty()) {
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
-        }
-
-        try {
             // do the actual password change
-            user = myRemoteSession.getUserDTOEx(userId);
+            MutableUser user = myRemoteSession.getUserDTOEx(userId);
             user.setPassword(password);
-            myRemoteSession.update(userId, user);
+            myRemoteSession.update(userId, (UserDTOEx)user);
 
             // I still need to call this method, because it populates the dto
             // with the menu and other fields needed for the login
             user = myRemoteSession.getGUIDTO(user.getUserName(), user.getEntityId());
+            LOG.debug("Password changed for user " + userId);
+            // now get the session completed. The user is actually logged only now.
+            UserLoginAction.logUser(session, user);
+            return (mapping.findForward("success"));
         } catch (RuntimeException e) {
-        	Log.error(e);
+        	LOG.error("",e);
             errors.add(ActionMessages.GLOBAL_MESSAGE,
                     new ActionMessage("all.internal"));
+            saveErrors(request, errors);
+            return (new ActionForward(mapping.getInput()));
         }
-
-        LOG.debug("Password changed for user " + userId);
-        // now get the session completed. The user is actually logged only now.
-        UserLoginAction.logUser(session, user);
-        return (mapping.findForward("success"));
-
     }
 }

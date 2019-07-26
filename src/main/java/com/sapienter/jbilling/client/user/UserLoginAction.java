@@ -22,6 +22,7 @@ package com.sapienter.jbilling.client.user;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,10 @@ import com.sapienter.jbilling.client.jsp.BillingAction;
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.user.UserDTOEx;
+import com.sapienter.jbilling.server.user.UserWithCredentials;
 import com.sapienter.jbilling.server.user.IUserSessionBean;
+import com.sapienter.jbilling.server.user.User;
+import com.sapienter.jbilling.server.user.UserCredentials;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 
@@ -48,6 +52,17 @@ public final class UserLoginAction extends BillingAction {
 
     // --------------------------------------------------------- Public Methods
 
+    
+    private HttpSession getNewSession(final HttpServletRequest request) {
+    	final HttpSession session = request.getSession();
+        if (!session.isNew()) {
+        	session.invalidate();
+        	return Objects.requireNonNull(request.getSession());
+        }
+        return session;
+    }
+    
+    
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -79,16 +94,11 @@ public final class UserLoginAction extends BillingAction {
         final String entityId = info.getEntityId().trim();
 
         // create the bean that is going to be passed to the session
-        // bean for authentication
-        UserDTOEx user = new UserDTOEx();
-        user.setUserName(username);
-        user.setPassword(password);
         if (username.equals(Util.getSysProp("internal_username"))) {
             // then you have to show me the extra key
             String key = request.getParameter("internalKey");
             if (key != null && key.equals(
                     Util.getSysProp("internal_key"))) {
-                user.setCompany(new CompanyDTO(1));
                 internalLogin = true;
                 LOG.debug("identified internal login");
             } else {
@@ -103,7 +113,10 @@ public final class UserLoginAction extends BillingAction {
                 return errorResponse(mapping, request, "errors.company.id.nan");
         	}
         }
-        user.setCompany(new CompanyDTO(companyId));
+        CompanyDTO company;
+        company = new CompanyDTO(companyId);
+        // bean for authentication
+        UserCredentials credentials = UserDTOEx.createCredentials(username, password, company);
         
         // verify that the billing process is not running
         File lock = new File(Util.getSysProp("login_lock"));
@@ -112,84 +125,80 @@ public final class UserLoginAction extends BillingAction {
             return errorResponse(mapping, request, "user.login.lock");
         }
 
-        boolean expired = false;
+        boolean expired = true;
         String error = null;
-        try {
+        UserWithCredentials user = null;
         	// now do the call to the business object
             // get the value from a Session EJB 
             final IUserSessionBean myRemoteSession = (IUserSessionBean) Context.getBean(
                     Context.Name.USER_SESSION);
-            Constants.Authentication result = myRemoteSession.authenticate(user);
+            Constants.Authentication result = myRemoteSession.authenticate(credentials);
             if (result.equals(Constants.Authentication.AUTH_WRONG_CREDENTIALS)) {
             	error = "user.login.badpassword";
             } else if (result.equals(Constants.Authentication.AUTH_LOCKED)) {
             	error = "user.login.passwordLocked";
             } else {
             	LOG.info("getting GUI UserDTO...");
-                user = myRemoteSession.getGUIDTO(user.getUserName(), user.getEntityId());
-            	LOG.info("got GUI UserDTO");
+                user = myRemoteSession.getGUIDTO(credentials.getUserName(), credentials.getEntityId());
+            	LOG.info("got GUI UserDTO " + user);
                 // children accounts can not login. They have no invoices and
                 // can't make any payments
-                if (user.getCustomer() != null && 
+                if ((user == null) || user.getCustomer() != null && 
                         user.getCustomer().getParent() != null) {
                 	error = "user.login.badpassword";
                 }
-                locale = myRemoteSession.getLocale(user.getUserId());
+                locale = myRemoteSession.getLocale(user.getId());
                 // it is authenticated, let's create the session
+                expired = myRemoteSession.isPasswordExpired(user.getId());
             }
-            expired = myRemoteSession.isPasswordExpired(user.getUserId());
-        } catch (RuntimeException e) {
-        	error = "all.internal";
-        }
-
         // Report any errors we have discovered back to the original form
         if (error != null) {
             return errorResponse(mapping, request, error);
         }
         
         // Save our logged-in user in the session
-        HttpSession session = request.getSession();
-        if (!session.isNew()) {
-        	session.invalidate();
-        	session = request.getSession();
-        }
+        final HttpSession session = Objects.requireNonNull(getNewSession(request));
         
         // this is for struts to pick up the right messages file
         session.setAttribute(Globals.LOCALE_KEY, locale);
         
+        final String forwardName;
         // verify that the password has not expired
         if (expired) {
             // can't login, go to the change password page
             // the user id is needed to validate the new password (validators)
             // and for the next action to know who's the user
-            session.setAttribute(Constants.SESSION_USER_ID, user.getUserId());
+            session.setAttribute(Constants.SESSION_USER_ID, user.getId());
             // the password will come handy to compare to the new one
             session.setAttribute("jsp_initial_password", password);
             // Leave the session empty, otherwise it'd be possible to go directly 
             // to a page
-            return (mapping.findForward("changePassword"));
+            forwardName = "changePassword";
+        } else {
+        	forwardName = "success";
         }
-
-        if (internalLogin) {
-            user.setCompany(new CompanyDTO(Integer.valueOf(entityId)));
-        }
+        Objects.requireNonNull(session);
+        Objects.requireNonNull(user);
         
         logUser(session, user);
-        
-        LOG.debug("user " + user.getUserName() + " logged. entity = " + user.getEntityId());
+        credentials = user;
+        LOG.info("user " + credentials.getUserName() + " logged. entity = " + credentials.getEntityId());
+        logSessionAttributes(session);
         // Forward control to the specified success URI
-        return (mapping.findForward("success"));
+        return mapping.findForward(forwardName);
 
     }
     
-    static void logUser(HttpSession session, UserDTOEx user) {
-
-        session.setAttribute(Constants.SESSION_LOGGED_USER_ID, 
-                user.getUserId());
-        session.setAttribute(Constants.SESSION_ENTITY_ID_KEY, 
-                user.getEntityId());
-        session.setAttribute(Constants.SESSION_LANGUAGE, user.getLanguageId());
-        session.setAttribute(Constants.SESSION_CURRENCY, user.getCurrencyId());
+    static void logUser(final HttpSession session, final User user) {
+    	final int userId = user.getId();
+    	final int companyId = user.getCompany().getId();
+    	final int languageId = user.getLanguage().getId();
+    	final int currencyId = user.getCurrency().getId();
+    	session.setAttribute(Constants.SESSION_USER_ID, userId);
+        session.setAttribute(Constants.SESSION_LOGGED_USER_ID, userId);
+        session.setAttribute(Constants.SESSION_ENTITY_ID_KEY, companyId); 
+        session.setAttribute(Constants.SESSION_LANGUAGE, languageId);
+        session.setAttribute(Constants.SESSION_CURRENCY, currencyId);
         // need the whole thing :( for the permissions
         session.setAttribute(Constants.SESSION_USER_DTO, user); 
     }
