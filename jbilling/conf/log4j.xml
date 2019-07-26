@@ -5,7 +5,7 @@
   <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
     <param name="File" value="${catalina.home}/logs/server.log"/>
     <param name="Append" value="false"/>
-    <param name="Threshold" value="INFO"/>
+    <param name="Threshold" value="FINER"/>
 
     <!-- Rollover at midnight each day -->
     <param name="DatePattern" value="'.'yyyy-MM-dd"/>
