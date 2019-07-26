@@ -39,6 +39,9 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.joda.time.DateTime;
+
+import com.google.common.collect.ImmutableSet;
 
 @Entity
 @TableGenerator(
@@ -77,7 +80,7 @@ public class ContactDTO  implements java.io.Serializable {
      private Integer faxAreaCode;
      private String faxNumber;
      private String email;
-     private Date createDate;
+     private DateTime createDate;
      private int deleted;
      private Integer include;
      private Integer userId;
@@ -91,9 +94,16 @@ public class ContactDTO  implements java.io.Serializable {
 	
     public ContactDTO(int id, Date createDatetime, int deleted) {
         this.id = id;
-        this.createDate = createDatetime;
+        this.createDate = new DateTime(createDatetime);
         this.deleted = deleted;
     }
+
+    public ContactDTO(int id, Date createDatetime, int deleted, Set<ContactFieldDTO> contactFields)
+    {
+    	this(id, createDatetime, deleted);
+    	setFields(contactFields);
+    }
+    
     public ContactDTO(int id, String organizationName, String streetAddres1, String streetAddres2, String city, String stateProvince, String postalCode, String countryCode, String lastName, String firstName, String personInitial, String personTitle, Integer phoneCountryCode, Integer phoneAreaCode, String phonePhoneNumber, Integer faxCountryCode, Integer faxAreaCode, String faxPhoneNumber, String email, Date createDatetime, int deleted, Integer notificationInclude, Integer userId, ContactMapDTO contactMap, Set<ContactFieldDTO> contactFields) {
        this.id = id;
        this.organizationName = organizationName;
@@ -114,7 +124,7 @@ public class ContactDTO  implements java.io.Serializable {
        this.faxAreaCode = faxAreaCode;
        this.faxNumber = faxPhoneNumber;
        this.email = email;
-       this.createDate = createDatetime;
+       this.createDate = new DateTime(createDatetime);
        this.deleted = deleted;
        this.include = notificationInclude;
        this.userId = userId;
@@ -324,11 +334,11 @@ public class ContactDTO  implements java.io.Serializable {
     }
     @Column(name="create_datetime", nullable=false, length=29)
     public Date getCreateDate() {
-        return this.createDate;
+        return this.createDate.toDate();
     }
     
     public void setCreateDate(Date createDatetime) {
-        this.createDate = createDatetime;
+        this.createDate = new DateTime(createDatetime);
     }
     
     @Column(name="deleted", nullable=false)
@@ -369,13 +379,13 @@ public class ContactDTO  implements java.io.Serializable {
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="contact")
     public Set<ContactFieldDTO> getFields() {
         if (fields == null) {
-            fields = new HashSet<ContactFieldDTO>(0);
+            fields = ImmutableSet.of();
         }
         return this.fields;
     }
     
     public void setFields(Set<ContactFieldDTO> contactFields) {
-        this.fields = contactFields;
+        this.fields = ImmutableSet.copyOf(contactFields);
     }
 
     @Version

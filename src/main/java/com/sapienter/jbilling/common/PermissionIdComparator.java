@@ -21,18 +21,18 @@ package com.sapienter.jbilling.common;
 
 import java.util.Comparator;
 
-import com.sapienter.jbilling.server.user.permisson.db.PermissionDTO;
+import com.sapienter.jbilling.server.user.permisson.db.Permission;
 
 /**
  * @author Emil
  */
-public class PermissionIdComparator implements Comparator<PermissionDTO> {
+public class PermissionIdComparator implements Comparator<Permission> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    public int compare(PermissionDTO perA, PermissionDTO perB) {
-        return new Integer(perA.getId()).compareTo(perB.getId());
+    @Override public int compare(final Permission perA, final Permission perB) {
+        return perA.getId() - perB.getId();
     }
 
 }

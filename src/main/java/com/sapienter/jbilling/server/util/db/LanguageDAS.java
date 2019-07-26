@@ -20,8 +20,7 @@
 package com.sapienter.jbilling.server.util.db;
 
 import org.hibernate.query.Query;
-
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.slf4j.LoggerFactory;
 
 
 public class LanguageDAS extends AbstractDAS<LanguageDTO> {

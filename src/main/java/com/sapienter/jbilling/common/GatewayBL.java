@@ -579,7 +579,7 @@ public class GatewayBL {
                     return;
                 }
                 user.setMainRoleId(type);
-                user.getRoles().add(new RoleDTO(type));
+                user.addRole(new RoleDTO(type));
 
                 // see if this is a partner
                 if (type.equals(Constants.TYPE_PARTNER)) {

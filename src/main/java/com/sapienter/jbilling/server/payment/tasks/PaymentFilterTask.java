@@ -117,7 +117,7 @@ public class PaymentFilterTask extends PaymentTaskBase implements PaymentTask {
      * response message is added to the returned results vector. An empty
      * returned vector means the user id didn't match any blacklist entries.
      */
-    public List<String> getBlacklistMatches(Integer userId) {
+    public List<String> getBlacklistMatches(int userId) {
         List<String> results = new ArrayList<String>();
         List<BlacklistFilter> filters = getEnabledFilters();
         for (BlacklistFilter filter : filters) {

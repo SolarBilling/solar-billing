@@ -22,7 +22,7 @@ package com.sapienter.jbilling.client.user;
 
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -218,7 +218,7 @@ public class PartnerCrudAction extends CrudActionBase<Partner> {
 	}
 
 	private PreferencesMap mapEntityParameters(Integer[] ids) throws RemoteException {
-		HashMap<Integer, String> result = myUserSession.getEntityParameters(entityId, ids);
+		final Map<Integer, String> result = myUserSession.getEntityParameters(entityId, ids);
 		return new PreferencesMap(result);
 	}
 

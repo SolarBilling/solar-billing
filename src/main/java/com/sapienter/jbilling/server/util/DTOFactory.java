@@ -62,7 +62,7 @@ import java.util.ArrayList;
  */
 
 /*
- * This code can't be testest through a JUnit test case because it will start
+ * This code can't be tested through a JUnit test case because it will start
  * using local interfaces ... from a remote client ;)
  */
 public class DTOFactory {
@@ -115,7 +115,6 @@ public class DTOFactory {
 		// add the roles
 		Integer mainRole = new Integer(1000);
 		String roleStr = null;
-		dto.getRoles().addAll(user.getRoles());
 		for (RoleDTO role : user.getRoles()) {
 			// the main role is the smallest of them, so they have to be ordered
 			// in the
@@ -192,6 +191,7 @@ public class DTOFactory {
 
         // set the balance
         dto.setBalance(new UserBL().getBalance(dto.getId()));
+        LOG.info("user=" + dto);
 
 		return dto;
 	}

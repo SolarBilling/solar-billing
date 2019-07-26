@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -143,20 +144,20 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * @param entityId entity id
      * @return DTO for GUI
      */
-    public UserDTOEx getGUIDTO(String username, Integer entityId) {
-        try {
+    @Override public UserDTOEx getGUIDTO(String username, Integer entityId) {
             final UserBL bl = new UserBL(username, entityId);
+            LOG.info("created UserBL " + bl);
             final UserDTOEx retValue = DTOFactory.getUserDTOEx(bl.getEntity());
+            LOG.info("got UserDTO " + retValue);
             retValue.setAllPermissions(bl.getPermissions());
-            retValue.setMenu(bl.getMenu(retValue.getAllPermissions()));
+            final Menu menu = bl.getMenu(retValue.getAllPermissions());
+            retValue.setMenu(menu);
+            LOG.info("set menu to " + menu);
             return retValue;
-        } catch (RuntimeException e) {
-            throw new SessionInternalError(e);
-        } 
     }
 
     /**
-     * @return the new user id if everthing ok, or null if the username is already 
+     * @return the new user id if everything okay, or null if the username is already 
      * taken, any other problems go as an exception
      */
     public Integer create(UserDTOEx newUser, ContactDTOEx contact) { 
@@ -729,13 +730,12 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * 
      * @param ids
      * An array of the parameter ids that will be looked up and returned in
-     * the hashtable
+     * the map
      * @return
-     * The paramteres in "id - value" pairs. The value is of type String
+     * The parameters in "id - value" pairs. The value is of type String
      */    
-    public HashMap<Integer, String> getEntityParameters(Integer entityId, Integer[] ids) 
-            throws SessionInternalError {
-        HashMap<Integer, String> retValue = new HashMap<Integer, String>();
+    public Map<Integer, String> getEntityParameters(final Integer entityId, final Integer[] ids) { 
+        final Map<Integer, String> retValue = new HashMap<Integer, String>();
         
         try {
             PreferenceBL preference = new PreferenceBL();
@@ -750,7 +750,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
                 }
             }        
             return retValue;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
@@ -760,8 +760,7 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
      * @param params
      * @throws SessionInternalError
      */
-    public void setEntityParameters(Integer entityId, HashMap<Integer, ?> params) 
-            throws SessionInternalError {
+    @Override public void setEntityParameters(final Integer entityId, final Map<Integer, ?> params) { 
         try {
             PreferenceBL preference = new PreferenceBL();
             for (Iterator<Integer> it = params.keySet().iterator(); it.hasNext();) {
@@ -786,18 +785,17 @@ public class UserSessionBean implements IUserSessionBean, PartnerSQL {
                             null, null);
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
     }
 
-    public void updatePreference(Integer userId, Integer typeId, Integer intValue, String strValue, BigDecimal decimalValue) 
-        throws SessionInternalError {
+    public void updatePreference(Integer userId, Integer typeId, Integer intValue, String strValue, BigDecimal decimalValue) {
         try {
             LOG.debug("updating preference " + typeId + " for user " + userId);
             PreferenceBL preference = new PreferenceBL();
             preference.createUpdateForUser(userId, typeId, intValue, strValue, decimalValue);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new SessionInternalError(e);
         }
         

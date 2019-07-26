@@ -33,8 +33,10 @@ import com.sapienter.jbilling.server.user.db.CompanyDAS;
 import com.sapienter.jbilling.server.user.db.CreditCardDTO;
 import com.sapienter.jbilling.server.user.db.CustomerDTO;
 import com.sapienter.jbilling.server.user.db.UserDTO;
+import com.sapienter.jbilling.server.user.permisson.db.Permission;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionDTO;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionTypeDTO;
+import com.sapienter.jbilling.server.user.permisson.db.RoleDTO;
 import com.sapienter.jbilling.server.util.db.CurrencyDAS;
 import com.sapienter.jbilling.server.util.db.CurrencyDTO;
 import com.sapienter.jbilling.server.util.db.LanguageDAS;
@@ -67,9 +69,9 @@ public final class UserDTOEx extends UserDTO {
     public static final Integer SUBSCRIBER_DISCONTINUED = new Integer(7);
     
     private Menu menu = null;
-    private List<PermissionDTO> allPermissions = null;
-    private List<PermissionDTO> permissionsTypeId = null; // same as before but sorted by type
-    private List<Integer> roles = null;
+    private List<Permission> allPermissions = null;
+    private List<Permission> permissionsTypeId = null; // same as before but sorted by type
+    private List<Integer> roles = null; // TODO doesn't this hide roles in UserDTO ? 
     private Integer mainRoleId = null;
     private String mainRoleStr = null;
     private String languageStr = null;
@@ -114,7 +116,7 @@ public final class UserDTOEx extends UserDTO {
         // the entity id
         setEntityId(entityId);
         // the permissions are defaulted to nothing
-        allPermissions = new ArrayList<PermissionDTO>();
+        allPermissions = new ArrayList<>();
         roles = new ArrayList<Integer>();
         if (roleId != null) {
             // we ask for at least one role for this user
@@ -161,11 +163,11 @@ public final class UserDTOEx extends UserDTO {
        super(user); 
     }
 
-    public List<PermissionDTO> getAllPermissions() {
+    public List<Permission> getAllPermissions() {
         return this.allPermissions;
     }
     // this expects the List to be sorted already
-    public void setAllPermissions(List<PermissionDTO> permissions) {
+    public void setAllPermissions(List<Permission> permissions) {
         this.allPermissions = permissions;
     }
     
@@ -188,7 +190,7 @@ public final class UserDTOEx extends UserDTO {
      */
     public boolean isGranted(Integer typeId, Integer foreignId) {
         if (permissionsTypeId == null) {
-            permissionsTypeId = new ArrayList<PermissionDTO>();
+            permissionsTypeId = new ArrayList<>();
             permissionsTypeId.addAll(allPermissions);
             Collections.sort(permissionsTypeId, new PermissionTypeIdComparator());
           /*

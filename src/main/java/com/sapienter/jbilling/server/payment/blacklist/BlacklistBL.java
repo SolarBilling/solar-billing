@@ -39,35 +39,32 @@ import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.util.PreferenceBL;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
  * Business logic class for the blacklist module.
  */
 public class BlacklistBL {
-    private BlacklistDAS blacklistDAS;
+    private BlacklistDAS blacklistDAS = new BlacklistDAS();
     private BlacklistDTO blacklistEntry;
+    private static final Logger logger = LoggerFactory.getLogger(BlacklistBL.class);
 
     public BlacklistBL() {
-        init();
     }
 
     public BlacklistBL(Integer blacklistEntryId) {
-        init();
         set(blacklistEntryId);
     }
 
     public BlacklistBL(BlacklistDTO blacklistEntry) {
-        init();
         set(blacklistEntry);
     }
 
-    private void init() {
-        blacklistDAS = new BlacklistDAS();
-    }
-
     public void set(Integer blacklistEntryId) {
-        blacklistEntry = blacklistDAS.find(blacklistEntryId);
+        blacklistEntry = blacklistDAS.apply(blacklistEntryId);
     }
 
     public void set(BlacklistDTO blacklistEntry) {
@@ -79,14 +76,15 @@ public class BlacklistBL {
     }
 
     /**
-     * Retuns true if the user id is blacklisted,
+     * Returns true if the user id is blacklisted,
      * even if the UserIdFilter is disabled.
      */
-    public static boolean isUserIdBlacklisted(Integer userId) {
-        List<BlacklistDTO> blacklist = new BlacklistDAS().findByUserType(
+    public static boolean isUserIdBlacklisted(int userId) {
+        final List<BlacklistDTO> blacklist = new BlacklistDAS().findByUserType(
                 userId, BlacklistDTO.TYPE_USER_ID);
-
-        return !blacklist.isEmpty();
+        final boolean isBlacklisted = !blacklist.isEmpty(); 
+        logger.info("user " + userId + " is " + (isBlacklisted ? "" : "not") + " blacklisted");
+        return isBlacklisted;
     }
 
     /**
@@ -95,8 +93,8 @@ public class BlacklistBL {
      * returned by filters the user fails on, or null if the blacklist
      * preference isn't enabled.
      */
-    public static List<String> getBlacklistMatches(Integer userId) {
-        Integer entityId = new UserDAS().find(userId).getCompany().getId();
+    public static List<String> getBlacklistMatches(int userId) {
+        Integer entityId = new UserDAS().apply(userId).getCompany().getId();
 
         PaymentFilterTask blacklist = instantiatePaymentFilter(entityId);
 
@@ -112,11 +110,11 @@ public class BlacklistBL {
      */
     public static Integer getBlacklistPluginId(Integer entityId) {
         // get the blacklist filter plug-in id from blacklist preference
-        PreferenceBL preferenceBL = new PreferenceBL();
+        PreferenceBL preferenceBL;
         try {
-            preferenceBL.set(entityId, Constants.PREFERENCE_USE_BLACKLIST);
+            preferenceBL = new PreferenceBL(entityId, Constants.PREFERENCE_USE_BLACKLIST);
         } catch (EmptyResultDataAccessException fe) { 
-            // use default
+        	preferenceBL = PreferenceBL.getDefaultPreferences();
         }
 
         return preferenceBL.getInt();

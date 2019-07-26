@@ -33,16 +33,16 @@ public class InternationalDescriptionId  implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private int tableId;
      private int foreignId;
-     private String psudoColumn;
+     private String pseudoColumn;
      private int languageId;
 
     public InternationalDescriptionId() {
     }
 
-    public InternationalDescriptionId(int tableId, int foreignId, String psudoColumn, int languageId) {
+    public InternationalDescriptionId(int tableId, int foreignId, String pseudoColumn, int languageId) {
        this.tableId = tableId;
        this.foreignId = foreignId;
-       this.psudoColumn = psudoColumn;
+       this.pseudoColumn = pseudoColumn;
        this.languageId = languageId;
     }
    
@@ -67,11 +67,11 @@ public class InternationalDescriptionId  implements java.io.Serializable {
 
     @Column(name="psudo_column", nullable=false, length=20)
     public String getPsudoColumn() {
-        return this.psudoColumn;
+        return this.pseudoColumn;
     }
     
     public void setPsudoColumn(String psudoColumn) {
-        this.psudoColumn = psudoColumn;
+        this.pseudoColumn = psudoColumn;
     }
 
     @Column(name="language_id", nullable=false)
@@ -107,7 +107,7 @@ public class InternationalDescriptionId  implements java.io.Serializable {
    }   
 
    public String toString() {
-       return "foreignId " + foreignId + " languageId " + languageId + " psudoColumn " + psudoColumn +
+       return "foreignId " + foreignId + " languageId " + languageId + " psudoColumn " + pseudoColumn +
                " tableId " + tableId;
    }
 }

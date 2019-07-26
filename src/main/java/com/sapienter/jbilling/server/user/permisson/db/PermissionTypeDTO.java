@@ -38,12 +38,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name="permission_type")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class PermissionTypeDTO  implements java.io.Serializable {
-
-
-     /**
-	 * 
-	 */
+public class PermissionTypeDTO  implements java.io.Serializable, PermissionType {
 	private static final long serialVersionUID = 1L;
 	private int id;
      private String description;
@@ -91,9 +86,8 @@ public class PermissionTypeDTO  implements java.io.Serializable {
         this.permissions = permissions;
     }
 
-
-
-
+	@Override
+	public Set<PermissionDTO> get() {
+		return getPermissions();
+	}
 }
-
-

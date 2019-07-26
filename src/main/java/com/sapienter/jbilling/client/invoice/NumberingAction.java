@@ -26,6 +26,7 @@ package com.sapienter.jbilling.client.invoice;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.client.util.UpdateOnlyCrudActionBase;
@@ -76,14 +77,14 @@ public class NumberingAction extends UpdateOnlyCrudActionBase<NumberingActionCon
     
     @Override
     protected ForwardAndMessage doSetup() throws RemoteException {
-        Integer[] preferenceIds = new Integer[] {
+    	final Integer[] preferenceIds = new Integer[] {
                 Constants.PREFERENCE_INVOICE_PREFIX, 
                 Constants.PREFERENCE_INVOICE_NUMBER,
         };
-        HashMap<?, ?> result = myUserSession.getEntityParameters(entityId, preferenceIds);
+        final Map<Integer, String> result = myUserSession.getEntityParameters(entityId, preferenceIds);
         
-        String prefix = (String) result.get(Constants.PREFERENCE_INVOICE_PREFIX); 
-        String number = (String) result.get(Constants.PREFERENCE_INVOICE_NUMBER); 
+        final String prefix = result.get(Constants.PREFERENCE_INVOICE_PREFIX); 
+        final String number = result.get(Constants.PREFERENCE_INVOICE_NUMBER); 
         myForm.set(FIELD_NUMBER, notNull(number));
         myForm.set(FIELD_PREFIX, notNull(prefix));
         

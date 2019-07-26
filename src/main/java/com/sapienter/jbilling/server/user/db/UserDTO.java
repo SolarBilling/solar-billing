@@ -42,6 +42,10 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.joda.time.DateTime;
+import org.joda.time.ReadableDateTime;
+
+import com.google.common.collect.ImmutableSet;
 import com.sapienter.jbilling.server.invoice.db.InvoiceDTO;
 import com.sapienter.jbilling.server.notification.db.NotificationMessageArchDTO;
 import com.sapienter.jbilling.server.order.db.OrderDTO;
@@ -80,7 +84,7 @@ public class UserDTO implements java.io.Serializable {
     private String password;
     private int deleted;
     private Date createDatetime;
-    private Date lastStatusChange;
+    private ReadableDateTime lastStatusChange;
     private Date lastLogin;
     private String userName;
     private int failedAttempts;
@@ -162,7 +166,7 @@ public class UserDTO implements java.io.Serializable {
         this.password = password;
         this.deleted = deleted;
         this.createDatetime = createDatetime;
-        this.lastStatusChange = lastStatusChange;
+        this.lastStatusChange = new DateTime(lastStatusChange);
         this.lastLogin = lastLogin;
         this.userName = userName;
         this.failedAttempts = failedAttempts;
@@ -272,11 +276,11 @@ public class UserDTO implements java.io.Serializable {
 
     @Column(name = "last_status_change", length = 29)
     public Date getLastStatusChange() {
-        return this.lastStatusChange;
+        return this.lastStatusChange.toDateTime().toDate();
     }
 
     public void setLastStatusChange(Date lastStatusChange) {
-        this.lastStatusChange = lastStatusChange;
+        this.lastStatusChange = new DateTime(lastStatusChange);
     }
 
     @Column(name = "last_login", length = 29)
@@ -311,8 +315,8 @@ public class UserDTO implements java.io.Serializable {
         return this.payments;
     }
 
-    public void setPayments(Set<PaymentDTO> payments) {
-        this.payments = payments;
+    private void setPayments(Set<PaymentDTO> payments) {
+        this.payments = ImmutableSet.copyOf(payments);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -320,8 +324,8 @@ public class UserDTO implements java.io.Serializable {
         return this.achs;
     }
 
-    public void setAchs(Set<AchDTO> achs) {
-        this.achs = achs;
+    private void setAchs(Set<AchDTO> achs) {
+        this.achs = ImmutableSet.copyOf(achs);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -329,8 +333,8 @@ public class UserDTO implements java.io.Serializable {
         return this.permissions;
     }
 
-    public void setPermissions(Set<PermissionUserDTO> permissionUsers) {
-        this.permissions = permissionUsers;
+    private void setPermissions(Set<PermissionUserDTO> permissionUsers) {
+        this.permissions = ImmutableSet.copyOf(permissionUsers);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -338,8 +342,8 @@ public class UserDTO implements java.io.Serializable {
         return this.reports;
     }
 
-    public void setReports(Set<ReportUserDTO> reportUsers) {
-        this.reports = reportUsers;
+    private void setReports(Set<ReportUserDTO> reportUsers) {
+        this.reports = ImmutableSet.copyOf(reportUsers);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUserByRelatedClerk")
@@ -348,7 +352,7 @@ public class UserDTO implements java.io.Serializable {
     }
 
     public void setPartnersForRelatedClerk(Set<Partner> partnersForRelatedClerk) {
-        this.partnersForRelatedClerk = partnersForRelatedClerk;
+        this.partnersForRelatedClerk = ImmutableSet.copyOf(partnersForRelatedClerk);
     }
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -374,8 +378,8 @@ public class UserDTO implements java.io.Serializable {
         return this.purchaseOrdersForCreatedBy;
     }
 
-    public void setPurchaseOrdersForCreatedBy(Set<OrderDTO> purchaseOrdersForCreatedBy) {
-        this.purchaseOrdersForCreatedBy = purchaseOrdersForCreatedBy;
+    private void setPurchaseOrdersForCreatedBy(Set<OrderDTO> purchaseOrdersForCreatedBy) {
+        this.purchaseOrdersForCreatedBy = ImmutableSet.copyOf(purchaseOrdersForCreatedBy);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUserByUserId")
@@ -383,7 +387,7 @@ public class UserDTO implements java.io.Serializable {
         return this.orders;
     }
 
-    public void setOrders(Set<OrderDTO> purchaseOrdersForUserId) {
+    private void setOrders(Set<OrderDTO> purchaseOrdersForUserId) {
         this.orders = purchaseOrdersForUserId;
     }
 
@@ -395,8 +399,8 @@ public class UserDTO implements java.io.Serializable {
         return this.creditCards;
     }
 
-    public void setCreditCards(Set<CreditCardDTO> creditCards) {
-        this.creditCards = creditCards;
+    private void setCreditCards(final Set<CreditCardDTO> creditCards) {
+        this.creditCards = ImmutableSet.copyOf(creditCards);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -404,8 +408,8 @@ public class UserDTO implements java.io.Serializable {
         return this.notificationMessageArchs;
     }
 
-    public void setNotificationMessageArchs(Set<NotificationMessageArchDTO> notificationMessageArchs) {
-        this.notificationMessageArchs = notificationMessageArchs;
+    private void setNotificationMessageArchs(Set<NotificationMessageArchDTO> notificationMessageArchs) {
+        this.notificationMessageArchs = ImmutableSet.copyOf(notificationMessageArchs);
     }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -416,8 +420,14 @@ public class UserDTO implements java.io.Serializable {
         return this.roles;
     }
 
-    public void setRoles(Set<RoleDTO> roles) {
-        this.roles = roles;
+  	public void addRole(final RoleDTO roleDTO) {
+   		final Set<RoleDTO> roles = new HashSet<>(this.roles);
+   		roles.add(roleDTO);
+   		this.roles = ImmutableSet.copyOf(roles);
+    }
+    
+    private void setRoles(Set<RoleDTO> roles) {
+        this.roles = ImmutableSet.copyOf(roles);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -426,7 +436,7 @@ public class UserDTO implements java.io.Serializable {
     }
 
     public void setEventLogs(Set<EventLogDTO> eventLogs) {
-        this.eventLogs = eventLogs;
+        this.eventLogs = ImmutableSet.copyOf(eventLogs);
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseUser")
@@ -435,7 +445,7 @@ public class UserDTO implements java.io.Serializable {
     }
 
     public void setInvoices(Set<InvoiceDTO> invoices) {
-        this.invoices = invoices;
+        this.invoices = ImmutableSet.copyOf(invoices);
     }
 
     @Version

@@ -24,13 +24,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.ImmutableSet;
 import com.sapienter.jbilling.common.SessionInternalError;
 import com.sapienter.jbilling.server.payment.blacklist.db.BlacklistDAS;
 import com.sapienter.jbilling.server.payment.blacklist.db.BlacklistDTO;
@@ -91,10 +91,8 @@ public class CsvProcessor {
     private static Logger LOG = Logger.getLogger(CsvProcessor.class);
 
     // some frequently used data classes
-    private BlacklistDAS blacklistDAS = null;
-    private UserDAS userDAS = null;
-    private ContactDAS contactDAS = null;
-    private CreditCardDAS creditCardDAS = null;
+    private final BlacklistDAS blacklistDAS;
+    private final UserDAS userDAS;
     private ContactFieldTypeDTO ipAddressFieldTypeDTO = null;
     private ResourceBundle rBundle = null;
 
@@ -105,8 +103,6 @@ public class CsvProcessor {
     public CsvProcessor() {
         blacklistDAS = new BlacklistDAS();
         userDAS = new UserDAS();
-        contactDAS = new ContactDAS();
-        creditCardDAS = new CreditCardDAS();
     }
 
     /**
@@ -308,8 +304,7 @@ public class CsvProcessor {
         newField.setContent(getString(Column.IP_ADDRESS));
         newField.setContact(newContact);
 
-        Set<ContactFieldDTO> fields = new HashSet<ContactFieldDTO>(1);
-        fields.add(newField);
+        final Set<ContactFieldDTO> fields = ImmutableSet.of(newField);
         newContact.setFields(fields);
 
         entry.setContact(newContact);

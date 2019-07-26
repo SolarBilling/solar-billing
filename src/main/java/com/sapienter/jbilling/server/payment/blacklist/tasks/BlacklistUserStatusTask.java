@@ -22,11 +22,13 @@ package com.sapienter.jbilling.server.payment.blacklist.tasks;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.ImmutableSet;
 import com.sapienter.jbilling.server.payment.blacklist.BlacklistBL;
 import com.sapienter.jbilling.server.payment.blacklist.db.BlacklistDTO;
 import com.sapienter.jbilling.server.pluggableTask.PluggableTask;
@@ -50,14 +52,16 @@ public class BlacklistUserStatusTask extends PluggableTask
         implements IInternalEventsTask {
     private static final Logger LOG = Logger.getLogger(BlacklistUserStatusTask.class);
 
-    private static final Class<Event> events[] = new Class[] { 
+    private static final Class<? extends Event> events[] = new Class[] { 
             NewUserStatusEvent.class };
+    
+    @Autowired private Function<Integer, UserDTO> userDAS = new UserDAS();
 
-    public Class<Event>[] getSubscribedEvents() {
+    public Class<? extends Event>[] getSubscribedEvents() {
         return events;
     }
 
-    public void process(Event event) {
+    @Override public void process(final Event event) {
         NewUserStatusEvent myEvent = (NewUserStatusEvent) event;
         // only process suspended or higher events
         if (myEvent.getNewStatusId() < UserDTOEx.STATUS_SUSPENDED) {
@@ -73,7 +77,7 @@ public class BlacklistUserStatusTask extends PluggableTask
             return;
         }
 
-        UserDTO user = new UserDAS().find(myEvent.getUserId());
+        UserDTO user = userDAS.apply(myEvent.getUserId());
         BlacklistBL blacklistBL = new BlacklistBL();
 
         LOG.debug("Adding blacklist records for user id: " + user.getId());
@@ -169,7 +173,7 @@ public class BlacklistUserStatusTask extends PluggableTask
 
         // blacklist the ip address if it was found
         if (ipAddress != null) {
-            newContact = new ContactDTO();
+            
             newContact.setCreateDate(new Date());
             newContact.setDeleted(0);
             ContactFieldDTO newField = new ContactFieldDTO();
@@ -177,8 +181,7 @@ public class BlacklistUserStatusTask extends PluggableTask
             newField.setContent(ipAddress);
             newField.setContact(newContact);
 
-            Set<ContactFieldDTO> fields = new HashSet<ContactFieldDTO>(1);
-            fields.add(newField);
+            final Set<ContactFieldDTO> fields = ImmutableSet.of(newField);
             newContact.setFields(fields);
             blacklistBL.create(user.getCompany(), BlacklistDTO.TYPE_IP_ADDRESS,
                     BlacklistDTO.SOURCE_USER_STATUS_CHANGE, null, newContact, null);

@@ -31,23 +31,38 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.google.common.base.Objects;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 
 @Entity
 @Table(name="permission_user")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class PermissionUserDTO  implements java.io.Serializable {
-
-
-     /**
-	 * 
-	 */
+public class PermissionUserDTO  implements java.io.Serializable, PermissionUser {
 	private static final long serialVersionUID = 1L;
 	private int id;
-     private UserDTO baseUser;
-     private PermissionDTO permission;
-     private short isGrant;
+    private UserDTO baseUser;
+    private PermissionDTO permission;
+    private short isGrant;
 
+    @Override public String toString()
+    {
+    	return "PermissionUserDTO " + id;
+    }
+    
+    @Override public int hashCode() {
+    	return id;
+    }
+    
+    @Override public boolean equals(final Object o) {
+    	if (!(o instanceof PermissionUserDTO)) {
+    		return false;
+    	}
+    	final PermissionUserDTO permission = (PermissionUserDTO)o;
+    	return getId() == permission.getId() && Objects.equal(getBaseUser(), permission.getBaseUser()) &&
+    		Objects.equal(getPermission(), permission.getPermission()) &&
+    		getIsGrant() == permission.getIsGrant();
+    }
+    
     public PermissionUserDTO() {
     }
 
@@ -84,7 +99,7 @@ public class PermissionUserDTO  implements java.io.Serializable {
     }
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="permission_id")
-    public PermissionDTO getPermission() {
+    @Override public Permission getPermission() {
         return this.permission;
     }
     

@@ -42,12 +42,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name="permission")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class PermissionDTO  implements java.io.Serializable {
-
-
-     /**
-	 * 
-	 */
+public class PermissionDTO  implements java.io.Serializable, Permission {
 	private static final long serialVersionUID = 1L;
 	private int id;
      private PermissionTypeDTO permissionType;
@@ -76,7 +71,7 @@ public class PermissionDTO  implements java.io.Serializable {
    
     @Id 
     @Column(name="id", unique=true, nullable=false)
-    public int getId() {
+    @Override public int getId() {
         return this.id;
     }
     
@@ -86,7 +81,7 @@ public class PermissionDTO  implements java.io.Serializable {
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="type_id", nullable=false)
-    public PermissionTypeDTO getPermissionType() {
+    @Override public PermissionType getPermissionType() {
         return this.permissionType;
     }
     

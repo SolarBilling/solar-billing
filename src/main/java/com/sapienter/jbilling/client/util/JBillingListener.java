@@ -36,8 +36,8 @@ import com.sapienter.jbilling.server.user.db.CompanyDTO;
 import com.sapienter.jbilling.server.util.Context;
 
 import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.client.item.CurrencyArrayWrap;
 import com.sapienter.jbilling.client.process.Trigger;
 import com.sapienter.jbilling.common.SessionInternalError;
@@ -55,8 +55,11 @@ public class JBillingListener implements ServletContextListener {
     @Autowired private Supplier<List<CompanyDTO>> companyDAS = new CompanyDAS();
 
 	public void contextInitialized(ServletContextEvent event) {
-		LOG.info("log4j logging is working");
-		LoggerFactory.getLogger(getClass()).info("slf4j logging is working");
+		LOG.info("log4j logging is working at info level");
+		LOG.debug("log4j logging is working at debug level");
+		LoggerFactory.getLogger(getClass()).info("slf4j logging is working at info level");
+		LoggerFactory.getLogger(getClass()).debug("slf4j logging is working at debug level");
+		LoggerFactory.getLogger(getClass()).trace("slf4j logging is working at trace level");
 		java.util.logging.Logger.getLogger(getClass().getName()).info("java.util.logging is working");
         // validate that the java version is correct
         validateJava();

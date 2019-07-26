@@ -20,7 +20,6 @@
 package com.sapienter.jbilling.server.user.permisson.db;
 
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,6 +37,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OrderBy;
 
+import com.google.common.collect.ImmutableSet;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.util.Constants;
 import com.sapienter.jbilling.server.util.db.AbstractDescription;
@@ -45,28 +45,31 @@ import com.sapienter.jbilling.server.util.db.AbstractDescription;
 @Entity
 @Table(name="role")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class RoleDTO extends AbstractDescription implements java.io.Serializable {
-
-
-     /**
-	 * 
-	 */
+public class RoleDTO extends AbstractDescription implements java.io.Serializable, Role {
 	private static final long serialVersionUID = 1L;
 	private int id;
-     private Set<UserDTO> baseUsers = new HashSet<UserDTO>(0);
-     private Set<PermissionDTO> permissions = new HashSet<PermissionDTO>(0);
+    private final ImmutableSet<UserDTO> baseUsers;
+    private final ImmutableSet<PermissionDTO> permissions;
 
-    public RoleDTO() {
+     @Override public String toString()
+     {
+    	 return "RoleDTO " + id;
+     }
+ 
+    // this is not called directly from any of our code, however it is called when instantiating this class as a spring bean 
+    public void setId(int id) {
+        this.id = id;
     }
-
-	
+     
     public RoleDTO(int id) {
         this.id = id;
+        this.baseUsers = ImmutableSet.of();
+        this.permissions = ImmutableSet.of();
     }
     public RoleDTO(int id, Set<UserDTO> baseUsers, Set<PermissionDTO> permissions) {
        this.id = id;
-       this.baseUsers = baseUsers;
-       this.permissions = permissions;
+       this.baseUsers = ImmutableSet.copyOf(baseUsers);
+       this.permissions = ImmutableSet.copyOf(permissions);
     }
     
     @Transient
@@ -75,7 +78,7 @@ public class RoleDTO extends AbstractDescription implements java.io.Serializable
     }
 
     @Transient
-    public String getTitle(Integer languageId) {
+    @Override public String getTitle(int languageId) {
         return getDescription(languageId, "title");
     }
     
@@ -85,19 +88,12 @@ public class RoleDTO extends AbstractDescription implements java.io.Serializable
         return this.id;
     }
     
-    public void setId(int id) {
-        this.id = id;
-    }
 @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JoinTable(name="user_role_map", joinColumns = { 
         @JoinColumn(name="role_id", updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="user_id", updatable=false) })
     public Set<UserDTO> getBaseUsers() {
         return this.baseUsers;
-    }
-    
-    public void setBaseUsers(Set<UserDTO> baseUsers) {
-        this.baseUsers = baseUsers;
     }
     
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
@@ -109,13 +105,11 @@ public class RoleDTO extends AbstractDescription implements java.io.Serializable
         return this.permissions;
     }
     
-    public void setPermissions(Set<PermissionDTO> permissions) {
-        this.permissions = permissions;
+/*
+    private void setPermissions(Set<PermissionDTO> permissions) {
+        this.permissions = ImmutableSet.copyOf(permissions);
     }
-
-
-
-
+*/    
 }
 
 

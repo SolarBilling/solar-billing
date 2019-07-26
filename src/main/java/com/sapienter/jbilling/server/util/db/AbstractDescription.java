@@ -47,8 +47,8 @@ public abstract class AbstractDescription implements Serializable {
         return getDescription(languageId, "description");
     }
     
-    public String getDescription(Integer languageId, String label) {
-        if (label == null || languageId == null) {
+    public String getDescription(int languageId, String label) {
+        if (label == null) {
             throw new SessionInternalError("Null parameters " + label + " " + languageId);
         }
         DescriptionDAS de = new DescriptionDAS();

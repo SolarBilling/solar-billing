@@ -29,14 +29,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.jfree.util.Log;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.sapienter.jbilling.client.jsp.BillingAction;
 import com.sapienter.jbilling.client.util.Constants;
 import com.sapienter.jbilling.common.Util;
 import com.sapienter.jbilling.server.user.UserDTOEx;
@@ -45,7 +42,7 @@ import com.sapienter.jbilling.server.util.Context;
 import com.sapienter.jbilling.server.user.db.CompanyDTO;
 
 
-public final class UserLoginAction extends Action {
+public final class UserLoginAction extends BillingAction {
 
     private static final Logger LOG = Logger.getLogger(UserLoginAction.class);
 
@@ -64,7 +61,7 @@ public final class UserLoginAction extends Action {
      * @param response The HTTP response we are creating
      *
      */
-    public ActionForward execute(
+    protected ActionForward doExecute(
         final ActionMapping mapping,
         final ActionForm form,
         final HttpServletRequest request,
@@ -74,7 +71,6 @@ public final class UserLoginAction extends Action {
 
         // Get the values from the form and do further validation
         // or parsing
-        final ActionMessages errors = new ActionMessages();
         Locale locale = null;
         boolean internalLogin = false;
         final UserLoginForm info = (UserLoginForm) form;
@@ -104,11 +100,7 @@ public final class UserLoginAction extends Action {
         	try { 
         		companyId = Integer.parseInt(entityId);
         	} catch (NumberFormatException nfe) {
-                errors.add(
-                        ActionMessages.GLOBAL_MESSAGE,
-                        new ActionMessage("errors.company.id.nan"));        		
-                saveErrors(request, errors);
-                return (new ActionForward(mapping.getInput()));
+                return errorResponse(mapping, request, "errors.company.id.nan");
         	}
         }
         user.setCompany(new CompanyDTO(companyId));
@@ -117,14 +109,11 @@ public final class UserLoginAction extends Action {
         File lock = new File(Util.getSysProp("login_lock"));
         if (lock.exists()) {
             LOG.debug("Denying login. Lock present.");
-            errors.add(
-                    ActionMessages.GLOBAL_MESSAGE,
-                    new ActionMessage("user.login.lock"));
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+            return errorResponse(mapping, request, "user.login.lock");
         }
 
         boolean expired = false;
+        String error = null;
         try {
         	// now do the call to the business object
             // get the value from a Session EJB 
@@ -132,38 +121,30 @@ public final class UserLoginAction extends Action {
                     Context.Name.USER_SESSION);
             Constants.Authentication result = myRemoteSession.authenticate(user);
             if (result.equals(Constants.Authentication.AUTH_WRONG_CREDENTIALS)) {
-                errors.add(
-                    ActionMessages.GLOBAL_MESSAGE,
-                    new ActionMessage("user.login.badpassword"));
+            	error = "user.login.badpassword";
             } else if (result.equals(Constants.Authentication.AUTH_LOCKED)) {
-                errors.add(
-                        ActionMessages.GLOBAL_MESSAGE,
-                        new ActionMessage("user.login.passwordLocked"));
+            	error = "user.login.passwordLocked";
             } else {
+            	LOG.info("getting GUI UserDTO...");
                 user = myRemoteSession.getGUIDTO(user.getUserName(), user.getEntityId());
+            	LOG.info("got GUI UserDTO");
                 // children accounts can not login. They have no invoices and
                 // can't make any payments
                 if (user.getCustomer() != null && 
                         user.getCustomer().getParent() != null) {
-                    errors.add(
-                            ActionMessages.GLOBAL_MESSAGE,
-                            new ActionMessage("user.login.badpassword"));
+                	error = "user.login.badpassword";
                 }
                 locale = myRemoteSession.getLocale(user.getUserId());
                 // it is authenticated, let's create the session
             }
             expired = myRemoteSession.isPasswordExpired(user.getUserId());
         } catch (RuntimeException e) {
-        	Log.error(e);
-            errors.add(
-                ActionMessages.GLOBAL_MESSAGE,
-                new ActionMessage("all.internal"));
+        	error = "all.internal";
         }
 
         // Report any errors we have discovered back to the original form
-        if (!errors.isEmpty()) {
-            saveErrors(request, errors);
-            return (new ActionForward(mapping.getInput()));
+        if (error != null) {
+            return errorResponse(mapping, request, error);
         }
         
         // Save our logged-in user in the session

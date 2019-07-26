@@ -31,8 +31,8 @@ public class NewUserStatusEvent implements Event {
     private Integer oldStatusId;
     private Integer newStatusId;
 
-    public NewUserStatusEvent(Integer entityId, Integer userId, 
-            Integer oldStatusId, Integer newStatusId) {
+    public NewUserStatusEvent(int entityId, int userId, 
+            Integer oldStatusId, int newStatusId) {
         this.entityId = entityId;
         this.userId = userId;
         this.oldStatusId = oldStatusId;

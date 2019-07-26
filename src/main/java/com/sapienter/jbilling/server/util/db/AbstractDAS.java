@@ -42,9 +42,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.query.Query;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.sapienter.jbilling.server.util.Context;
 import org.hibernate.LockMode;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -160,10 +161,14 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
 	@SuppressWarnings("hiding")
 	protected <T> List<T> selectAll(final Class<T> theClass, final ImmutableMap<String, ?> values) {
 		try {
-			return createQuery(theClass, values).list();
-		} catch (final RuntimeException rte) {
-			logAllCauses(rte);
-			throw rte;
+			final List<T> results = createQuery(theClass, values).list();
+			LOG.info("returning " + results.size() + " results");
+	    	logStackTrace();
+			return results;
+		} catch (final IllegalArgumentException rte) {
+	    	LoggerFactory.getLogger(getClass()).info("", rte);
+	    	LOG.info("", rte);
+			return ImmutableList.of();
 		}
 	}
 
@@ -209,6 +214,7 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
 	@SuppressWarnings("hiding")
     protected <T> Query<T> createHQLQuery(final String hql, Class<T> theClass, final ImmutableMap<String, ?> parameters, final int maxResults) {
     	final Query<T> query = getSession().createQuery(hql, theClass);
+    	LOG.info("created query '" + hql + "' with parameters " + parameters);
     	for (Map.Entry<String, ?> parameter : parameters.entrySet()) {
     		query.setParameter( parameter.getKey(), parameter.getValue());
     	}
@@ -253,6 +259,7 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
 			criteriaQuery.orderBy(order);
 		}
 		criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
+		LOG.info("created query with values " + values);
 		return session.createQuery(criteriaQuery);
 	}
 
@@ -398,9 +405,20 @@ public abstract class AbstractDAS<T> implements Function<Integer,T>, Supplier<Li
         return crit;
     }
     
+    private void logStackTrace() {
+    	try {
+    		throw new RuntimeException("Stack Trace");
+    	} catch (RuntimeException rte) {
+    		LOG.info(rte);
+    	}
+    }
+    
     @SuppressWarnings("unchecked")
     protected T findByCriteriaSingle(Criterion... criterion) {
-        return (T) createCriteria(criterion).uniqueResult();
+    	final T result = (T) createCriteria(criterion).uniqueResult();
+    	LOG.info("returning single result " + result);
+    	logStackTrace();
+        return result;
    }
 
     protected void useCache() {

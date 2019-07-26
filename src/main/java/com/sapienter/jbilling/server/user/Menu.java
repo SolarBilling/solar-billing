@@ -26,8 +26,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import org.apache.log4j.Logger;
 
 import com.sapienter.jbilling.common.SessionInternalError;

@@ -212,5 +212,9 @@ public class PreferenceBL {
     public PreferenceDTO getEntity() {
         return preference;
     }
+
+	public static PreferenceBL getDefaultPreferences() {
+		return new PreferenceBL();
+	}
     
 }

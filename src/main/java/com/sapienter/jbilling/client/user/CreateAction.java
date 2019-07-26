@@ -21,6 +21,8 @@
 package com.sapienter.jbilling.client.user;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +91,7 @@ public class CreateAction extends Action {
                 Integer typeId = (Integer) userForm.get("type");
                 if (typeId == null) {
                     // some users won't have the permission to pick the
-                    // type, so it is assumend they are creating customers
+                    // type, so it is assumed they are creating customers
                     typeId = Constants.TYPE_CUSTOMER;
                 }
 
@@ -105,7 +107,7 @@ public class CreateAction extends Action {
                 // now, it will be just one and directly mapped to the user type
                 // this doesn't have to be like this, it is now because it is 
                 // enough for the BAT requirements
-                dto.getRoles().add(new RoleDTO(typeId));
+                dto.addRole(new RoleDTO(typeId));
                 
                 // finally, create the contact dto to send the email
                 ContactDTOEx contact = new ContactDTOEx();

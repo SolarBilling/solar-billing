@@ -22,7 +22,8 @@ package com.sapienter.jbilling.server.util;
 
 import java.util.Collection;
 
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.slf4j.LoggerFactory;
+
 import com.sapienter.jbilling.server.util.db.InternationalDescriptionDAS;
 
 public class DescriptionBL {

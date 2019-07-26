@@ -22,7 +22,7 @@ package com.sapienter.jbilling.server.user;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 
@@ -193,16 +193,14 @@ public interface IUserSessionBean {
      * @return
      * The parameters in "id - value" pairs. The value is of type String
      */    
-    public HashMap<Integer, String> getEntityParameters(Integer entityId, Integer[] ids) 
-            throws SessionInternalError;
+    Map<Integer, String> getEntityParameters(Integer entityId, Integer[] ids); 
     
     /**
      * @param entityId
      * @param params
      * @throws SessionInternalError
      */
-    public void setEntityParameters(Integer entityId, HashMap<Integer, ?> params) 
-            throws SessionInternalError;
+    void setEntityParameters(Integer entityId, Map<Integer, ?> params); 
 
     public void updatePreference(Integer userId, Integer typeId, 
             Integer intValue, String strValue, BigDecimal decimalValue);

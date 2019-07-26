@@ -40,6 +40,7 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.ImmutableSet;
 import com.sapienter.jbilling.common.JBCrypto;
 import com.sapienter.jbilling.common.PermissionConstants;
 import com.sapienter.jbilling.common.PermissionIdComparator;
@@ -74,8 +75,10 @@ import com.sapienter.jbilling.server.user.db.UserDAS;
 import com.sapienter.jbilling.server.user.db.UserDTO;
 import com.sapienter.jbilling.server.user.db.UserStatusDAS;
 import com.sapienter.jbilling.server.user.partner.PartnerBL;
+import com.sapienter.jbilling.server.user.permisson.db.Permission;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionDTO;
 import com.sapienter.jbilling.server.user.permisson.db.PermissionUserDTO;
+import com.sapienter.jbilling.server.user.permisson.db.Role;
 import com.sapienter.jbilling.server.user.permisson.db.RoleDAS;
 import com.sapienter.jbilling.server.user.permisson.db.RoleDTO;
 import com.sapienter.jbilling.server.user.tasks.IValidatePurchaseTask;
@@ -240,7 +243,7 @@ public class UserBL extends ResultList
             // make sure the role is in the session
             RoleDTO dbRole = new RoleDAS().find(aRole.getId());
             //dbRole.getBaseUsers().add(user);
-            user.getRoles().add(dbRole);
+            user.addRole(dbRole);
         }
     }
 
@@ -268,7 +271,7 @@ public class UserBL extends ResultList
                 LOG.warn("Creating user without any role...");
             }
         } else {
-            for (RoleDTO role: dto.getRoles()) {
+            for (Role role: dto.getRoles()) {
                 roles.add(role.getId());
             }
         }
@@ -463,18 +466,20 @@ public class UserBL extends ResultList
          return user;
      }
 
-     public List<PermissionDTO> getPermissions() {
-         List<PermissionDTO> ret = new ArrayList<PermissionDTO>();
+     public List<Permission> getPermissions() {
+         List<Permission> ret = new ArrayList<Permission>();
 
-         LOG.debug("Reading permisions for user " + user.getUserId());
+         LOG.info("Reading permisions for user " + user.getUserId());
 
-         for (RoleDTO role: user.getRoles()) {
+         for (Role role: user.getRoles()) {
              // now get the permissions. They come sorted from the DB
+        	 LOG.info("Reading permissions for role " + role);
              ret.addAll(role.getPermissions());
          }
 
          // now add / remove those privileges that were granted / revoked
          // to this particular user
+         LOG.info("Reading user-specific permisions for user " + user.getUserId());
          for(PermissionUserDTO permission : user.getPermissions()) {
              if (permission.getIsGrant() == 1) {
                  // see that this guy has it
@@ -494,16 +499,16 @@ public class UserBL extends ResultList
 
          // make sure the permissions are sorted
          Collections.sort(ret, new PermissionIdComparator());
-
+         LOG.info("returning " + ret);
          return ret;
      }
 
-    public Menu getMenu(List<PermissionDTO> permissions) {
+    public Menu getMenu(Iterable<Permission> permissions) {
         Menu menu = new Menu();
         // this should be doable in EJB/QL !! :( :(
         LOG.debug("getting menu for user=" + user.getUserId());
 
-        for (PermissionDTO permission : permissions) {
+        for (Permission permission : permissions) {
             if (permission.getPermissionType().getId() == Constants.PERMISSION_TYPE_MENU) {
                 // get the menu
                 MenuOption option = DTOFactory.getMenuOption(
@@ -652,7 +657,7 @@ public class UserBL extends ResultList
     public Integer getMainRole() {
         if (mainRole == null) {
             List<Integer> roleIds = new LinkedList<Integer>();
-            for (RoleDTO nextRoleObject : user.getRoles()){
+            for (Role nextRoleObject : user.getRoles()){
         		roleIds.add(nextRoleObject.getId());
         	}
         	mainRole = selectMainRole(roleIds);
@@ -709,11 +714,11 @@ public class UserBL extends ResultList
     /**
      * Will mark the user as deleted (deleted = 1), and do the same
      * with all her orders, etc ...
-     * Not deleted for reporting reasong: invoices, payments
+     * Not deleted for reporting reasons: invoices, payments
      */
     public void delete(Integer executorId) {
         user.setDeleted(1);
-        user.setUserStatus(new UserStatusDAS().find(UserDTOEx.STATUS_DELETED));
+        user.setUserStatus(new UserStatusDAS().apply(UserDTOEx.STATUS_DELETED));
         user.setLastStatusChange(Calendar.getInstance().getTime());
 
         // credit cards
@@ -724,15 +729,16 @@ public class UserBL extends ResultList
         for (OrderDTO order: user.getOrders()) {
             order.setDeleted(1);
         }
-        // permisions
-        user.getPermissions().clear();
-        // user saved reports
         for (ReportUserDTO report: user.getReports()) {
             new ReportUserDAS().delete(report);
         }
-        user.getReports().clear();
+        LOG.error("TODO: how to delete user permissions, reports and roles when the user is deleted ?");
+        // permissions
+        // user.getPermissions().clear();
+        // user saved reports
+        //user.getReports().clear();
         // roles
-        user.getRoles().clear();
+        //user.getRoles().clear();
 
         if (executorId != null) {
             eLogger.audit(executorId, user.getId(), Constants.TABLE_BASE_USER,
